@@ -31,3 +31,7 @@ Real submission and inbox delivery remain unverified because the cloud network b
 ## Manual regression checks
 
 Check widths 320, 375, 390, 768, 960, 1024 and 1440px for horizontal overflow. Verify skip link, menu focus, Tab/Shift+Tab wrapping, Escape, navigation link closure and desktop resize. Check all five FAQ items. Check invalid email, submission error preserving data and successful submission resetting data. Use mocked responses for routine checks to avoid sending test email.
+
+## Camera calibration panel
+
+Open [edge/calibration/index.html](edge/calibration/index.html) in a modern browser (or serve the repository locally with Python if local files are blocked). Load a camera still, draw the counting line and rectangular zones, then export `config.local.json` for the edge program. Everything runs locally; this panel does not start analytics or connect to RTSP/cloud. See `edge/README.md` for details.

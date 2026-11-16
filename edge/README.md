@@ -88,3 +88,13 @@ Përgjigjja duhet të jetë JSON: `{"accepted_event_ids":["uuid"]}`. Vetëm ID-t
 - Mungojnë ende deploy si shërbim/systemd ose Docker, health dashboard, menaxhimi i konfigurimit nga cloud dhe backend-i i raporteve.
 
 Testet automatike mbulojnë drejtimin, dridhjet, segmentin e kufizuar, skadimin e track-ut, dwell të plotë/të ndërprerë, persistencën, deduplikimin lokal, kapacitetin, konfirmimet e pjesshme dhe dështimin e rrjetit. Prova e videos sintetike verifikon dekodimin dhe ekzekutimin e HOG, jo saktësinë në njerëz realë. Kamera reale, saktësia dhe cloud real mbeten të patestuara.
+
+## Paneli lokal i kalibrimit
+
+Paneli është statik dhe mund të hapet nga `calibration/index.html` në shfletues. Nëse politika e shfletuesit bllokon skedarët lokalë, nga dosja e projektit nis `python3 -m http.server 8000 --bind 127.0.0.1`, pastaj hap shtegun `/edge/calibration/index.html` në serverin lokal. Testet në këtë ambient u kryen përmes HTTP lokal, sepse politika e Chromium bllokon file://. Ngarko një foto PNG/JPEG/WebP të pamjes fikse të kamerës. Zgjidh mjetin e vijës dhe kliko dy pika; shigjeta jeshile tregon drejtimin e hyrjes. Për zonat, kliko dy cepat e kundërt të një drejtkëndëshi. Mund të përdorësh edhe fushat numerike me tastierë.
+
+Shkarko `config.local.json`, vendose në dosjen `edge` dhe rinis procesin me `--config config.local.json`. Paneli shkarkon skedar në kompjuter; nuk e instalon automatikisht në pajisje. Importo konfigurimin ekzistues për të ruajtur parametrat e runtime-it dhe rrugën e databazës. Mos ndrysho kornizimin/aspektin e pamjes midis kalibrimit dhe analizës. Për konfigurimin e disa kamerave ruaj një JSON për secilën, me `camera_id` të ndryshëm.
+
+Pamja qëndron në shfletues dhe nuk përfshihet në JSON. Paneli nuk lexon stream RTSP, nuk kryen detektim dhe nuk lidhet me cloud. Nëse mbyll panelin pa eksportuar, ndryshimet nuk ruhen. Nuk ka ruajtje të fshehtë në localStorage.
+
+Test opsional i panelit me Python Playwright dhe Chromium: `python3 calibration/test_browser.py` nga dosja edge. Testi kontrollon edhe eksportin me validatorin real Python; kërkon instalimin ekzistues në `.venv`. Këto varësi të shfletuesit nuk nevojiten në Mini PC për të ekzekutuar analytics.
