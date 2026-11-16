@@ -7,3 +7,5 @@ config.local.json
 *.egg-info/
 build/
 dist/
+
+.panel.lock

@@ -35,3 +35,7 @@ Check widths 320, 375, 390, 768, 960, 1024 and 1440px for horizontal overflow. V
 ## Camera calibration panel
 
 Open [edge/calibration/index.html](edge/calibration/index.html) in a modern browser (or serve the repository locally with Python if local files are blocked). Load a camera still, draw the counting line and rectangular zones, then export `config.local.json` for the edge program. Everything runs locally; this panel does not start analytics or connect to RTSP/cloud. See `edge/README.md` for details.
+
+## Local device control panel (Linux/macOS)
+
+After installing the edge package, run `ai-camera-panel --config config.local.json` on the Mini PC and open the loopback address printed in its terminal on that same device. This mode adds configuration saving, start/stop controls and worker frame status to the calibration UI. Set `EDGE_RTSP_URL` in the process environment first, or pass `--video` for a local file test. The static HTML file alone does not control a device. See `edge/README.md` for setup and limits.

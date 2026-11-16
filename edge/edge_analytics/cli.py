@@ -2,6 +2,7 @@ import argparse
 import csv
 import json
 import os
+from pathlib import Path
 import signal
 import sys
 import time
@@ -20,6 +21,7 @@ def main():
     run = commands.add_parser('run')
     run.add_argument('--video', help='Local video path; otherwise read RTSP from EDGE_RTSP_URL')
     run.add_argument('--max-frames', type=int, default=0)
+    run.add_argument('--health-file', help=argparse.SUPPRESS)
     replay = commands.add_parser('replay')
     replay.add_argument('path', help='JSONL with timestamp and normalized points')
     commands.add_parser('status')
@@ -28,6 +30,20 @@ def main():
     report = commands.add_parser('report')
     report.add_argument('--output', required=True)
     args = parser.parse_args()
+    health_path = Path(args.health_file) if args.command == 'run' and args.health_file else None
+    processed_frames, last_frame_at, last_health_write = 0, None, 0
+
+    def health(state, force=False):
+        nonlocal last_health_write
+        now = time.time()
+        if health_path and (force or now - last_health_write >= 1):
+            temporary = health_path.with_suffix('.tmp')
+            temporary.write_text(json.dumps({'state': state, 'processed_frames': processed_frames,
+                                             'last_frame_at': last_frame_at, 'updated_at': now}))
+            temporary.replace(health_path)
+            last_health_write = now
+
+    health('starting', True)
     config = load_config(args.config)
     store = EventStore(config['database'], config['queue_max_events'])
     stopped = False
@@ -102,10 +118,14 @@ def main():
                     for frame, timestamp in iterator:
                         if stopped: break
                         if frame is None:
+                            health('reconnecting', True)
                             store.add(engine.reset(timestamp))
                             continue
                         store.add(engine.update(detector.detect(frame), timestamp))
                         count += 1
+                        processed_frames = count
+                        last_frame_at = time.time()
+                        health('processing')
                         if args.max_frames and count >= args.max_frames: break
                 finally:
                     iterator.close()
@@ -113,6 +133,7 @@ def main():
             store.add(engine.reset(time.time()))
             print(json.dumps(store.status()))
     finally:
+        health('stopped', True)
         store.close()
 
 

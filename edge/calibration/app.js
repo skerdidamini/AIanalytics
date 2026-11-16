@@ -145,13 +145,25 @@ $('config-file').addEventListener('change',async(event)=>{
   }catch(e){status(`Importi dështoi: ${e.message}`,true);}
   finally{event.target.value='';}
 });
+function collectConfig() {
+  if (!$('settings').reportValidity()) throw Error('Plotëso të gjitha fushat me vlera të vlefshme.');
+  if (pending) throw Error('Përfundo vizatimin ose anulo pikën përpara ruajtjes.');
+  applyLine();ids.forEach((id)=>{config[id]=$(id).value.trim();});
+  config.zones.forEach((z)=>{z.id=z.id.trim();});validate(config);
+  return structuredClone(config);
+}
+function loadConfig(candidate) {
+  const value=structuredClone(candidate);
+  if(value.zones===undefined)value.zones=[];
+  validate(value);config=value;ids.forEach((id)=>{$(id).value=config[id];});
+  lineReady=true;pending=null;syncLineInputs();renderZones();draw();
+}
+window.CameraCalibration = { collectConfig, loadConfig };
 $('settings').addEventListener('submit',(event)=>{
   event.preventDefault();
   try{
-    if(pending)throw Error('Përfundo vizatimin ose anulo pikën përpara shkarkimit.');
-    applyLine();ids.forEach((id)=>{config[id]=$(id).value.trim();});
-    config.zones.forEach((z)=>{z.id=z.id.trim();});validate(config);
-    const blob=new Blob([JSON.stringify(config,null,2)+'\n'],{type:'application/json'});
+    const value=collectConfig();
+    const blob=new Blob([JSON.stringify(value,null,2)+'\n'],{type:'application/json'});
     const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='config.local.json';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
     status('Konfigurimi u përgatit për shkarkim. Ruaje te edge dhe rinis procesin me këtë skedar.');
   }catch(e){status(e.message,true);}

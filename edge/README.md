@@ -84,7 +84,7 @@ Përgjigjja duhet të jetë JSON: `{"accepted_event_ids":["uuid"]}`. Vetëm ID-t
 - Dwell është qëndrim i dukshëm në zonë. Humbja e track-ut shënohet `censored: true`; nuk paraqitet si vizitë e përfunduar. Ndalimi i detyruar mund të humbasë sesionin aktiv, por jo eventet e kryera në SQLite.
 - Sampling ul inferencën, por jo domosdoshmërisht koston e dekodimit. Numri i kamerave që përballon pajisja ende nuk është matur.
 - Kufiri `queue_max_events` ndalon procesin në vend që të hedhë evente pa njoftim. Eventet synced ruhen; politika e arkivimit/retention dhe monitorimi i hapësirës në disk duhen shtuar për prodhim.
-- `status` kontrollon radhën lokale; nuk është monitorim i plotë i shëndetit të kamerës/cloud.
+- `status` në CLI kontrollon radhën lokale. Paneli i pajisjes tregon edhe gjendjen e procesit dhe frame-t e përpunuar; nuk është monitorim i plotë i hardware-it/cloud.
 - Mungojnë ende deploy si shërbim/systemd ose Docker, health dashboard, menaxhimi i konfigurimit nga cloud dhe backend-i i raporteve.
 
 Testet automatike mbulojnë drejtimin, dridhjet, segmentin e kufizuar, skadimin e track-ut, dwell të plotë/të ndërprerë, persistencën, deduplikimin lokal, kapacitetin, konfirmimet e pjesshme dhe dështimin e rrjetit. Prova e videos sintetike verifikon dekodimin dhe ekzekutimin e HOG, jo saktësinë në njerëz realë. Kamera reale, saktësia dhe cloud real mbeten të patestuara.
@@ -98,3 +98,29 @@ Shkarko `config.local.json`, vendose në dosjen `edge` dhe rinis procesin me `--
 Pamja qëndron në shfletues dhe nuk përfshihet në JSON. Paneli nuk lexon stream RTSP, nuk kryen detektim dhe nuk lidhet me cloud. Nëse mbyll panelin pa eksportuar, ndryshimet nuk ruhen. Nuk ka ruajtje të fshehtë në localStorage.
 
 Test opsional i panelit me Python Playwright dhe Chromium: `python3 calibration/test_browser.py` nga dosja edge. Testi kontrollon edhe eksportin me validatorin real Python; kërkon instalimin ekzistues në `.venv`. Këto varësi të shfletuesit nuk nevojiten në Mini PC për të ekzekutuar analytics.
+
+## Paneli i pajisjes: ruaj / nis / ndalo
+
+Në Mini PC Linux (ose macOS për zhvillim), instalo/refresko paketën nga dosja `edge`:
+
+```sh
+.venv/bin/pip install -e .
+.venv/bin/ai-camera-panel --config config.local.json
+```
+
+Pastaj hap shfletuesin **në të njëjtën pajisje**, te adresa lokale që shfaq terminali (porti standard 8765). Paneli shërbehet vetëm në 127.0.0.1; nuk hapet nga telefoni përmes IP-së së Mini PC. Windows mund të përdorë kalibruesin statik, por paneli i procesit për momentin kërkon Linux/macOS.
+
+Për lidhje reale, `EDGE_RTSP_URL` duhet të jetë konfiguruar në ambientin e procesit para nisjes së panelit. Adresa nuk kërkohet në faqe dhe nuk shfaqet në përgjigjet API. Për test me video lokale:
+
+```sh
+.venv/bin/ai-camera-panel --config config.local.json --video /path/to/video.mp4
+```
+
+- **Ruaj në pajisje**: validon JSON-in dhe zëvendëson konfigurimin atomikisht. Databaza fiksohet te `events.sqlite3` në të njëjtën dosje, pavarësisht rrugës në JSON-in e importuar. Eventet ekzistuese nuk fshihen.
+- **Ruaj dhe nis analizën**: ruan fushat aktuale dhe nis worker-in Python me konfigurimin e ri. Bllokohet nëse mungon burimi ose ka proces tjetër të nisur nga ky panel.
+- **Ndalo analizën**: ndalon vetëm worker-in e nisur nga ky panel. Nëse nuk mbyllet brenda 15 sekondash, ndërpritet me forcë; një sesion aktiv mund të mbetet i paplotë, por eventet e kryera në SQLite mbeten.
+- **Statusi**: dallon nisjen, përpunimin e frame-ve, rilidhjen, statusin e vjetruar dhe ndalimin. Proces aktiv nuk do të thotë domosdoshmërisht kamerë online. Shfaq frame-t, orën e fundit të përpunimit dhe eventet lokale në pritje. “Frame i fundit” mat kohën kur u përpunua frame-i, jo freskinë e garantuar të stream-it në NVR.
+
+Ruajtja bllokohet gjatë analizës; ndalo, ndrysho dhe rinis. Për këtë version përdor vetëm një panel dhe një worker për këtë kamerë; mos nis paralelisht një `run` manual. Paneli nuk nis cloud sync dhe nuk përmirëson saktësinë e modelit HOG. Ndërrimi i `camera_id` nuk fshin historikun e kamerës së mëparshme. Mbyllja e panelit në terminal ndalon edhe worker-in; mbyllja e tab-it të shfletuesit e lë analizën në punë. Nuk ka ende autostart pas reboot-it ose ruajtje automatike të fotos.
+
+Serveri përdor kufizim Host/Origin dhe token për veprime, pa CORS të hapur. Nuk është panel publik me login; mos e ekspozo në internet ose me proxy të hapur. Testet përfshijnë ruajtje/ringarkim, konfigurim të pavlefshëm, bllokim kërkesash nga origjina të tjera, nisje reale worker-i mbi video sintetike dhe ndalim me ruajtje eventesh. Kontrolli opsional nga shfletuesi: `python3 calibration/test_panel_browser.py` nga dosja edge.
