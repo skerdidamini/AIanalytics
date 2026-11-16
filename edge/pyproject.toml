@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ai-camera-edge"
+version = "0.1.0"
+description = "Single-camera edge analytics proof of concept"
+requires-python = ">=3.10"
+dependencies = ["opencv-python-headless==4.11.0.86"]
+
+[project.scripts]
+ai-camera-edge = "edge_analytics.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["edge_analytics*"]

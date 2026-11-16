@@ -1,4 +1,4 @@
-﻿:root {
+:root {
   color-scheme: dark;
   --surface: #030b16;
   --panel: rgba(5, 16, 38, 0.85);
@@ -50,7 +50,6 @@ img {
   z-index: 30;
   background: rgba(1, 6, 15, 0.92);
   border-bottom: 1px solid var(--border);
-  backdrop-filter: blur(18px);
 }
 
 .nav-wrapper {
@@ -199,17 +198,15 @@ a:focus-visible {
   inset: 0;
   background: rgba(2, 10, 25, 0.95);
   padding: 2rem 1.5rem;
-  transform: translateX(100%);
-  transition: transform 0.4s ease;
+  overflow-y: auto;
+  overscroll-behavior: contain;
   display: flex;
   flex-direction: column;
   gap: 2rem;
   z-index: 40;
 }
 
-.nav-menu[data-open='true'] {
-  transform: translateX(0);
-}
+.nav-menu[hidden] { display: none; }
 
 .nav-menu-header {
   display: flex;
@@ -250,9 +247,9 @@ a:focus-visible {
 .hero-section {
   min-height: 78vh;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
   gap: 2.5rem;
-  padding: 3rem 0 4rem;
+  padding: 3rem 1.5rem 4rem;
   width: min(1200px, 100%);
   margin: 0 auto;
 }
@@ -577,7 +574,7 @@ section {
   border-radius: 28px;
   padding: 2.5rem;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr));
   gap: 2rem;
 }
 
@@ -720,4 +717,19 @@ section {
   .form-actions button {
     width: 100%;
   }
+}
+
+.skip-link { position: fixed; top: 0.5rem; left: 0.5rem; z-index: 100; padding: 1rem; background: var(--surface); color: var(--text-strong); transform: translateY(-200%); }
+.skip-link:focus { transform: translateY(0); }
+.btn:disabled { cursor: wait; opacity: 0.65; transform: none; }
+.panel-bars strong { display: block; font-size: 1rem; margin-top: 0.4rem; }
+@media (max-width: 600px) {
+  .nav-actions > .nav-cta { display: none; }
+  .contact-section .container { padding: 1.5rem; }
+  .contact-form { min-width: 0; }
+  .contact-form input, .contact-form select, .contact-form textarea { width: 100%; min-width: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition: none !important; animation: none !important; }
 }

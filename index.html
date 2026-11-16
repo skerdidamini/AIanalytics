@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -12,23 +12,22 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
-    <link rel="icon" href="assets/logo.png" type="image/png" />
+    <link rel="icon" href="data:," />
     <meta name="description" content="Edge-first video analytics that turns existing cameras into actionable insights for retail and hospitality teams." />
     <meta name="theme-color" content="#01040c" />
     <meta property="og:title" content="AI Camera Analytica | Edge-first Video Intelligence" />
     <meta property="og:description" content="Transform your current camera feeds into people flow, dwell-time, and zone usage intelligence without replacing infrastructure." />
-    <meta property="og:image" content="assets/logo.png" />
     <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:card" content="summary" />
     <meta name="twitter:title" content="AI Camera Analytica | Edge-first Video Intelligence" />
     <meta name="twitter:description" content="Deploy operational analytics on your existing cameras with a privacy-conscious, edge-first engine." />
   </head>
   <body>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
     <div class="page-shell">
       <header class="site-header" id="home">
         <div class="container nav-wrapper">
           <a class="logo-wrap" href="#home">
-            <img src="assets/logo.png" alt="AI Camera Analytica logo" class="logo-image" />
             <div class="logo-copy">
               <strong>AI Camera</strong>
               <span>Analytica</span>
@@ -59,10 +58,9 @@
             </button>
           </div>
         </div>
-        <div class="nav-menu" id="mobile-navigation" data-nav-menu>
+        <div class="nav-menu" id="mobile-navigation" data-nav-menu role="dialog" aria-modal="true" aria-label="Mobile navigation" hidden inert>
           <div class="nav-menu-header">
             <a class="logo-wrap compact" href="#home">
-              <img src="assets/logo.png" alt="AI Camera Analytica logo" class="logo-image" />
               <div class="logo-copy">
                 <strong>AI Camera</strong>
                 <span>Analytica</span>
@@ -92,7 +90,7 @@
         <div class="nav-backdrop" data-nav-backdrop></div>
       </header>
 
-      <main>
+      <main id="main-content">
         <section class="hero-section">
           <div class="hero-content">
             <p class="eyebrow">Edge-first video intelligence for retail &amp; hospitality</p>
@@ -133,16 +131,16 @@
             <div class="visual-panel">
               <div class="panel-header">
                 <strong>Edge-to-cloud flow</strong>
-                <span>Subtle, secure, high-availability architecture</span>
+                <span>Illustrative deployment architecture</span>
               </div>
               <div class="panel-bars">
                 <div>
-                  <span>Edge Capacity</span>
-                  <strong>98%</strong>
+                  <span>Processing</span>
+                  <strong>Local processing</strong>
                 </div>
                 <div>
-                  <span>Bandwidth Saved</span>
-                  <strong>74%</strong>
+                  <span>Cloud traffic</span>
+                  <strong>Metrics-only sync</strong>
                 </div>
               </div>
             </div>
@@ -430,37 +428,25 @@
             <div class="contact-details">
               <p class="eyebrow">Request a Demo</p>
               <h2>Talk with the team</h2>
-              <p>Tell us about your locations, cameras, and reporting needs—we respond within one business day.</p>
-              <ul class="contact-meta">
-                <li>
-                  <strong>Email:</strong>
-                  <span>contact@aicameraanalytica.com</span>
-                  <small>(placeholder—update before launch)</small>
-                </li>
-                <li>
-                  <strong>Phone:</strong>
-                  <span>+1 (555) 010-2300</span>
-                  <small>(placeholder—replace with your published number)</small>
-                </li>
-              </ul>
-              <p class="contact-note">Need a faster reply? Send your files and questions to the email above once you replace the placeholder details.</p>
+              <p>Tell us about your locations, cameras, and reporting needs.</p>
+              <p class="contact-note">Use the form to tell us about your project and how we can reach you.</p>
             </div>
-            <form class="contact-form" id="contact-form" novalidate>
+            <form class="contact-form" id="contact-form" data-formspree-endpoint="https://formspree.io/f/mrpqprab" novalidate>
               <label>
                 Full Name
-                <input type="text" name="name" required />
+                <input type="text" name="name" autocomplete="name" required />
               </label>
               <label>
                 Company Name
-                <input type="text" name="company" required />
+                <input type="text" name="company" autocomplete="organization" required />
               </label>
               <label>
                 Email
-                <input type="email" name="email" required />
+                <input type="email" name="email" autocomplete="email" required />
               </label>
               <label>
                 Phone
-                <input type="tel" name="phone" />
+                <input type="tel" name="phone" autocomplete="tel" />
               </label>
               <label>
                 Industry
@@ -489,7 +475,6 @@
         <div class="container footer-grid">
           <div>
             <a class="logo-wrap footer-logo" href="#home">
-              <img src="assets/logo.png" alt="AI Camera Analytica logo" class="logo-image" />
               <div class="logo-copy">
                 <strong>AI Camera</strong>
                 <span>Analytica</span>
@@ -511,8 +496,7 @@
           </div>
           <div>
             <h3>Contact</h3>
-            <p>Email: hello@aicameraanalytica.com</p>
-            <p>Phone: +1 (555) 010-2300</p>
+            <p><a href="#contact">Request a demo through our contact form</a></p>
             <p>© 2026 AI Camera Analytica. All rights reserved.</p>
           </div>
         </div>

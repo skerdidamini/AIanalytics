@@ -1,0 +1,9 @@
+.venv/
+__pycache__/
+*.sqlite3*
+config.local.json
+*.mp4
+*.avi
+*.egg-info/
+build/
+dist/
