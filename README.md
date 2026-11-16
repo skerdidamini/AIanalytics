@@ -59,3 +59,7 @@ The owner UI now includes table/service sections, per-zone observed dwell and a 
 ## Extended installer calibration
 
 Use **NIS-KALIBRIMIN-WINDOWS.cmd** or `python3 start-calibration.py` to open local image/video calibration without installing the inference stack. Supports typed zones, service-to-table links, manual uniform color samples, geometry-only crossing tests and versioned metadata. Automatic staff classification/service measurement is not active. See [edge/calibration/README.md](edge/calibration/README.md).
+
+## Product appearance
+
+The owner dashboard now uses a light theme with white cards, navy structure and restrained teal actions; the installer calibration tool keeps a coordinated dark theme. See [design notes and demo previews](docs/DESIGN.md). The preview images contain synthetic data only.

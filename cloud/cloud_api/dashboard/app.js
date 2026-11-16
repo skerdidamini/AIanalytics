@@ -39,18 +39,22 @@ function chart(rows){
   const values=[...hours].sort((a,b)=>a[0].localeCompare(b[0]));
   const group=Math.ceil(values.length/60),buckets=[];
   for(let i=0;i<values.length;i+=group){const chunk=values.slice(i,i+group);buckets.push({time:chunk[0][0],end:chunk.at(-1)[0],entries:chunk.reduce((s,[,v])=>s+v.entries,0),exits:chunk.reduce((s,[,v])=>s+v.exits,0)});}
-  const maximum=Math.max(1,...buckets.flatMap((b)=>[b.entries,b.exits]));
-  svg('line',{x1:40,y1:230,x2:945,y2:230,stroke:'#35485f'});
-  const width=900/buckets.length;
+  const maximum=Math.max(4,Math.ceil(Math.max(...buckets.flatMap((b)=>[b.entries,b.exits]))/4)*4);
+  for(let i=0;i<=4;i++){const y=230-i*190/4;svg('line',{x1:80,y1:y,x2:945,y2:y,stroke:'var(--chart-grid)'});svg('text',{x:68,y:y+4,class:'chart-y-label',fill:'var(--chart-text)','font-size':11,'text-anchor':'end'},format.format(maximum*i/4));}
+  const width=860/buckets.length,labelEvery=Math.max(1,Math.ceil(buckets.length/5)),lastLabel=Math.floor((buckets.length-1)/labelEvery)*labelEvery;
   buckets.forEach((b,i)=>{
     ['entries','exits'].forEach((key,j)=>{
       const height=b[key]/maximum*190;
-      const bar=svg('rect',{x:40+i*width+j*width*.4,y:230-height,width:Math.max(1,width*.35),height,fill:j?'#38edbd':'#78baff'});
+      const barWidth=Math.max(1,Math.min(18,width*.32)),center=80+(i+.5)*width;
+      const bar=svg('rect',{x:j?center+2:center-barWidth-2,y:230-height,width:barWidth,height,rx:3,fill:j?'var(--chart-exit)':'var(--chart-entry)'});
       bar.append(Object.assign(document.createElementNS('http://www.w3.org/2000/svg','title'),{textContent:`${dateFormat.format(new Date(b.time))}–${dateFormat.format(new Date(b.end))}: ${b.entries} hyrje / ${b.exits} dalje`}));
     });
-    if(i%Math.max(1,Math.ceil(buckets.length/5))===0)svg('text',{x:40+i*width,y:255,fill:'#a1b6ce','font-size':11},dateFormat.format(new Date(b.time)));
+    if(i%labelEvery===0){
+      const x=80+(i+.5)*width;
+      svg('text',{x,y:255,class:'axis-label-desktop',fill:'var(--chart-text)','font-size':11,'text-anchor':'middle'},dateFormat.format(new Date(b.time)));
+      if(i===0||i===lastLabel||i%(labelEvery*2)===0)svg('text',{x,y:263,class:'axis-label-mobile',fill:'var(--chart-text)','text-anchor':i===0&&lastLabel>0?'start':i===lastLabel&&lastLabel>0?'end':'middle'},new Intl.DateTimeFormat('sq-AL',{day:'2-digit',month:'2-digit'}).format(new Date(b.time)));
+    }
   });
-  svg('text',{x:5,y:30,fill:'#a1b6ce','font-size':12},maximum);
   $('chart').removeAttribute('hidden');$('chart-empty').hidden=true;
   $('chart').setAttribute('aria-label',`Grafiku me ${buckets.length} intervale; ${group>1?'disa orë janë bashkuar për lexueshmëri':'intervale orare'}. Detajet janë në tabelë.`);
 }
