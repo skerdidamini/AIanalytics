@@ -117,3 +117,26 @@ class Database:
             cameras=[dict(row) for row in db.execute('SELECT location_id,node_id,id FROM cameras WHERE organization_id=? ORDER BY location_id,node_id,id',(organization,))]
             return {'locations':locations,'cameras':cameras}
         finally:db.close()
+
+    def zones(self, organization, start, end, location=None, camera=None, node=None):
+        conditions=['organization_id=?','timestamp>=?','timestamp<?']
+        args=[organization,start,end]
+        for field,value in [('location_id',location),('camera_id',camera),('node_id',node)]:
+            if value is not None:conditions.append(field+'=?');args.append(value)
+        query='''WITH scoped AS (SELECT * FROM events WHERE '''+' AND '.join(conditions)+'''), observations AS (
+          SELECT location_id,node_id,camera_id,json_extract(payload,'$.details.zone_id') AS zone_id,
+          type,json_extract(payload,'$.details.censored') AS censored,
+          json_extract(payload,'$.details.duration_seconds') AS duration,NULL AS visible
+          FROM scoped WHERE type IN ('dwell_time_completed','zone_crossed')
+          UNION ALL
+          SELECT s.location_id,s.node_id,s.camera_id,z.key,NULL,NULL,NULL,z.value
+          FROM scoped s,json_each(s.payload,'$.details.zones') z WHERE s.type='occupancy_snapshot'
+        ) SELECT location_id,node_id,camera_id,zone_id,
+          sum(CASE WHEN type='dwell_time_completed' AND censored=0 THEN 1 ELSE 0 END) AS completed_sessions,
+          sum(CASE WHEN type='dwell_time_completed' AND censored=1 THEN 1 ELSE 0 END) AS interrupted_sessions,
+          sum(CASE WHEN type='dwell_time_completed' AND censored=0 THEN duration ELSE 0 END) AS observed_dwell_seconds,
+          max(visible) AS peak_visible_persons
+          FROM observations GROUP BY location_id,node_id,camera_id,zone_id ORDER BY location_id,node_id,camera_id,zone_id'''
+        db=self.connect()
+        try:return [dict(row) for row in db.execute(query,args)]
+        finally:db.close()

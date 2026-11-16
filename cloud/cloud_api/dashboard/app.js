@@ -1,10 +1,10 @@
 'use strict';
 const $=(id)=>document.getElementById(id);
-let inventory={locations:[],cameras:[]}, query=null, loading=false, revision=0;
+let inventory={locations:[],cameras:[]}, query=null, loading=false, revision=0, zoneRows=[], takeawayChoice='';
 const format=new Intl.NumberFormat('sq-AL');
 const dateFormat=new Intl.DateTimeFormat('sq-AL',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
 function message(text,error=false){$('status').textContent=text;$('status').classList.toggle('error',error);}
-function loginView(){revision++;loading=false;$('refresh').disabled=false;document.querySelectorAll('#filters input,#filters select').forEach((e)=>{e.disabled=false;});query=null;$('dashboard').hidden=true;$('login-view').hidden=false;$('password').value='';$('download').disabled=true;}
+function loginView(){takeawayChoice='';revision++;loading=false;$('refresh').disabled=false;document.querySelectorAll('#filters input,#filters select').forEach((e)=>{e.disabled=false;});query=null;$('dashboard').hidden=true;$('login-view').hidden=false;$('password').value='';$('download').disabled=true;}
 async function api(url,options={}){
   const response=await fetch(url,{...options,credentials:'same-origin',signal:AbortSignal.timeout(20000)});
   if(response.status===401){loginView();throw Error('Hyr përsëri në llogari.');}
@@ -29,7 +29,7 @@ function selectedQuery(){
   return params;
 }
 function element(tag,text){const e=document.createElement(tag);e.textContent=text;return e;}
-function clear(){$('peak-note').textContent=$('camera').value?'Maksimumi i snapshot-eve të kamerës':'Zgjidh një kamerë për këtë matje';['entries','exits','dwell','peak'].forEach((id)=>{$(id).textContent='—';});$('rows').replaceChildren();$('chart').replaceChildren();$('chart').setAttribute('hidden','');$('chart-empty').hidden=false;$('row-count').textContent='';}
+function clear(){clearRestaurant();$('peak-note').textContent=$('camera').value?'Maksimumi i snapshot-eve të kamerës':'Zgjidh një kamerë për këtë matje';['entries','exits','dwell','peak'].forEach((id)=>{$(id).textContent='—';});$('rows').replaceChildren();$('chart').replaceChildren();$('chart').setAttribute('hidden','');$('chart-empty').hidden=false;$('row-count').textContent='';}
 function svg(tag,attrs,text){const e=document.createElementNS('http://www.w3.org/2000/svg',tag);Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));if(text!==undefined)e.textContent=text;$('chart').append(e);return e;}
 function chart(rows){
   $('chart').replaceChildren();
@@ -67,10 +67,48 @@ function render(rows){
   rows.slice(0,200).forEach((r)=>{const tr=document.createElement('tr');[dateFormat.format(new Date(r.hour_utc)),`${r.location_id} / ${r.camera_id} (${r.node_id})`,r.entries,r.exits,r.completed_zone_dwell_sessions].forEach((v)=>tr.append(element('td',String(v))));fragment.append(tr);});
   $('rows').append(fragment);$('row-count').textContent=`${format.format(rows.length)} rreshta orarë${rows.length>200?' · Shfaqen 200 të parët; CSV përmban të gjithë.':''}`;chart(rows);
 }
+function clearRestaurant(){
+  zoneRows=[];$('zone-rows').replaceChildren();$('zones-status').textContent='Nuk ka të dhëna zone të ngarkuara.';
+  $('takeaway-zone').replaceChildren(new Option('Zgjidh zonën e takeaway',''));$('takeaway-dwell').textContent='—';$('download-zones').disabled=true;
+  $('takeaway-note').textContent='Zgjidh zonën nga të dhënat e kamerës. Kjo zgjedhje vlen për pamjen aktuale; nuk ndryshon kalibrimin.';
+}
+function zoneKey(row){return JSON.stringify([row.location_id,row.node_id,row.camera_id,row.zone_id]);}
+function duration(seconds){return `${(seconds/60).toLocaleString('sq-AL',{maximumFractionDigits:1})} min`;}
+function takeaway(){
+  const row=zoneRows.find((r)=>zoneKey(r)===$('takeaway-zone').value);
+  takeawayChoice=$('takeaway-zone').value;
+  $('takeaway-dwell').textContent=row&&row.completed_sessions?duration(row.observed_dwell_seconds/row.completed_sessions):'—';
+  $('takeaway-note').textContent=row?`${row.location_id} / ${row.camera_id} / ${row.zone_id} · ${format.format(row.completed_sessions)} sesione të plota dhe ${format.format(row.interrupted_sessions)} të ndërprera. Pa dallim klient/staf.`:'Zgjidh zonën nga të dhënat e kamerës. Kjo zgjedhje vlen për pamjen aktuale; nuk ndryshon kalibrimin.';
+}
+function renderZones(rows){
+  zoneRows=rows;$('zone-rows').replaceChildren();
+  $('takeaway-zone').replaceChildren(new Option('Zgjidh zonën e takeaway',''));
+  const fragment=document.createDocumentFragment();
+  rows.forEach((r,index)=>{
+    $('takeaway-zone').add(new Option(`${r.zone_id} · ${r.location_id} / ${r.camera_id} (${r.node_id})`,zoneKey(r)));
+    if(index>=200)return;
+    const tr=document.createElement('tr');
+    [r.zone_id,`${r.location_id} / ${r.camera_id} (${r.node_id})`,r.completed_sessions?duration(r.observed_dwell_seconds/r.completed_sessions):'—',format.format(r.completed_sessions),format.format(r.interrupted_sessions)].forEach((value)=>tr.append(element('td',value)));
+    fragment.append(tr);
+  });
+  $('zone-rows').append(fragment);
+  $('zones-status').textContent=rows.length?`${format.format(rows.length)} zona me evente${rows.length>200?' · Shfaqen 200 të parat; CSV i përfshin të gjitha.':''}. Pritja e shërbimit dhe përqindja e përdorimit ende nuk maten.`:'Nuk ka evente zonash për këta filtra. Kjo nuk provon se tavolinat nuk janë përdorur.';
+  $('takeaway-zone').value=rows.some((r)=>zoneKey(r)===takeawayChoice)?takeawayChoice:'';
+  $('download-zones').disabled=!rows.length;takeaway();
+}
+$('takeaway-zone').addEventListener('change',takeaway);
+$('download-zones').addEventListener('click',()=>{
+  if(!zoneRows.length)return;
+  const columns=['location_id','node_id','camera_id','zone_id','completed_sessions','interrupted_sessions','observed_dwell_seconds','average_observed_dwell_seconds'];
+  function cell(value){let text=String(value??'');if(typeof value==='string'&&/^[\s]*[=+@-]/.test(text))text="'"+text;return '"'+text.replaceAll('"','""')+'"';}
+  const lines=[columns.map(cell).join(','),...zoneRows.map((r)=>columns.map((key)=>cell(key==='average_observed_dwell_seconds'?(r.completed_sessions?r.observed_dwell_seconds/r.completed_sessions:null):r[key])).join(','))];
+  const url=URL.createObjectURL(new Blob(['\uFEFF'+lines.join('\r\n')],{type:'text/csv;charset=utf-8'}));
+  const a=document.createElement('a');a.href=url;a.download='raporti-zonave.csv';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+});
 async function load(){
   if(loading)return;const version=++revision;loading=true;document.querySelectorAll('#filters input,#filters select').forEach((e)=>{e.disabled=true;});$('refresh').disabled=true;$('download').disabled=true;query=null;clear();message('Duke ngarkuar të dhënat…');
-  try{const params=selectedQuery();const response=await api('/v1/metrics/hourly?'+params);const data=await response.json();if(version!==revision)return;render(data.rows);query=params;$('download').disabled=false;message(data.rows.length?'Të dhënat u përditësuan.':'Nuk ka evente për periudhën dhe filtrat e zgjedhur.');}
-  catch(e){if(version===revision)message(e.message,true);}
+  try{const params=selectedQuery();const responses=await Promise.all([api('/v1/metrics/hourly?'+params),api('/v1/metrics/zones?'+params)]);const [data,zones]=await Promise.all(responses.map((r)=>r.json()));if(version!==revision)return;render(data.rows);renderZones(zones.rows);query=params;$('download').disabled=false;message(data.rows.length?'Të dhënat u përditësuan.':'Nuk ka evente për periudhën dhe filtrat e zgjedhur.');}
+  catch(e){if(version===revision){message(e.message,true);$('zones-status').textContent='Nuk u ngarkuan të dhënat e zonave. Provo përsëri.';}}
   finally{if(version===revision){loading=false;$('refresh').disabled=false;document.querySelectorAll('#filters input,#filters select').forEach((e)=>{e.disabled=false;});}}
 }
 async function enter(){

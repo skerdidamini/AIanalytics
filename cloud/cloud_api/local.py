@@ -59,6 +59,8 @@ def seed_demo(database,organization,now=None):
             for i in range(max(0,count-2)):add('person_exited',f'exit-{i}',{'track_id':f'demo-{hour}-{i}'})
             add('occupancy_snapshot','occupancy',{'visible_persons':count//2,'zones':{'demo-zone':count//3},'scope':'camera_visible_only'})
             for i in range(2):add('dwell_time_completed',f'dwell-{i}',{'track_id':f'demo-{hour}-{i}','zone_id':'demo-zone','duration_seconds':float(120+hour*20+i*30),'completion':'zone_exit','censored':False})
+            for zone_id,seconds in [('Zone1',600+hour*20),('Zone2',900+hour*30),('Takeaway',120+hour*5)]:
+                add('dwell_time_completed','restaurant-zone-'+zone_id,{'track_id':'demo-'+zone_id,'zone_id':zone_id,'duration_seconds':float(seconds),'completion':'zone_exit','censored':False})
     for index in range(0,len(events),100):database.ingest(principal,events[index:index+100])
     return len(events)
 

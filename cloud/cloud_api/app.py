@@ -91,6 +91,16 @@ def create_app(database_path, secure_cookies=True, demo=False):
                 node_id: str | None = Query(default=None,max_length=128), identity=Depends(role('reader'))):
         return {'timezone':'UTC','start':start,'end':end,'rows':report_rows(start,end,location_id,camera_id,identity,node_id)}
 
+    @app.get('/v1/metrics/zones')
+    def zone_metrics(start: float = Query(ge=0,allow_inf_nan=False), end: float = Query(ge=0,allow_inf_nan=False),
+                     location_id: str | None = Query(default=None,max_length=128), camera_id: str | None = Query(default=None,max_length=128),
+                     node_id: str | None = Query(default=None,max_length=128), identity=Depends(role('reader'))):
+        if not 0 <= start < end or end-start > 31*86400:
+            raise HTTPException(422,'Use a positive UTC time range of at most 31 days; end is exclusive')
+        return {'start':start,'end':end,'rows':database.zones(identity['organization_id'],start,end,location_id,camera_id,node_id),
+                'measurement':'observed_person_tracks',
+                'capabilities':{'staff_first_approach':False,'order_delivery':False,'table_group_sessions':False,'table_utilization':False}}
+
     @app.get('/v1/reports/hourly.csv')
     def report(start: float = Query(ge=0,allow_inf_nan=False), end: float = Query(ge=0,allow_inf_nan=False),
                location_id: str | None = Query(default=None,max_length=128), camera_id: str | None = Query(default=None,max_length=128),

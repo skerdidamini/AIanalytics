@@ -54,6 +54,19 @@ D.ingest(p,events)
             expect(page.locator('#chart')).to_be_visible()
             assert 'business-b' not in page.locator('#dashboard').inner_text()
             assert 'site-b' not in page.locator('#location').inner_text()
+            expect(page.locator('#zone-rows tr')).to_have_count(1)
+            expect(page.locator('#zone-rows')).to_contain_text('zone-a')
+            assert page.locator('.service-grid strong').all_inner_texts()==['—']*4
+            takeaway=page.locator('#takeaway-zone option').nth(1).get_attribute('value')
+            page.locator('#takeaway-zone').select_option(takeaway)
+            expect(page.locator('#takeaway-dwell')).to_contain_text('2')
+            expect(page.locator('#takeaway-note')).to_contain_text('Pa dallim klient/staf')
+            with page.expect_download() as download:page.locator('#download-zones').click()
+            zone_file=Path(temp)/'zones.csv';download.value.save_as(zone_file)
+            zone_rows=list(csv.DictReader(io.StringIO(zone_file.read_text(encoding='utf-8-sig'))))
+            assert zone_rows[0]['zone_id']=='zone-a'
+            assert float(zone_rows[0]['average_observed_dwell_seconds'])==120
+
             for width in [320,390,768,1440]:
                 page.set_viewport_size({'width':width,'height':1000})
                 assert page.evaluate('document.documentElement.scrollWidth===innerWidth'),width
@@ -73,6 +86,9 @@ D.ingest(p,events)
             expect(page.locator('#status')).to_contain_text('Nuk ka evente')
             expect(page.locator('#entries')).to_have_text('—')
             expect(page.locator('#chart-empty')).to_be_visible()
+            expect(page.locator('#zone-rows tr')).to_have_count(0)
+            expect(page.locator('#takeaway-dwell')).to_have_text('—')
+            expect(page.locator('#download-zones')).to_be_disabled()
             page.locator('#start').fill('2020-02-01');page.locator('#end').fill('2020-01-02');page.locator('#refresh').click()
             expect(page.locator('#status')).to_have_class('error')
             page.locator('#logout').click();expect(page.locator('#login-view')).to_be_visible()

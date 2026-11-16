@@ -23,7 +23,7 @@ Hap me dy klikime **NIS-DEMO-WINDOWS.cmd**.
 - Hap automatikisht shfletuesin. Nëse nuk hapet, shkruaj `http://127.0.0.1:8080` në shfletuesin e të njëjtit PC.
 - Hyr me emailin/fjalëkalimin që sapo zgjodhe.
 
-Dashboard-i ka shënimin **MODALITET DEMO** dhe të dhëna të simuluara për ditët e fundit. Nuk janë rezultate nga kamera dhe nuk dërgohen në ndonjë server publik. Mund të provosh datat, filtrat, grafikun, përmbledhjet dhe CSV-në.
+Dashboard-i ka shënimin **MODALITET DEMO** dhe të dhëna të simuluara për ditët e fundit. Nuk janë rezultate nga kamera dhe nuk dërgohen në ndonjë server publik. Mund të provosh datat, filtrat, grafikun, përmbledhjet dhe CSV-në. Për bar/restorant ka edhe shembuj `Zone1`, `Zone2` dhe `Takeaway`, tabelë qëndrimi të vëzhguar dhe CSV zonash. Kartat e pritjes së kamarierit/porosisë, qëndrimit të grupit dhe përdorimit të tavolinës shënohen ende të pamatura; këto funksione edge nuk janë ndërtuar.
 
 ## 4. Mbaje terminalin hapur
 

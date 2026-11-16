@@ -40,6 +40,9 @@ for name,org in [('demo','demo-business'),('local','real-business')]:
                     expect(page.locator('#demo-banner')).to_be_visible()
                     expect(page.locator('#entries')).not_to_have_text('—')
                     expect(page.locator('#chart')).to_be_visible()
+                    expect(page.locator('#zone-rows')).to_contain_text('Zone1')
+                    expect(page.locator('#zone-rows')).to_contain_text('Zone2')
+                    expect(page.locator('#zone-rows')).to_contain_text('Takeaway')
                 else:
                     expect(page.locator('#demo-banner')).to_be_hidden()
                     expect(page.locator('#status')).to_contain_text('Nuk ka evente')

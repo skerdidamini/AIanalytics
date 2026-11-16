@@ -46,8 +46,12 @@ After installing the edge package, run `ai-camera-panel --config config.local.js
 
 ## Minimal cloud backend
 
-The `cloud/` directory contains a FastAPI ingestion service, device-scoped credentials, persistent SQLite storage, deduplication, organization-scoped hourly metrics and CSV reports. See [cloud/README.md](cloud/README.md). Twenty-one backend tests passed, including actual edge-to-API HTTPS sync with duplicate retries. This backend has not been deployed publicly; owner login/dashboard are now included; public deployment and report email remain pending.
+The `cloud/` directory contains a FastAPI ingestion service, device-scoped credentials, persistent SQLite storage, deduplication, organization-scoped hourly metrics and CSV reports. See [cloud/README.md](cloud/README.md). Twenty-four backend tests passed, including actual edge-to-API HTTPS sync with duplicate retries. This backend has not been deployed publicly; owner login/dashboard are now included; public deployment and report email remain pending.
 
 ## Owner dashboard
 
 The cloud server now serves an Albanian owner dashboard at `/`, with email/password login, organization-scoped filters, hourly traffic chart, zone dwell summary and authorized CSV downloads. Create an owner account using the cloud CLI; see `cloud/README.md`. It requires the running backend, not opening the HTML file directly. It has been tested locally with synthetic data, not deployed publicly.
+
+## Restaurant dashboard
+
+The owner UI now includes table/service sections, per-zone observed dwell and a selectable takeaway area with separate zone CSV export. First waiter approach, order delivery, group table sessions and table utilization remain explicitly unmeasured until the corresponding edge/POS logic exists. Local demo includes `Zone1`, `Zone2` and `Takeaway` synthetic data. See `cloud/README.md` for metric definitions.
