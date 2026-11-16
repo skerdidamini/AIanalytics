@@ -75,6 +75,7 @@ async function load(){
 }
 async function enter(){
   const me=await(await api('/v1/me')).json();inventory=await(await api('/v1/inventory')).json();
+  $('demo-banner').hidden=!me.demo;
   $('identity').textContent=`Biznesi: ${me.organization_id}${me.email?' · '+me.email:''}`;
   $('location').replaceChildren(new Option('Të gjitha lokacionet',''));inventory.locations.forEach((id)=>$('location').add(new Option(id,id)));cameras();dates();
   $('timezone').textContent=`Datat dhe orët shfaqen sipas ${Intl.DateTimeFormat().resolvedOptions().timeZone}. Agregimet bazë në server janë në UTC.`;

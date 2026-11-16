@@ -17,7 +17,7 @@ from . import accounts
 MAX_BODY = 1024 * 1024
 
 
-def create_app(database_path, secure_cookies=True):
+def create_app(database_path, secure_cookies=True, demo=False):
     database = Database(database_path)
     accounts.initialize(database)
     app = FastAPI(title='AI Camera Analytica — Cloud MVP', version='0.1.0')
@@ -141,7 +141,7 @@ def create_app(database_path, secure_cookies=True):
 
     @app.get('/v1/me')
     def me(identity=Depends(role('reader'))):
-        return {'organization_id':identity['organization_id'],'email':identity.get('email')}
+        return {'organization_id':identity['organization_id'],'email':identity.get('email'),'demo':demo}
 
     @app.get('/v1/inventory')
     def inventory(identity=Depends(role('reader'))):

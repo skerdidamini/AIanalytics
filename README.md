@@ -1,3 +1,7 @@
+## Try the owner dashboard on Windows
+
+See [FILLIMI-WINDOWS.md](FILLIMI-WINDOWS.md). Extract the full ZIP and double-click **NIS-DEMO-WINDOWS.cmd**. Requires Python 3.10+ (recommended 3.12) and Internet for first-time dependency installation. Creates your own account and starts an isolated, explicitly marked demo. **NIS-REAL-WINDOWS.cmd** uses a separate empty database. Nothing is deployed publicly by these scripts.
+
 # AI Camera Analytica
 
 Static marketing site built with HTML, CSS and JavaScript. This repository does not contain the video analytics engine or a dashboard.
@@ -42,7 +46,7 @@ After installing the edge package, run `ai-camera-panel --config config.local.js
 
 ## Minimal cloud backend
 
-The `cloud/` directory contains a FastAPI ingestion service, device-scoped credentials, persistent SQLite storage, deduplication, organization-scoped hourly metrics and CSV reports. See [cloud/README.md](cloud/README.md). Eighteen backend tests passed, including actual edge-to-API HTTPS sync with duplicate retries. This backend has not been deployed publicly; owner login/dashboard are now included; public deployment and report email remain pending.
+The `cloud/` directory contains a FastAPI ingestion service, device-scoped credentials, persistent SQLite storage, deduplication, organization-scoped hourly metrics and CSV reports. See [cloud/README.md](cloud/README.md). Twenty-one backend tests passed, including actual edge-to-API HTTPS sync with duplicate retries. This backend has not been deployed publicly; owner login/dashboard are now included; public deployment and report email remain pending.
 
 ## Owner dashboard
 

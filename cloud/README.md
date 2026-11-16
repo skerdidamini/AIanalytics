@@ -111,7 +111,7 @@ Timestamp-et më shumë se 5 minuta në të ardhmen refuzohen. Eventet e vjetra 
 .venv/bin/pip check
 ```
 
-18 teste: deduplikim, konfirmim, role, izolim biznesesh/node-sh/kamerash, rollback, kufij batch-i, schema, qëndrim i ndërprerë, persistencë, revokim dhe CSV. Testi integrues përdor evente të gjeneruara nga `edge_analytics.Analytics`, radhën SQLite dhe funksionin real `sync_batch` kundër Uvicorn HTTPS. Simulon commit me konfirmim të humbur, ridërgon dhe verifikon vetëm 1 hyrje në raport. Përdor certifikatë provë të besuar shprehimisht brenda testit; verifikimi TLS dhe hostname mbeten aktivë. Kërkon `openssl` dhe dosjen edge pranë cloud.
+21 teste: deduplikim, konfirmim, role, izolim biznesesh/node-sh/kamerash, rollback, kufij batch-i, schema, qëndrim i ndërprerë, persistencë, revokim dhe CSV. Testi integrues përdor evente të gjeneruara nga `edge_analytics.Analytics`, radhën SQLite dhe funksionin real `sync_batch` kundër Uvicorn HTTPS. Simulon commit me konfirmim të humbur, ridërgon dhe verifikon vetëm 1 hyrje në raport. Përdor certifikatë provë të besuar shprehimisht brenda testit; verifikimi TLS dhe hostname mbeten aktivë. Kërkon `openssl` dhe dosjen edge pranë cloud.
 
 ## Para përdorimit publik
 
@@ -148,3 +148,9 @@ Fjalëkalimet përdorin PBKDF2-HMAC-SHA256 me kripë të rastësishme dhe 600000
 Në HTTP lokal/loopback CLI përdor cookie jo-Secure vetëm për zhvillim. Me TLS direkt cookie bëhet Secure. Në prodhim pas reverse proxy HTTPS nise patjetër me **`--secure-cookies`**, ruaj Host-in origjinal dhe mos lejo akses publik direkt te porti HTTP i backend-it. Login/logout kontrollojnë Origin dhe nuk lejojnë kërkesa nga faqe të tjera. API-të ekzistuese vazhdojnë të pranojnë token-at teknikë; sesioni i pronarit ka vetëm rol reader dhe nuk mund të dërgojë evente edge.
 
 Testet e llogarive mbulojnë cookie-t, daljen/revokimin, skadimin, kufizimin e tentativave, Origin dhe izolimin e inventarit. Test opsional i shfletuesit (Playwright/Chromium): `python3 tests/browser_dashboard.py` nga dosja cloud. Ai përdor databazë dhe evente sintetike të përkohshme; nuk fut të dhëna demonstrative në databazën e përdoruesit. Dashboard-i ende nuk është deploy-uar publikisht dhe llogaritë reale duhen krijuar nga administratori.
+
+## Provë në PC Windows pa hosting
+
+Udhëzuesi [FILLIMI-WINDOWS.md](../FILLIMI-WINDOWS.md) dhe skriptet në rrënjën e projektit përgatisin `.venv` dhe nisin serverin në loopback. Demo përdor `runtime/demo.sqlite3`, krijon llogarinë e zgjedhur nga përdoruesi dhe evente sintetike idempotente për ditët e fundit. `/v1/me` shënon modalitetin demo dhe UI shfaq banner të qartë. Mënyra reale përdor `runtime/local.sqlite3` pa seed. Të dyja databazat dhe sesionet qëndrojnë lokale, jashtë Git. Demo nuk lidhet me kamerë dhe nuk krijon pagesa hosting.
+
+Testet shtesë mbulojnë krijimin e llogarisë, seed të përsëritur pa dublikime dhe ndarjen demo/reale. Kontrolli opsional i runtime-it lokal: `python3 tests/browser_local.py`. Nisja Python u provua në Linux; wrapper-i Windows `.cmd` pret verifikim në PC real Windows.
