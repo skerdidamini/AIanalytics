@@ -1,6 +1,6 @@
 # AI Camera Analytica — Cloud API minimale
 
-Kjo pjesë pranon **eventet** nga Mini PC dhe i kthen në të dhëna raportimi. Nuk merr RTSP, video, foto ose identitete njerëzish. Nuk ka ende dashboard, login përdoruesish ose raportim me email.
+Kjo pjesë pranon **eventet** nga Mini PC dhe i kthen në të dhëna raportimi. Nuk merr RTSP, video, foto ose identitete njerëzish. Përfshin edhe dashboard-in fillestar të pronarit me hyrje email/fjalëkalim. Raportimi me email mbetet për fazën pasuese.
 
 Rrjedha: **kamera → edge → radhë lokale → HTTPS API → databazë qendrore → metrika/CSV**. Kur interneti bie, edge vazhdon ruajtjen lokale. Kur kthehet, ridërgon eventet; cloud-i deduplifikon UUID-të.
 
@@ -111,10 +111,40 @@ Timestamp-et më shumë se 5 minuta në të ardhmen refuzohen. Eventet e vjetra 
 .venv/bin/pip check
 ```
 
-12 teste: deduplikim, konfirmim, role, izolim biznesesh/node-sh/kamerash, rollback, kufij batch-i, schema, qëndrim i ndërprerë, persistencë, revokim dhe CSV. Testi integrues përdor evente të gjeneruara nga `edge_analytics.Analytics`, radhën SQLite dhe funksionin real `sync_batch` kundër Uvicorn HTTPS. Simulon commit me konfirmim të humbur, ridërgon dhe verifikon vetëm 1 hyrje në raport. Përdor certifikatë provë të besuar shprehimisht brenda testit; verifikimi TLS dhe hostname mbeten aktivë. Kërkon `openssl` dhe dosjen edge pranë cloud.
+18 teste: deduplikim, konfirmim, role, izolim biznesesh/node-sh/kamerash, rollback, kufij batch-i, schema, qëndrim i ndërprerë, persistencë, revokim dhe CSV. Testi integrues përdor evente të gjeneruara nga `edge_analytics.Analytics`, radhën SQLite dhe funksionin real `sync_batch` kundër Uvicorn HTTPS. Simulon commit me konfirmim të humbur, ridërgon dhe verifikon vetëm 1 hyrje në raport. Përdor certifikatë provë të besuar shprehimisht brenda testit; verifikimi TLS dhe hostname mbeten aktivë. Kërkon `openssl` dhe dosjen edge pranë cloud.
 
 ## Para përdorimit publik
 
 Ky version është testuar lokalisht dhe **nuk është deploy-uar në një cloud publik**. Ende duhen server/domain, certifikatë reale HTTPS ose reverse proxy, secrets në shërbim, backup/restore, monitorim, rate limiting në hyrje, autostart dhe politikë arkivimi. SQLite është për një instancë pilot me disk persistent lokal; PostgreSQL dhe migrimet duhen para zgjerimit në disa instanca. Mos e vendos databazën në filesystem efemer. Për eksport live/backup përdor SQLite backup API ose snapshot konsistent; mos kopjo vetëm skedarin kryesor ndërsa WAL është aktiv.
 
-Mungojnë ende llogaritë e përdoruesve, paneli i biznesit, PDF, dërgimi i raporteve me email, menaxhimi në distancë i pajisjeve dhe monitorimi i shëndetit të tyre. Token-at reader janë akses teknik provizor, jo sistem login për klientë finalë. API nuk aktivizon CORS të hapur dhe nuk kërkon që token-at të futen në faqen publike.
+Mungojnë ende rikuperimi/ndryshimi i fjalëkalimit nga përdoruesi, verifikimi i emailit, MFA, menaxhimi i përdoruesve nga UI, PDF, dërgimi i raporteve me email, menaxhimi në distancë i pajisjeve dhe monitorimi i shëndetit të tyre. Token-at reader mbeten për akses teknik; pronari përdor llogarinë e vet dhe sesionin e shfletuesit. API nuk aktivizon CORS të hapur dhe nuk kërkon që token-at të futen në faqen publike.
+
+## Dashboard-i i pronarit
+
+Dashboard-i shërbehet te rruga kryesore `/` e backend-it. Nuk është HTML që punon veçmas nga serveri. Për nisjen e parë, krijo llogarinë nga terminali i administratorit:
+
+```sh
+.venv/bin/ai-camera-cloud --database runtime/cloud.sqlite3 create-owner \
+  --organization pilot-organization --email owner@example.com
+```
+
+Komanda kërkon fjalëkalimin në terminal pa e shfaqur (12–256 karaktere) dhe kërkon konfirmim. Ndrysho emailin sipas pronarit real; nuk krijohet llogari demo apo fjalëkalim standard. `organization` duhet të jetë i njëjti identifikues me pajisjet e biznesit. Për instalim automatik mund të përdoret `--password-file` me skedar privat jashtë Git. Mos dërgo fjalëkalime në chat.
+
+Pastaj nis backend-in me komandën `serve` më sipër dhe hap faqen kryesore në shfletues. Në Windows përdor `.venv\Scripts\python.exe` dhe `.venv\Scripts\ai-camera-cloud.exe` për komandat ekuivalente.
+
+Paneli përfshin:
+
+- Hyrje me email/fjalëkalim dhe dalje që revokon sesionin në server.
+- Identitetin e biznesit dhe inventarin vetëm të lokacioneve/kamerave të autorizuara.
+- Filtra datash (interval deri në 31×24 orë), lokacioni dhe kamere, përfshirë node-in kur ID-të e kamerave përsëriten.
+- Hyrje/dalje të regjistruara, mesatare të ponderuar të kohës së sesioneve të plota në zona dhe peak të personave të dukshëm kur zgjidhet një kamerë.
+- Grafik të fluksit, tabelë orare dhe shkarkim CSV nga API-ja e autorizuar.
+- Gjendje bosh/gabimi pa numra të shpikur. Tabela shfaq deri 200 rreshta; CSV përmban të gjithë intervalin. Grafiku bashkon orë në deri 60 grupe kur ka shumë të dhëna.
+
+Datat e zgjedhura interpretohen si ditë në timezone e shfletuesit, pastaj shndërrohen në UTC për API-në; grafiku/tabela përdorin orë lokale. Agregimet bazë mbeten orare UTC. Sesionet e zonave që kalojnë disa orë atribuohen sipas eventit të përfundimit.
+
+Fjalëkalimet përdorin PBKDF2-HMAC-SHA256 me kripë të rastësishme dhe 600000 iteracione. Cookie është HttpOnly, SameSite=Strict dhe afat 8 orë; databaza ruan vetëm hash-in e token-it të sesionit. Fjalëkalimi/token-i nuk ruhen në localStorage. Login kufizohet pas 5 tentativash për email në 5 minuta dhe 20 për burim; kjo nuk zëvendëson rate limiting në reverse proxy.
+
+Në HTTP lokal/loopback CLI përdor cookie jo-Secure vetëm për zhvillim. Me TLS direkt cookie bëhet Secure. Në prodhim pas reverse proxy HTTPS nise patjetër me **`--secure-cookies`**, ruaj Host-in origjinal dhe mos lejo akses publik direkt te porti HTTP i backend-it. Login/logout kontrollojnë Origin dhe nuk lejojnë kërkesa nga faqe të tjera. API-të ekzistuese vazhdojnë të pranojnë token-at teknikë; sesioni i pronarit ka vetëm rol reader dhe nuk mund të dërgojë evente edge.
+
+Testet e llogarive mbulojnë cookie-t, daljen/revokimin, skadimin, kufizimin e tentativave, Origin dhe izolimin e inventarit. Test opsional i shfletuesit (Playwright/Chromium): `python3 tests/browser_dashboard.py` nga dosja cloud. Ai përdor databazë dhe evente sintetike të përkohshme; nuk fut të dhëna demonstrative në databazën e përdoruesit. Dashboard-i ende nuk është deploy-uar publikisht dhe llogaritë reale duhen krijuar nga administratori.

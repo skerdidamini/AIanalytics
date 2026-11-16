@@ -42,4 +42,8 @@ After installing the edge package, run `ai-camera-panel --config config.local.js
 
 ## Minimal cloud backend
 
-The `cloud/` directory contains a FastAPI ingestion service, device-scoped credentials, persistent SQLite storage, deduplication, organization-scoped hourly metrics and CSV reports. See [cloud/README.md](cloud/README.md). Twelve backend tests passed, including actual edge-to-API HTTPS sync with duplicate retries. This backend has not been deployed publicly; client login/dashboard and report email are still pending.
+The `cloud/` directory contains a FastAPI ingestion service, device-scoped credentials, persistent SQLite storage, deduplication, organization-scoped hourly metrics and CSV reports. See [cloud/README.md](cloud/README.md). Eighteen backend tests passed, including actual edge-to-API HTTPS sync with duplicate retries. This backend has not been deployed publicly; owner login/dashboard are now included; public deployment and report email remain pending.
+
+## Owner dashboard
+
+The cloud server now serves an Albanian owner dashboard at `/`, with email/password login, organization-scoped filters, hourly traffic chart, zone dwell summary and authorized CSV downloads. Create an owner account using the cloud CLI; see `cloud/README.md`. It requires the running backend, not opening the HTML file directly. It has been tested locally with synthetic data, not deployed publicly.

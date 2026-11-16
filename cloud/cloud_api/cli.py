@@ -16,6 +16,11 @@ def main():
     serve.add_argument('--port',type=int,default=8080)
     serve.add_argument('--ssl-certfile')
     serve.add_argument('--ssl-keyfile')
+    serve.add_argument('--secure-cookies',action='store_true',help='Required behind an HTTPS reverse proxy')
+    owner=commands.add_parser('create-owner')
+    owner.add_argument('--organization',required=True)
+    owner.add_argument('--email',required=True)
+    owner.add_argument('--password-file',help='Private input file; otherwise prompt securely in terminal')
     for kind in ['provision-node','provision-reader']:
         command=commands.add_parser(kind)
         command.add_argument('--organization',required=True)
@@ -30,13 +35,21 @@ def main():
     path=Path(args.database).resolve()
     path.parent.mkdir(parents=True,exist_ok=True)
     database=Database(path)
-    if args.command=='serve':
+    from . import accounts
+    accounts.initialize(database)
+    if args.command=='create-owner':
+        import getpass
+        password=Path(args.password_file).read_text().rstrip('\r\n') if args.password_file else getpass.getpass('Owner password (minimum 12 characters): ')
+        if not args.password_file and password!=getpass.getpass('Confirm password: '):parser.error('Passwords do not match')
+        accounts.create_owner(database,args.organization,args.email,password)
+        print('Owner account created; no password printed.')
+    elif args.command=='serve':
         import uvicorn
         from .app import create_app
         if bool(args.ssl_certfile)!=bool(args.ssl_keyfile):parser.error('Both TLS certificate and key are required')
         if args.host not in ('127.0.0.1','localhost','::1') and not args.ssl_certfile:
             parser.error('Use TLS for non-loopback listeners, or a loopback listener behind an HTTPS proxy')
-        uvicorn.run(create_app(path),host=args.host,port=args.port,ssl_certfile=args.ssl_certfile,ssl_keyfile=args.ssl_keyfile,access_log=False,proxy_headers=False)
+        uvicorn.run(create_app(path,secure_cookies=bool(args.ssl_certfile or args.secure_cookies)),host=args.host,port=args.port,ssl_certfile=args.ssl_certfile,ssl_keyfile=args.ssl_keyfile,access_log=False,proxy_headers=False)
     elif args.command=='revoke':
         token=Path(args.token_file).read_text().strip()
         db=database.connect()

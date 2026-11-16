@@ -94,11 +94,12 @@ class Database:
         finally:
             db.close()
 
-    def hourly(self, organization, start, end, location=None, camera=None):
+    def hourly(self, organization, start, end, location=None, camera=None, node=None):
         conditions=['organization_id=?','timestamp>=?','timestamp<?']
         args=[organization,start,end]
         if location is not None: conditions.append('location_id=?');args.append(location)
         if camera is not None: conditions.append('camera_id=?');args.append(camera)
+        if node is not None: conditions.append('node_id=?');args.append(node)
         query='''SELECT location_id,node_id,camera_id,strftime('%Y-%m-%dT%H:00:00Z',timestamp,'unixepoch') AS hour_utc,
         sum(type='person_entered') AS entries,sum(type='person_exited') AS exits,
         sum(CASE WHEN type='dwell_time_completed' AND json_extract(payload,'$.details.censored')=0 THEN 1 ELSE 0 END) AS completed_zone_dwell_sessions,
@@ -108,3 +109,11 @@ class Database:
         db=self.connect()
         try: return [dict(row) for row in db.execute(query,args)]
         finally: db.close()
+
+    def inventory(self, organization):
+        db=self.connect()
+        try:
+            locations=[row['id'] for row in db.execute('SELECT id FROM locations WHERE organization_id=? ORDER BY id',(organization,))]
+            cameras=[dict(row) for row in db.execute('SELECT location_id,node_id,id FROM cameras WHERE organization_id=? ORDER BY location_id,node_id,id',(organization,))]
+            return {'locations':locations,'cameras':cameras}
+        finally:db.close()
