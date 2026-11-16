@@ -39,3 +39,7 @@ Open [edge/calibration/index.html](edge/calibration/index.html) in a modern brow
 ## Local device control panel (Linux/macOS)
 
 After installing the edge package, run `ai-camera-panel --config config.local.json` on the Mini PC and open the loopback address printed in its terminal on that same device. This mode adds configuration saving, start/stop controls and worker frame status to the calibration UI. Set `EDGE_RTSP_URL` in the process environment first, or pass `--video` for a local file test. The static HTML file alone does not control a device. See `edge/README.md` for setup and limits.
+
+## Minimal cloud backend
+
+The `cloud/` directory contains a FastAPI ingestion service, device-scoped credentials, persistent SQLite storage, deduplication, organization-scoped hourly metrics and CSV reports. See [cloud/README.md](cloud/README.md). Twelve backend tests passed, including actual edge-to-API HTTPS sync with duplicate retries. This backend has not been deployed publicly; client login/dashboard and report email are still pending.

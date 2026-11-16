@@ -1,0 +1,100 @@
+import csv
+import io
+import time
+from fastapi import Depends, FastAPI, HTTPException, Query, Request
+from fastapi.responses import Response
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from pydantic import ValidationError
+from starlette.concurrency import run_in_threadpool
+
+from .database import Database, Conflict, Rejected
+from .models import Batch
+
+MAX_BODY = 1024 * 1024
+
+
+def create_app(database_path):
+    database = Database(database_path)
+    app = FastAPI(title='AI Camera Analytica — Cloud MVP', version='0.1.0')
+    bearer = HTTPBearer(auto_error=False)
+
+    @app.middleware('http')
+    async def response_headers(request, call_next):
+        response = await call_next(request)
+        response.headers['Cache-Control'] = 'no-store'
+        response.headers['X-Content-Type-Options'] = 'nosniff'
+        return response
+
+    def principal(credentials: HTTPAuthorizationCredentials | None = Depends(bearer)):
+        if not credentials or credentials.scheme.lower() != 'bearer' or len(credentials.credentials) > 256:
+            raise HTTPException(401, 'Valid bearer credential required', headers={'WWW-Authenticate':'Bearer'})
+        identity = database.authenticate(credentials.credentials)
+        if identity is None:
+            raise HTTPException(401, 'Valid bearer credential required', headers={'WWW-Authenticate':'Bearer'})
+        return identity
+
+    def role(required):
+        def check(identity=Depends(principal)):
+            if identity['role'] != required: raise HTTPException(403, 'Credential role not allowed')
+            return identity
+        return check
+
+    @app.get('/healthz')
+    def health():
+        try:
+            connection=database.connect()
+            try: connection.execute('SELECT 1').fetchone()
+            finally: connection.close()
+        except Exception:
+            raise HTTPException(503, 'Storage unavailable') from None
+        return {'status':'ok'}
+
+    @app.post('/v1/events')
+    async def ingest(request: Request, identity=Depends(role('ingest'))):
+        if request.headers.get('content-type','').split(';')[0].lower() != 'application/json':
+            raise HTTPException(415,'application/json required')
+        body=bytearray()
+        async for chunk in request.stream():
+            if len(body)+len(chunk) > MAX_BODY: raise HTTPException(413,'Batch body too large')
+            body.extend(chunk)
+        try:
+            batch=Batch.model_validate_json(bytes(body))
+            if type(batch.schema_version) is not int: raise ValueError()
+            events=[event.model_dump() for event in batch.events]
+            if any(event['timestamp'] > time.time()+300 for event in events): raise ValueError()
+        except (ValidationError, ValueError):
+            raise HTTPException(422,'Invalid analytics batch; schema version 1 and 1–100 valid metadata events required') from None
+        try:
+            accepted=await run_in_threadpool(database.ingest,identity,events)
+        except Rejected:
+            raise HTTPException(403,'Events do not belong to this registered node/camera') from None
+        except Conflict:
+            raise HTTPException(409,'An event ID was reused with different content; batch not committed') from None
+        return {'accepted_event_ids':accepted}
+
+    def report_rows(start, end, location, camera, identity):
+        if not 0 <= start < end or end-start > 31*86400:
+            raise HTTPException(422,'Use a positive UTC time range of at most 31 days; end is exclusive')
+        return database.hourly(identity['organization_id'],start,end,location,camera)
+
+    @app.get('/v1/metrics/hourly')
+    def metrics(start: float = Query(ge=0,allow_inf_nan=False), end: float = Query(ge=0,allow_inf_nan=False),
+                location_id: str | None = Query(default=None,max_length=128), camera_id: str | None = Query(default=None,max_length=128),
+                identity=Depends(role('reader'))):
+        return {'timezone':'UTC','start':start,'end':end,'rows':report_rows(start,end,location_id,camera_id,identity)}
+
+    @app.get('/v1/reports/hourly.csv')
+    def report(start: float = Query(ge=0,allow_inf_nan=False), end: float = Query(ge=0,allow_inf_nan=False),
+               location_id: str | None = Query(default=None,max_length=128), camera_id: str | None = Query(default=None,max_length=128),
+               identity=Depends(role('reader'))):
+        rows=report_rows(start,end,location_id,camera_id,identity)
+        output=io.StringIO(newline='')
+        fields=['hour_utc','location_id','node_id','camera_id','entries','exits','completed_zone_dwell_sessions','completed_zone_dwell_seconds','peak_visible_persons']
+        writer=csv.DictWriter(output,fieldnames=fields)
+        writer.writeheader()
+        for row in rows:
+            # Neutralize spreadsheet formulas in externally configured identifiers.
+            writer.writerow({key:("'"+value if isinstance(value,str) and value.lstrip().startswith(('=','+','-','@')) else value) for key,value in row.items()})
+        return Response(output.getvalue(),media_type='text/csv',headers={'Content-Disposition':'attachment; filename="hourly.csv"'})
+
+    return app

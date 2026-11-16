@@ -62,7 +62,7 @@ Koordinatat janë relative 0–1: `[x,y]`. Pika e një personi është qendra e 
 
 ## Cloud sync — kontrata, jo backend i ndërtuar
 
-Backend-i cloud nuk ekziston ende në këtë repository. Formspree shërben vetëm website-in dhe **nuk përdoret për eventet e kamerës**. Vendos `EDGE_CLOUD_URL` dhe `EDGE_CLOUD_TOKEN` në ambientin e pajisjes vetëm kur të ekzistojë API-ja përkatëse.
+Backend-i minimal cloud tani ndodhet te `../cloud`; është testuar lokalisht me HTTPS, por nuk është ende deploy-uar publikisht. Shih `../cloud/README.md` për regjistrimin e node-it dhe kontratën e API-së. Formspree shërben vetëm website-in dhe **nuk përdoret për eventet e kamerës**. Vendos `EDGE_CLOUD_URL` dhe `EDGE_CLOUD_TOKEN` në ambientin e pajisjes vetëm kur të ekzistojë API-ja përkatëse.
 
 ```sh
 .venv/bin/ai-camera-edge --config config.local.json sync --watch
@@ -87,7 +87,7 @@ Përgjigjja duhet të jetë JSON: `{"accepted_event_ids":["uuid"]}`. Vetëm ID-t
 - `status` në CLI kontrollon radhën lokale. Paneli i pajisjes tregon edhe gjendjen e procesit dhe frame-t e përpunuar; nuk është monitorim i plotë i hardware-it/cloud.
 - Mungojnë ende deploy si shërbim/systemd ose Docker, health dashboard, menaxhimi i konfigurimit nga cloud dhe backend-i i raporteve.
 
-Testet automatike mbulojnë drejtimin, dridhjet, segmentin e kufizuar, skadimin e track-ut, dwell të plotë/të ndërprerë, persistencën, deduplikimin lokal, kapacitetin, konfirmimet e pjesshme dhe dështimin e rrjetit. Prova e videos sintetike verifikon dekodimin dhe ekzekutimin e HOG, jo saktësinë në njerëz realë. Kamera reale, saktësia dhe cloud real mbeten të patestuara.
+Testet automatike mbulojnë drejtimin, dridhjet, segmentin e kufizuar, skadimin e track-ut, dwell të plotë/të ndërprerë, persistencën, deduplikimin lokal, kapacitetin, konfirmimet e pjesshme dhe dështimin e rrjetit. Prova e videos sintetike verifikon dekodimin dhe ekzekutimin e HOG, jo saktësinë në njerëz realë. Kamera reale dhe saktësia mbeten të patestuara. Sync me backend-in minimal është testuar përmes HTTPS lokal; deploy publik mbetet i paprovuar.
 
 ## Paneli lokal i kalibrimit
 
