@@ -164,7 +164,7 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header('Cache-Control', 'no-store')
         self.send_header('X-Content-Type-Options', 'nosniff')
         self.send_header('Referrer-Policy', 'no-referrer')
-        self.send_header('Content-Security-Policy', "default-src 'self'; img-src 'self' blob: data:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'")
+        self.send_header('Content-Security-Policy', "default-src 'self'; img-src 'self' blob: data:; media-src 'self' blob:; style-src 'self' 'unsafe-inline'; script-src 'self'; connect-src 'self'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'")
         self.end_headers()
         self.wfile.write(data)
 
@@ -187,7 +187,7 @@ class Handler(BaseHTTPRequestHandler):
             return self.reply(200, {'token': self.server.controller.token, 'config': value, 'warning': warning})
         if path == '/api/status':
             return self.reply(200, self.server.controller.status())
-        assets = {'/': ('index.html', 'text/html; charset=utf-8'), '/styles.css': ('styles.css', 'text/css; charset=utf-8'), '/app.js': ('app.js', 'text/javascript; charset=utf-8'), '/panel.js': ('panel.js', 'text/javascript; charset=utf-8')}
+        assets = {'/': ('index.html', 'text/html; charset=utf-8'), '/styles.css': ('styles.css', 'text/css; charset=utf-8'), '/app.js': ('app.js', 'text/javascript; charset=utf-8'), '/calibration.js': ('calibration.js', 'text/javascript; charset=utf-8'), '/panel.js': ('panel.js', 'text/javascript; charset=utf-8')}
         if path not in assets:
             return self.reply(404, {'error': 'Nuk u gjet.'})
         name, content_type = assets[path]

@@ -70,7 +70,7 @@ with tempfile.TemporaryDirectory() as temp, sync_playwright() as p:
     page.locator('#add-zone').click()
     zone_inputs=page.locator('#zones .zone input')
     # Duplicate names must prevent export.
-    page.locator('#zones .zone').nth(1).locator('input').first.fill('zone-1')
+    page.locator('#zones .zone').nth(1).locator('input').first.fill('Zone1')
     page.locator('#export').click()
     assert 'emra unikë' in page.locator('#status').inner_text()
     page.locator('#zones .zone').nth(1).locator('button').click()

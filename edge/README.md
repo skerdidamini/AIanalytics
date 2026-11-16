@@ -124,3 +124,9 @@ Për lidhje reale, `EDGE_RTSP_URL` duhet të jetë konfiguruar në ambientin e p
 Ruajtja bllokohet gjatë analizës; ndalo, ndrysho dhe rinis. Për këtë version përdor vetëm një panel dhe një worker për këtë kamerë; mos nis paralelisht një `run` manual. Paneli nuk nis cloud sync dhe nuk përmirëson saktësinë e modelit HOG. Ndërrimi i `camera_id` nuk fshin historikun e kamerës së mëparshme. Mbyllja e panelit në terminal ndalon edhe worker-in; mbyllja e tab-it të shfletuesit e lë analizën në punë. Nuk ka ende autostart pas reboot-it ose ruajtje automatike të fotos.
 
 Serveri përdor kufizim Host/Origin dhe token për veprime, pa CORS të hapur. Nuk është panel publik me login; mos e ekspozo në internet ose me proxy të hapur. Testet përfshijnë ruajtje/ringarkim, konfigurim të pavlefshëm, bllokim kërkesash nga origjina të tjera, nisje reale worker-i mbi video sintetike dhe ndalim me ruajtje eventesh. Kontrolli opsional nga shfletuesi: `python3 calibration/test_panel_browser.py` nga dosja edge.
+
+## Kalibrimi i zgjeruar: foto/video, funksione zonash dhe mostra uniforme
+
+Shih [calibration/README.md](calibration/README.md) për rrjedhën e re. Paneli pranon video lokale me pause/seek, zona tavoline/shërbimi/takeaway, lidhje shërbimi→tavolinë, mostra manuale RGB/HSV sipas rolit, provë gjeometrike hyrje/daljeje dhe kontroll manual të konfigurimit. Numërimi i vijës mund të çaktivizohet për kamerat e tavolinave; edge kontrollon edhe raportin e përmasave të pamjes kundrejt kalibrimit.
+
+Mostrat dhe funksionet e zonave janë metadata për instalimin. Klasifikimi automatik i stafit dhe matjet e shërbimit ende nuk janë aktive; JSON i shënon të dyja false. Dallimi i stafit, tracking-u i përmirësuar dhe preview automatik i detektimeve kërkojnë zhvillimin/vlerësimin e modelit me video reale. Mos e paraqit kontrollin manual si validim të saktësisë së AI-së.

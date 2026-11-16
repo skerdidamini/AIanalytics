@@ -77,7 +77,7 @@ class Analytics:
                     ratio = old_cross / (old_cross - new_cross)
                     hit = (old[0] + ratio * (point[0] - old[0]), old[1] + ratio * (point[1] - old[1]))
                     projection = ((hit[0] - a[0]) * dx + (hit[1] - a[1]) * dy) / length**2
-                    if 0 <= projection <= 1:
+                    if 0 <= projection <= 1 and self.config['line'].get('enabled', True):
                         kind = 'person_entered' if side == self.config['line']['enter_side'] else 'person_exited'
                         events.append(self.event(kind, timestamp, track_id=track_id))
                 track.side, track.stable_point = side, tuple(point)

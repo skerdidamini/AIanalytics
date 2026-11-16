@@ -10,7 +10,7 @@ from collections import defaultdict
 from datetime import datetime, timezone
 
 from .analytics import Analytics
-from .config import load_config
+from .config import load_config, verify_frame_aspect
 from .storage import EventStore, sync_batch
 
 
@@ -121,6 +121,7 @@ def main():
                             health('reconnecting', True)
                             store.add(engine.reset(timestamp))
                             continue
+                        verify_frame_aspect(config, frame.shape[1], frame.shape[0])
                         store.add(engine.update(detector.detect(frame), timestamp))
                         count += 1
                         processed_frames = count

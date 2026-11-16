@@ -57,3 +57,7 @@ Lidhja e edge me databazën reale kërkon konfigurim të kredencialeve dhe endpo
 Mos e mbyll dritaren me gabimin. Dërgo një screenshot të mesazhit duke fshehur çdo të dhënë private, që ta diagnostikojmë. Nëse Windows nuk njeh `py`/`python`, kontrollo instalimin e Python dhe opsionin PATH.
 
 Logjika e nisjes Python, llogaritë, demonstrimi dhe izolimi i databazave janë testuar në ambientin Linux të zhvillimit. Wrapper-at `.cmd` janë përgatitur për Windows, por ekzekutimi real në Windows ende duhet konfirmuar në PC-në tënde.
+
+## Hap panelin e instalimit të kamerës
+
+Për kalibrim përdor **NIS-KALIBRIMIN-WINDOWS.cmd**, jo launcher-in e dashboard-it. Ky panel hap foto ose video të shkurtër, vizaton vijën/zonat, merr mostra manuale uniforme dhe shkarkon JSON-in për kamerën. Vetëm Python duhet instaluar; nuk instalohen varësi për këtë panel statik. Mostrat nuk aktivizojnë ende njohje automatike të stafit. Rrjedha e plotë është te `edge/calibration/README.md`. Mbyll terminalin kur mbaron; nëse porta është zënë, përdor `py -3 start-calibration.py --port 8767`.

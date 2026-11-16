@@ -2,3 +2,6 @@
 
 .toolbar label{position:relative}.toolbar input[type=file]{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer}.toolbar label:focus-within{outline:3px solid #7dcaff;outline-offset:3px}
 .runtime{margin:0 0 28px}.runtime .tools{margin-top:16px}.runtime button:disabled{opacity:.45;cursor:not-allowed}.error{color:#ffb5b5}
+[hidden]{display:none!important}.stage video{display:block;width:100%;height:100%;object-fit:fill}.video-controls{display:flex;align-items:center;gap:12px;margin-top:14px}.video-controls label{flex:1;margin:0}.video-controls input{padding:0}.check{flex-direction:row;align-items:start}.check input{width:auto;margin:3px}.uniform-sample{border-top:1px solid var(--border);padding:12px 0;font-size:12px}.uniform-sample p{overflow-wrap:anywhere}.workspace>.card{margin-top:22px}#role-samples{max-height:350px;overflow:auto}@media(max-width:500px){.video-controls{flex-wrap:wrap}.video-controls label{min-width:180px}}
+.toolbar label{overflow:hidden}@media(max-width:500px){.toolbar>label{flex:1 1 140px}}
+#image-name,#review-result,#sample-result,#crossing-result{overflow-wrap:anywhere}

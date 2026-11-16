@@ -88,6 +88,7 @@ class PanelTests(unittest.TestCase):
         self.assertIn(b'/panel.js',body)
         self.assertEqual(self.request('/app.js')[0],200)
         self.assertEqual(self.request('/panel.js')[0],200)
+        self.assertEqual(self.request('/calibration.js')[0],200)
 
     def test_real_worker_frames_stop_and_save_guard(self):
         import cv2

@@ -17,4 +17,4 @@ ai-camera-panel = "edge_analytics.panel:main"
 include = ["edge_analytics*"]
 
 [tool.setuptools.data-files]
-"share/ai-camera-edge/calibration" = ["calibration/index.html", "calibration/styles.css", "calibration/app.js", "calibration/panel.js"]
+"share/ai-camera-edge/calibration" = ["calibration/index.html", "calibration/styles.css", "calibration/app.js", "calibration/panel.js", "calibration/calibration.js"]

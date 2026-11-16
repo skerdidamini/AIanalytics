@@ -25,13 +25,17 @@ function validate(c) {
   const l = c.line;
   if (!l || !point(l.start) || !point(l.end) || (l.start[0] === l.end[0] && l.start[1] === l.end[1]) ||
       ![1, -1].includes(l.enter_side) || !number(l.margin) || l.margin <= 0 || l.margin >= 1) throw Error('Vija duhet të ketë dy pika të ndryshme dhe tolerancë midis 0 dhe 1.');
+  if(l.enabled!==undefined&&typeof l.enabled!=='boolean')throw Error('Statusi i vijës duhet të jetë boolean.');
   if (!Array.isArray(c.zones)) throw Error('Lista e zonave është e pavlefshme.');
   const names = new Set();
   for (const z of c.zones) {
     if (!z || typeof z.id !== 'string' || !z.id.trim() || names.has(z.id.trim()) || !Array.isArray(z.rect) || z.rect.length !== 4 ||
         !z.rect.every((v) => number(v) && v >= 0 && v <= 1) || z.rect[0] >= z.rect[2] || z.rect[1] >= z.rect[3]) throw Error('Zonat duan emra unikë dhe koordinata të vlefshme: X1 < X2, Y1 < Y2.');
+    if(z.kind!==undefined&&!['table','service','takeaway','entrance','exit','other'].includes(z.kind))throw Error('Lloj zone i pavlefshëm.');
     names.add(z.id.trim());
   }
+  for(const z of c.zones)if(z.kind==='service'&&!c.zones.some((t)=>t.kind==='table'&&t.id===z.table_id))throw Error('Çdo zonë shërbimi duhet lidhur me një tavolinë ekzistuese.');
+  window.CalibrationExtras?.validateConfig(c);
 }
 function svg(tag, attributes, text) {
   const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
@@ -45,10 +49,11 @@ function draw() {
   config.zones.forEach((z, index) => {
     const [x1, y1, x2, y2] = z.rect;
     if (![x1,y1,x2,y2].every(number)) return;
-    svg('rect', {x:x1*1000,y:y1*1000,width:Math.max(0,x2-x1)*1000,height:Math.max(0,y2-y1)*1000,fill:'#4dafff22',stroke:'#72bcff','stroke-width':2,'vector-effect':'non-scaling-stroke'});
+    const zoneColor=window.CalibrationExtras?.zoneColor(z.kind)||'#72bcff';
+    svg('rect', {x:x1*1000,y:y1*1000,width:Math.max(0,x2-x1)*1000,height:Math.max(0,y2-y1)*1000,fill:zoneColor+'22',stroke:zoneColor,'stroke-width':2,'vector-effect':'non-scaling-stroke'});
     svg('text', {x:x1*1000+8,y:y1*1000+32,fill:'#fff','font-size':24,'paint-order':'stroke',stroke:'#08111d','stroke-width':4}, `${index+1}. ${z.id}`);
   });
-  if (lineReady) {
+  if (lineReady && config.line.enabled!==false) {
     const [a,b] = [config.line.start,config.line.end];
     svg('line',{x1:a[0]*1000,y1:a[1]*1000,x2:b[0]*1000,y2:b[1]*1000,stroke:'#38edbd','stroke-width':3,'vector-effect':'non-scaling-stroke'});
     for (const p of [a,b]) svg('circle',{cx:p[0]*1000,cy:p[1]*1000,r:7,fill:'#38edbd'});
@@ -56,13 +61,16 @@ function draw() {
     const x=(a[0]+b[0])*500,y=(a[1]+b[1])*500;
     svg('line',{x1:x,y1:y,x2:x-dy/length*90*side,y2:y+dx/length*90*side,stroke:'#38edbd','stroke-width':3,'marker-end':'url(#arrow)'});
   }
+  window.CalibrationExtras?.drawDetails();
   if (pending) svg('circle',{cx:pending[0]*1000,cy:pending[1]*1000,r:9,fill:'#ffce73'});
 }
 function setMode(value) {
   mode = value; pending = null;
   $('line-tool').setAttribute('aria-pressed', String(mode === 'line'));
   $('zone-tool').setAttribute('aria-pressed', String(mode === 'zone'));
-  $('instruction').textContent = mode === 'line' ? 'Kliko pikën e parë dhe pastaj të dytën të vijës.' : 'Kliko dy cepat e kundërt të zonës drejtkëndore.';
+  $('role-tool').setAttribute('aria-pressed',String(mode==='role'));$('trace-tool').setAttribute('aria-pressed',String(mode==='trace'));
+  window.CalibrationExtras?.pause();
+  $('instruction').textContent = ({line:'Kliko pikën e parë dhe pastaj të dytën të vijës.',zone:'Kliko dy cepat e kundërt të zonës drejtkëndore.',role:'Vizato dy cepat e pjesës së bluzës për rolin e zgjedhur.',trace:'Kliko pikën e nisjes dhe pikën e mbërritjes së personit.'})[mode];
   draw();
 }
 function syncLineInputs() {
@@ -70,11 +78,12 @@ function syncLineInputs() {
   coordinateIds.forEach((id,i) => { $(id).value = values[i]; });
   $('enter-side').value = config.line.enter_side;
   $('margin').value = config.line.margin;
+  $('line-enabled').checked=config.line.enabled!==false;
 }
 function newZone(rect) {
   let index=1;
-  while (config.zones.some((z) => z.id === `zone-${index}`)) index++;
-  config.zones.push({id:`zone-${index}`,rect});
+  while (config.zones.some((z) => z.id === `Zone${index}`)) index++;
+  config.zones.push({id:`Zone${index}`,kind:'table',rect});
   renderZones(); draw();
 }
 function renderZones() {
@@ -84,6 +93,15 @@ function renderZones() {
     const label=document.createElement('label');label.textContent=`Emri i zonës ${index+1}`;
     const input=document.createElement('input');input.value=zone.id;input.required=true;
     input.addEventListener('input',()=>{zone.id=input.value;draw();});label.append(input);box.append(label);
+    const kindLabel=document.createElement('label');kindLabel.textContent='Funksioni i zonës';
+    const kind=document.createElement('select');
+    for(const [key,text] of Object.entries({table:'Tavolinë',service:'Afrimi i shërbimit',takeaway:'Takeaway',entrance:'Hyrje',exit:'Dalje',other:'Zonë tjetër'}))kind.add(new Option(text,key));
+    kind.value=zone.kind||'other';kind.addEventListener('change',()=>{zone.kind=kind.value;if(kind.value!=='service')delete zone.table_id;renderZones();draw();});kindLabel.append(kind);box.append(kindLabel);
+    if(zone.kind==='service'){
+      const l=document.createElement('label');l.textContent='Tavolina e lidhur';const select=document.createElement('select');select.add(new Option('Zgjidh tavolinën',''));
+      config.zones.filter((z)=>z.kind==='table').forEach((z)=>select.add(new Option(z.id,z.id)));select.value=zone.table_id||'';select.required=true;
+      select.addEventListener('change',()=>{zone.table_id=select.value;draw();});l.append(select);box.append(l);
+    }
     const coordinates=document.createElement('div');coordinates.className='coordinates';
     ['X1','Y1','X2','Y2'].forEach((name,i)=>{
       const l=document.createElement('label');l.textContent=`Zona ${index+1} · ${name}`;
@@ -100,16 +118,19 @@ $('zone-tool').addEventListener('click',()=>setMode('zone'));
 $('cancel').addEventListener('click',()=>{pending=null;draw();status('Pika e papërfunduar u anulua.');});
 window.addEventListener('keydown',(event)=>{if(event.key==='Escape'){pending=null;draw();}});
 $('drawing').addEventListener('click',(event)=>{
+  window.CalibrationExtras?.pause();
   const rect=$('drawing').getBoundingClientRect();
   const p=[(event.clientX-rect.left)/rect.width,(event.clientY-rect.top)/rect.height].map((v)=>Math.round(Math.min(1,Math.max(0,v))*10000)/10000);
   if (!pending) {pending=p;draw();status('Pika e parë u vendos. Zgjidh pikën e dytë.');return;}
   if (mode === 'line') {
     if (Math.hypot(p[0]-pending[0],p[1]-pending[1])<0.005) {status('Zgjidh një pikë të dytë më larg.',true);return;}
     config.line.start=pending;config.line.end=p;lineReady=true;syncLineInputs();status('Vija u vendos. Kontrollo shigjetën e hyrjes.');
+  } else if(mode==='trace'){window.CalibrationExtras?.testCrossing(pending,p);
   } else {
     const coords=[Math.min(pending[0],p[0]),Math.min(pending[1],p[1]),Math.max(pending[0],p[0]),Math.max(pending[1],p[1])];
     if(coords[2]-coords[0]<0.005||coords[3]-coords[1]<0.005){status('Zona duhet të ketë gjerësi dhe lartësi.',true);return;}
-    newZone(coords);status('Zona u shtua. Mund ta riemërtosh ose rregullosh koordinatat.');
+    if(mode==='role'){try{window.CalibrationExtras.addSample(coords);}catch(e){status(e.message,true);pending=null;draw();return;}}
+    else{newZone(coords);status('Zona u shtua. Mund ta riemërtosh ose rregullosh koordinatat.');}
   }
   pending=null;draw();
 });
@@ -121,27 +142,12 @@ function applyLine() {
 $('apply-line').addEventListener('click',()=>{try{applyLine();status('Koordinatat e vijës u vendosën.');}catch(e){status(e.message,true);}});
 $('enter-side').addEventListener('change',()=>{config.line.enter_side=Number($('enter-side').value);draw();});
 $('add-zone').addEventListener('click',()=>{newZone([0.1,0.1,0.9,0.9]);$('zones').lastElementChild.querySelector('input').focus();});
-let imageRequest=0;
-$('image-file').addEventListener('change',async(event)=>{
-  const file=event.target.files[0];if(!file)return;
-  const request=++imageRequest;
-  if(!['image/png','image/jpeg','image/webp'].includes(file.type)||file.size>20*1024*1024){status('Zgjidh PNG, JPEG ose WebP deri në 20 MB.',true);return;}
-  const url=URL.createObjectURL(file);const image=new Image();
-  try{
-    image.src=url;await image.decode();if(request!==imageRequest)return;
-    if(lineReady||config.zones.length)status('Pamja ndryshoi. Kontrollo përsëri vijën dhe zonat për këtë kamerë.');else status('Pamja u ngarkua. Vendos vijën e numërimit.');
-    $('camera-image').src=url;$('camera-image').hidden=false;$('stage').style.aspectRatio=`${image.naturalWidth} / ${image.naturalHeight}`;
-    $('empty-label').hidden=true;$('image-name').textContent=`${file.name} · ${image.naturalWidth} × ${image.naturalHeight} px`;
-    await $('camera-image').decode();
-  }catch{if(request===imageRequest)status('Pamja nuk mund të lexohet. Zgjidh një skedar tjetër.',true);}
-  finally{URL.revokeObjectURL(url);event.target.value='';}
-});
 $('config-file').addEventListener('change',async(event)=>{
   const file=event.target.files[0];if(!file)return;
   try{
     if(file.size>1024*1024)throw Error('Konfigurimi duhet të jetë më i vogël se 1 MB.');
     const candidate=JSON.parse(await file.text());if(candidate.zones===undefined)candidate.zones=[];validate(candidate);
-    config=candidate;ids.forEach((id)=>{$(id).value=config[id];});lineReady=true;pending=null;syncLineInputs();renderZones();draw();status('Konfigurimi u importua. Verifiko që pamja i përket kësaj kamere.');
+    loadConfig(candidate);status('Konfigurimi u importua. Verifiko që pamja i përket kësaj kamere.');
   }catch(e){status(`Importi dështoi: ${e.message}`,true);}
   finally{event.target.value='';}
 });
@@ -149,14 +155,14 @@ function collectConfig() {
   if (!$('settings').reportValidity()) throw Error('Plotëso të gjitha fushat me vlera të vlefshme.');
   if (pending) throw Error('Përfundo vizatimin ose anulo pikën përpara ruajtjes.');
   applyLine();ids.forEach((id)=>{config[id]=$(id).value.trim();});
-  config.zones.forEach((z)=>{z.id=z.id.trim();});validate(config);
+  config.zones.forEach((z)=>{z.id=z.id.trim();});window.CalibrationExtras?.attach(config);validate(config);
   return structuredClone(config);
 }
 function loadConfig(candidate) {
   const value=structuredClone(candidate);
   if(value.zones===undefined)value.zones=[];
   validate(value);config=value;ids.forEach((id)=>{$(id).value=config[id];});
-  lineReady=true;pending=null;syncLineInputs();renderZones();draw();
+  lineReady=true;pending=null;window.CalibrationExtras?.onConfigLoaded(config);syncLineInputs();renderZones();draw();
 }
 window.CameraCalibration = { collectConfig, loadConfig };
 $('settings').addEventListener('submit',(event)=>{

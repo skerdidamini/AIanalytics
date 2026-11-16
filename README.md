@@ -55,3 +55,7 @@ The cloud server now serves an Albanian owner dashboard at `/`, with email/passw
 ## Restaurant dashboard
 
 The owner UI now includes table/service sections, per-zone observed dwell and a selectable takeaway area with separate zone CSV export. First waiter approach, order delivery, group table sessions and table utilization remain explicitly unmeasured until the corresponding edge/POS logic exists. Local demo includes `Zone1`, `Zone2` and `Takeaway` synthetic data. See `cloud/README.md` for metric definitions.
+
+## Extended installer calibration
+
+Use **NIS-KALIBRIMIN-WINDOWS.cmd** or `python3 start-calibration.py` to open local image/video calibration without installing the inference stack. Supports typed zones, service-to-table links, manual uniform color samples, geometry-only crossing tests and versioned metadata. Automatic staff classification/service measurement is not active. See [edge/calibration/README.md](edge/calibration/README.md).
