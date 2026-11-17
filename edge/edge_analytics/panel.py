@@ -23,14 +23,22 @@ class Conflict(Exception):
 
 
 class Controller:
-    def __init__(self, config_path, video=None):
+    def __init__(self, config_path, video=None, health_file=None):
         self.path = Path(config_path).resolve()
         self.video = str(Path(video).resolve()) if video else None
         self.lock = threading.RLock()
         self.process = None
         self.last_exit = None
         self.health_dir = tempfile.TemporaryDirectory(prefix='ai-camera-health-')
-        self.health = Path(self.health_dir.name) / 'worker.json'
+        self.health = Path(health_file).resolve() if health_file else Path(self.health_dir.name) / 'worker.json'
+        if self.health in (self.path,self.path.parent/'events.sqlite3'):
+            raise ValueError('Health file must be separate from configuration/database')
+        if health_file and self.health.exists():
+            try:
+                previous=json.loads(self.health.read_text())
+                if not isinstance(previous,dict) or 'state' not in previous or 'processed_frames' not in previous:raise ValueError()
+            except (OSError,ValueError):raise ValueError('Existing health path is not a worker health file; choose a new path') from None
+        self.health.parent.mkdir(parents=True,exist_ok=True)
         self.token = secrets.token_urlsafe(32)
 
     def _running(self):
@@ -230,9 +238,10 @@ def main():
     parser = argparse.ArgumentParser(description='Local edge calibration and process control')
     parser.add_argument('--config', required=True, help='Managed configuration file (database fixed alongside it)')
     parser.add_argument('--port', type=int, default=8765)
+    parser.add_argument('--health-file',help='Stable worker health file for sync --watch camera monitoring')
     parser.add_argument('--video', help='Optional local test video; otherwise use EDGE_RTSP_URL from environment')
     args = parser.parse_args()
-    controller = Controller(args.config, args.video)
+    controller = Controller(args.config, args.video, args.health_file)
     server = PanelServer(args.port, controller)
     # A second server cannot manage the same worker/database directory.
     lock_file = None

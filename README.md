@@ -46,7 +46,7 @@ After installing the edge package, run `ai-camera-panel --config config.local.js
 
 ## Minimal cloud backend
 
-The `cloud/` directory contains a FastAPI ingestion service, device-scoped credentials, persistent SQLite storage, deduplication, organization-scoped hourly metrics and CSV reports. See [cloud/README.md](cloud/README.md). Twenty-four backend tests passed, including actual edge-to-API HTTPS sync with duplicate retries. This backend has not been deployed publicly; owner login/dashboard are now included; public deployment and report email remain pending.
+The `cloud/` directory contains a FastAPI ingestion service, device-scoped credentials, persistent SQLite storage, deduplication, organization-scoped hourly metrics and CSV reports. See [cloud/README.md](cloud/README.md). Thirty-three backend tests passed, including actual edge-to-API HTTPS sync with duplicate retries. This backend has not been deployed publicly; owner login/dashboard are now included; public deployment and report email remain pending.
 
 ## Owner dashboard
 
@@ -63,3 +63,7 @@ Use **NIS-KALIBRIMIN-WINDOWS.cmd** or `python3 start-calibration.py` to open loc
 ## Product appearance
 
 The owner dashboard now uses a light theme with white cards, navy structure and restrained teal actions; the installer calibration tool keeps a coordinated dark theme. See [design notes and demo previews](docs/DESIGN.md). The preview images contain synthetic data only.
+
+## Administrator and technician workflow
+
+Use **NIS-ADMIN-WINDOWS.cmd** after stopping the existing local demo server. First launch creates a separate administrator account; the owner account is preserved. Admin can prepare businesses, locations, devices/cameras and user accounts, assign technicians, review calibration versions, download device credentials and monitor heartbeat/frame/event evidence. Technicians calibrate only assigned cameras with server-checked identity. See [cloud/ADMIN.md](cloud/ADMIN.md). Device installation remains manual; activation/download alone never claims successful application.

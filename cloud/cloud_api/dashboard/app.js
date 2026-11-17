@@ -116,7 +116,10 @@ async function load(){
   finally{if(version===revision){loading=false;$('refresh').disabled=false;document.querySelectorAll('#filters input,#filters select').forEach((e)=>{e.disabled=false;});}}
 }
 async function enter(){
-  const me=await(await api('/v1/me')).json();inventory=await(await api('/v1/inventory')).json();
+  const me=await(await api('/v1/me')).json();
+  if(me.role==='admin'){location.assign('/admin');return;}
+  if(me.role==='technician'){location.assign('/technician');return;}
+  inventory=await(await api('/v1/inventory')).json();
   $('demo-banner').hidden=!me.demo;
   $('identity').textContent=`Biznesi: ${me.organization_id}${me.email?' · '+me.email:''}`;
   $('location').replaceChildren(new Option('Të gjitha lokacionet',''));inventory.locations.forEach((id)=>$('location').add(new Option(id,id)));cameras();dates();
@@ -139,4 +142,4 @@ $('download').addEventListener('click',async()=>{
   try{const response=await api('/v1/reports/hourly.csv?'+query);const url=URL.createObjectURL(await response.blob());const a=document.createElement('a');a.href=url;a.download='raporti-orar.csv';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}
   catch(e){message(e.message,true);}finally{$('download').disabled=!query;}
 });
-enter().catch((error)=>{loginView();if(error.message!=='Hyr përsëri në llogari.')$('login-status').textContent='Nuk mund të ngarkohet paneli. Kontrollo lidhjen dhe provo përsëri.';});
+if(new URLSearchParams(location.search).get('login')==='admin'){loginView();document.querySelector('#login-view .eyebrow').textContent='HYRJE ADMIN';}else enter().catch((error)=>{loginView();if(error.message!=='Hyr përsëri në llogari.')$('login-status').textContent='Nuk mund të ngarkohet paneli. Kontrollo lidhjen dhe provo përsëri.';});

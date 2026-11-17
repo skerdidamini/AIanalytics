@@ -26,6 +26,13 @@ class LocalTests(unittest.TestCase):
         token=accounts.login(self.database,'owner@example.com','local-test-password-123','test')
         self.assertIsNotNone(token)
 
+    def test_administrator_does_not_replace_owner_setup(self):
+        from cloud_api.operations import SYSTEM_ORG
+        accounts.create_owner(self.database,SYSTEM_ORG,'admin@example.com','admin-test-password','admin')
+        answers=iter(['real-business','owner@example.com']);passwords=iter(['owner-test-password','owner-test-password'])
+        organization=ensure_owner(self.database,False,lambda _:next(answers),lambda _:next(passwords))
+        self.assertEqual(organization,'real-business')
+
     def test_demo_seed_is_idempotent_and_time_bounded(self):
         now=datetime(2026,11,16,12,30,tzinfo=timezone.utc)
         count=seed_demo(self.database,'demo',now)

@@ -8,6 +8,7 @@ import sys
 
 def main():
     parser=argparse.ArgumentParser(description='Start AI Camera Analytica locally on this PC')
+    parser.add_argument('--admin',action='store_true',help='Create/use the administrator account')
     parser.add_argument('--demo',action='store_true',help='Use isolated simulated data, never the real database')
     parser.add_argument('--port',type=int,default=8080)
     parser.add_argument('--no-browser',action='store_true')
@@ -29,6 +30,7 @@ def main():
         marker.write_text(signature)
     command=[str(python),'-m','cloud_api.local','--root',str(project),'--port',str(args.port)]
     if args.demo:command.append('--demo')
+    if args.admin:command.append('--admin')
     if args.no_browser:command.append('--no-browser')
     return subprocess.call(command)
 

@@ -5,14 +5,16 @@ import json
 from pathlib import Path
 from urllib.parse import urlsplit
 from fastapi import Depends, FastAPI, HTTPException, Query, Request
-from fastapi.responses import Response
+from fastapi.responses import Response, JSONResponse
+from fastapi.exceptions import RequestValidationError
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import ValidationError
 from starlette.concurrency import run_in_threadpool
 
 from .database import Database, Conflict, Rejected
 from .models import Batch
-from . import accounts
+from . import accounts, operations
+from .limits import RequestSizeLimit
 
 MAX_BODY = 1024 * 1024
 
@@ -20,8 +22,14 @@ MAX_BODY = 1024 * 1024
 def create_app(database_path, secure_cookies=True, demo=False):
     database = Database(database_path)
     accounts.initialize(database)
+    operations.initialize(database)
     app = FastAPI(title='AI Camera Analytica — Cloud MVP', version='0.1.0')
+    app.add_middleware(RequestSizeLimit,max_bytes=MAX_BODY)
     bearer = HTTPBearer(auto_error=False)
+
+    @app.exception_handler(RequestValidationError)
+    async def invalid_request(request,exception):
+        return JSONResponse(status_code=422,content={'detail':'Invalid request fields'})
 
     @app.middleware('http')
     async def response_headers(request, call_next):
@@ -150,8 +158,9 @@ def create_app(database_path, secure_cookies=True, demo=False):
         return response
 
     @app.get('/v1/me')
-    def me(identity=Depends(role('reader'))):
-        return {'organization_id':identity['organization_id'],'email':identity.get('email'),'demo':demo}
+    def me(identity=Depends(principal)):
+        if identity['role'] not in ('reader','admin','technician'):raise HTTPException(403,'Account required')
+        return {'organization_id':identity['organization_id'],'email':identity.get('email'),'demo':demo,'role':identity['role']}
 
     @app.get('/v1/inventory')
     def inventory(identity=Depends(role('reader'))):
@@ -169,4 +178,6 @@ def create_app(database_path, secure_cookies=True, demo=False):
         if asset not in types:raise HTTPException(404)
         return Response((Path(__file__).parent/'dashboard'/asset).read_bytes(),media_type=types[asset])
 
+    from .admin_api import register
+    register(app,database,principal,same_origin,demo)
     return app

@@ -11,10 +11,10 @@
     <p class="hint">Vetëm një kamerë për këtë panel. Gjatë analizës, ndryshimet mbeten në formular; ndalo procesin para ruajtjes. Pamja e ngarkuar nuk dërgohet në pajisje.</p>`;
   document.querySelector('.intro').after(card);
   const get=(id)=>document.getElementById(id);
-  let token=null, busy=false, current=null;
+  let token=null, busy=false, current=null, managed=false;
   function message(text,error=false){get('runtime-message').textContent=text;get('runtime-message').classList.toggle('error',error);}
   function controls(){
-    get('save-device').disabled=busy||!token||!current||current.running;
+    get('save-device').disabled=busy||!token||!current||current.running||managed;
     get('start-worker').disabled=busy||!token||!current||current.running||!current.source_configured;
     get('stop-worker').disabled=busy||!token||!current||!current.running;
   }
@@ -47,12 +47,14 @@
   }
   get('save-device').addEventListener('click',()=>action(save));
   get('start-worker').addEventListener('click',()=>action(async()=>{
-    await save();display(await request('/api/start',{}));message('Procesi u nis. Prit konfirmimin e frame-ve; nisja nuk garanton saktësinë e numërimit.');
+    if(!managed)await save();display(await request('/api/start',{}));message('Procesi u nis. Prit konfirmimin e frame-ve; nisja nuk garanton saktësinë e numërimit.');
   }));
   get('stop-worker').addEventListener('click',()=>action(async()=>{display(await request('/api/stop',{}));message('Analiza u ndal. Eventet e ruajtura mbeten në databazë.');}));
   try{
     const bootstrap=await request('/api/bootstrap');token=bootstrap.token;
     if(bootstrap.config)window.CameraCalibration.loadConfig(bootstrap.config);
+    managed=Boolean(bootstrap.config?.deployment);
+    if(managed){get('start-worker').textContent='Nis konfigurimin aktiv të ruajtur';message('Konfigurim i menaxhuar nga platforma. Nisja përdor skedarin ekzistues pa ruajtur ndryshimet e formularit. Për ndryshime krijo version të ri në platformë.');}
     if(bootstrap.warning)message(bootstrap.warning,true);
     display(await request('/api/status'));
   }catch(error){message(`Lidhja dështoi: ${error.message}`,true);controls();return;}

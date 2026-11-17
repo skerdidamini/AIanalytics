@@ -111,13 +111,13 @@ Timestamp-et më shumë se 5 minuta në të ardhmen refuzohen. Eventet e vjetra 
 .venv/bin/pip check
 ```
 
-24 teste: deduplikim, konfirmim, role, izolim biznesesh/node-sh/kamerash, rollback, kufij batch-i, schema, qëndrim i ndërprerë, persistencë, revokim dhe CSV. Testi integrues përdor evente të gjeneruara nga `edge_analytics.Analytics`, radhën SQLite dhe funksionin real `sync_batch` kundër Uvicorn HTTPS. Simulon commit me konfirmim të humbur, ridërgon dhe verifikon vetëm 1 hyrje në raport. Përdor certifikatë provë të besuar shprehimisht brenda testit; verifikimi TLS dhe hostname mbeten aktivë. Kërkon `openssl` dhe dosjen edge pranë cloud.
+33 teste: deduplikim, konfirmim, role, izolim biznesesh/node-sh/kamerash, rollback, kufij batch-i, schema, qëndrim i ndërprerë, persistencë, revokim dhe CSV. Testi integrues përdor evente të gjeneruara nga `edge_analytics.Analytics`, radhën SQLite dhe funksionin real `sync_batch` kundër Uvicorn HTTPS. Simulon commit me konfirmim të humbur, ridërgon dhe verifikon vetëm 1 hyrje në raport. Përdor certifikatë provë të besuar shprehimisht brenda testit; verifikimi TLS dhe hostname mbeten aktivë. Kërkon `openssl` dhe dosjen edge pranë cloud.
 
 ## Para përdorimit publik
 
 Ky version është testuar lokalisht dhe **nuk është deploy-uar në një cloud publik**. Ende duhen server/domain, certifikatë reale HTTPS ose reverse proxy, secrets në shërbim, backup/restore, monitorim, rate limiting në hyrje, autostart dhe politikë arkivimi. SQLite është për një instancë pilot me disk persistent lokal; PostgreSQL dhe migrimet duhen para zgjerimit në disa instanca. Mos e vendos databazën në filesystem efemer. Për eksport live/backup përdor SQLite backup API ose snapshot konsistent; mos kopjo vetëm skedarin kryesor ndërsa WAL është aktiv.
 
-Mungojnë ende rikuperimi/ndryshimi i fjalëkalimit nga përdoruesi, verifikimi i emailit, MFA, menaxhimi i përdoruesve nga UI, PDF, dërgimi i raporteve me email, menaxhimi në distancë i pajisjeve dhe monitorimi i shëndetit të tyre. Token-at reader mbeten për akses teknik; pronari përdor llogarinë e vet dhe sesionin e shfletuesit. API nuk aktivizon CORS të hapur dhe nuk kërkon që token-at të futen në faqen publike.
+Mungojnë ende rikuperimi/ndryshimi i fjalëkalimit nga përdoruesi, verifikimi i emailit, MFA, ndryshimi/çaktivizimi i plotë i llogarive nga UI, PDF, dërgimi i raporteve me email, menaxhimi në distancë i pajisjeve dhe monitorimi i shëndetit të tyre. Token-at reader mbeten për akses teknik; pronari përdor llogarinë e vet dhe sesionin e shfletuesit. API nuk aktivizon CORS të hapur dhe nuk kërkon që token-at të futen në faqen publike.
 
 ## Dashboard-i i pronarit
 
@@ -166,3 +166,7 @@ Tabela e zonave tregon mesataren `observed_dwell_seconds / completed_sessions`, 
 Te takeaway pronari zgjedh shprehimisht zonën e dedikuar nga rreshtat e ngarkuar; zgjedhja vlen për pamjen aktuale dhe nuk ruan klasifikim në konfigurimin edge. Shfaqet qëndrim i vëzhguar, jo konfirmim i pritjes apo dorëzimit të porosisë. Pamja aktuale mund të përfshijë edhe stafin. ID-të e zonave merren nga kalibrimi, pa bashkuar `Zone1` të kamerave të ndryshme.
 
 Demoja lokale shton shembuj sintetikë për `Zone1`, `Zone2` dhe `Takeaway`, krahas zonës demonstrative ekzistuese. Seed-i mbetet idempotent dhe i izoluar në databazën demo. CSV orare dhe metrikat e mëparshme vazhdojnë të punojnë. Testet shtesë kontrollojnë agregimin e zonave, përjashtimin e sesioneve të ndërprera, filtrat, izolimin e bizneseve dhe përputhjen e shifrave me etiketat e aftësive. Testet e shfletuesit mbulojnë përzgjedhjen e takeaway, CSV-në e zonave dhe gjendjet bosh.
+
+## Panel Admin dhe instalimet
+
+Paneli `/admin`, pamja e teknikut `/technician`, kalibruesi i autorizuar `/installer/` dhe heartbeat janë tashmë pjesë e backend-it. Shih [ADMIN.md](ADMIN.md) për nisjen në Windows, regjistrin, llogaritë/rolet, caktimet, versionet dhe statuset që dallojnë komunikimin nga përpunimi i frame-ve dhe mbërritja e eventeve. Nuk ka ende autoinstalim të konfigurimeve në pajisje; JSON-i aktiv instalohet manualisht dhe konfirmohet nga raportimi i versionit/hash-it.

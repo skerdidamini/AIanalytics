@@ -26,12 +26,15 @@ def main():
     replay.add_argument('path', help='JSONL with timestamp and normalized points')
     commands.add_parser('status')
     sync = commands.add_parser('sync')
+    sync.add_argument('--health-file',help='Worker health JSON from run --health-file, for camera status')
     sync.add_argument('--watch', action='store_true', help='Retry with backoff; run separately from video process')
     report = commands.add_parser('report')
     report.add_argument('--output', required=True)
     args = parser.parse_args()
     health_path = Path(args.health_file) if args.command == 'run' and args.health_file else None
     processed_frames, last_frame_at, last_health_write = 0, None, 0
+    applied_version, configuration_sha256 = None, None
+    worker_identity = None
 
     def health(state, force=False):
         nonlocal last_health_write
@@ -39,12 +42,16 @@ def main():
         if health_path and (force or now - last_health_write >= 1):
             temporary = health_path.with_suffix('.tmp')
             temporary.write_text(json.dumps({'state': state, 'processed_frames': processed_frames,
-                                             'last_frame_at': last_frame_at, 'updated_at': now}))
+                                             'last_frame_at': last_frame_at, 'updated_at': now, 'applied_version': applied_version, 'configuration_sha256': configuration_sha256, 'identity': worker_identity}))
             temporary.replace(health_path)
             last_health_write = now
 
     health('starting', True)
     config = load_config(args.config)
+    if args.command=='run':
+        worker_identity={key:config[key] for key in ('organization_id','location_id','node_id','camera_id')}
+        from .heartbeat import configuration_proof
+        applied_version,configuration_sha256=configuration_proof(args.config)
     store = EventStore(config['database'], config['queue_max_events'])
     stopped = False
 
@@ -62,8 +69,14 @@ def main():
             if not url or not token:
                 raise ValueError('Set cloud URL/token in the documented environment variables')
             delay = 1
+            last_heartbeat = -30
+            from .heartbeat import send_heartbeat
             while not stopped:
                 try:
+                    if time.monotonic()-last_heartbeat>=30:
+                        try:send_heartbeat(config,url,token,args.health_file)
+                        except Exception:print('Heartbeat unavailable; event sync will still be attempted',flush=True)
+                        last_heartbeat=time.monotonic()
                     count = sync_batch(store, url, token)
                     print(f'Acknowledged events: {count}', flush=True)
                     delay = 1 if count else 5

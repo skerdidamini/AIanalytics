@@ -60,6 +60,14 @@ class HttpsIntegrationTests(unittest.TestCase):
                     request=urllib.request.Request(base+'/v1/events',data=json.dumps({'schema_version':1,'events':events}).encode(),
                                                    headers={'Authorization':f'Bearer {token}','Content-Type':'application/json'})
                     with urllib.request.urlopen(request) as response:self.assertEqual(response.status,200)
+                    from edge_analytics.heartbeat import send_heartbeat
+                    health=directory/'health.json'
+                    health.write_text(json.dumps({'identity':{key:config[key] for key in ('organization_id','location_id','node_id','camera_id')},'updated_at':time.time(),'state':'processing','last_frame_at':time.time()}))
+                    send_heartbeat(config,base+'/v1/events',token,health)
+                    from cloud_api.database import Database
+                    connection=Database(cloud).connect()
+                    try:self.assertEqual(connection.execute('SELECT state FROM camera_health').fetchone()[0],'processing')
+                    finally:connection.close()
                     accepted=sync_batch(store,base+'/v1/events',token)
                     self.assertEqual(accepted,len(events))
                     self.assertEqual(store.pending(),[])

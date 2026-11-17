@@ -21,6 +21,10 @@ def main():
     owner.add_argument('--organization',required=True)
     owner.add_argument('--email',required=True)
     owner.add_argument('--password-file',help='Private input file; otherwise prompt securely in terminal')
+    for kind in ['create-admin','create-technician']:
+        operator=commands.add_parser(kind)
+        operator.add_argument('--email',required=True)
+        operator.add_argument('--password-file')
     for kind in ['provision-node','provision-reader']:
         command=commands.add_parser(kind)
         command.add_argument('--organization',required=True)
@@ -37,11 +41,12 @@ def main():
     database=Database(path)
     from . import accounts
     accounts.initialize(database)
-    if args.command=='create-owner':
+    if args.command in ('create-owner','create-admin','create-technician'):
         import getpass
         password=Path(args.password_file).read_text().rstrip('\r\n') if args.password_file else getpass.getpass('Owner password (minimum 12 characters): ')
         if not args.password_file and password!=getpass.getpass('Confirm password: '):parser.error('Passwords do not match')
-        accounts.create_owner(database,args.organization,args.email,password)
+        from .operations import SYSTEM_ORG
+        accounts.create_owner(database,getattr(args,'organization',SYSTEM_ORG),args.email,password,role={'create-owner':'reader','create-admin':'admin','create-technician':'technician'}[args.command])
         print('Owner account created; no password printed.')
     elif args.command=='serve':
         import uvicorn

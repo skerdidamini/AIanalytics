@@ -9,6 +9,7 @@ SESSION_SECONDS=8*3600
 SCHEMA='''
 CREATE TABLE IF NOT EXISTS owners (email TEXT PRIMARY KEY,organization_id TEXT NOT NULL,salt TEXT NOT NULL,password_hash TEXT NOT NULL,enabled INTEGER NOT NULL DEFAULT 1,
  FOREIGN KEY(organization_id) REFERENCES organizations(id));
+CREATE TABLE IF NOT EXISTS account_roles (email TEXT PRIMARY KEY,role TEXT NOT NULL CHECK(role IN ('admin','technician')),FOREIGN KEY(email) REFERENCES owners(email));
 CREATE TABLE IF NOT EXISTS sessions (digest TEXT PRIMARY KEY,email TEXT NOT NULL,expires REAL NOT NULL,FOREIGN KEY(email) REFERENCES owners(email));
 CREATE TABLE IF NOT EXISTS login_attempts (key TEXT NOT NULL,timestamp REAL NOT NULL);
 CREATE INDEX IF NOT EXISTS login_attempt_time ON login_attempts(key,timestamp);
@@ -22,7 +23,8 @@ def initialize(database):
     finally:connection.close()
 
 
-def create_owner(database,organization,email,password):
+def create_owner(database,organization,email,password,role='reader'):
+    if role not in ('reader','admin','technician'):raise ValueError('Invalid account role')
     email=email.strip().casefold()
     if not organization.strip() or len(organization)>128 or len(email)>254 or '@' not in email or len(password)<12 or len(password)>256:
         raise ValueError('Use a valid email and a password of 12–256 characters')
@@ -33,6 +35,7 @@ def create_owner(database,organization,email,password):
         with connection:
             connection.execute('INSERT OR IGNORE INTO organizations VALUES (?)',(organization,))
             connection.execute('INSERT INTO owners(email,organization_id,salt,password_hash) VALUES (?,?,?,?)',(email,organization,salt,digest))
+            if role!='reader':connection.execute('INSERT INTO account_roles VALUES (?,?)',(email,role))
     finally:connection.close()
 
 
@@ -69,9 +72,9 @@ def authenticate(database,token):
     if not token or len(token)>256:return None
     connection=database.connect()
     try:
-        owner=connection.execute('SELECT owners.email,organization_id FROM sessions JOIN owners USING(email) WHERE digest=? AND expires>? AND enabled=1',
+        owner=connection.execute("SELECT owners.email,organization_id,coalesce(role,'reader') AS role FROM sessions JOIN owners USING(email) LEFT JOIN account_roles USING(email) WHERE digest=? AND expires>? AND enabled=1",
                                  (hashlib.sha256(token.encode()).hexdigest(),time.time())).fetchone()
-        return {'email':owner['email'],'organization_id':owner['organization_id'],'role':'reader'} if owner else None
+        return {'email':owner['email'],'organization_id':owner['organization_id'],'role':owner['role']} if owner else None
     finally:connection.close()
 
 

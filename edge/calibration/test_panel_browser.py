@@ -1,5 +1,6 @@
 """Optional full local-panel browser check; requires Playwright and installed edge venv."""
 import json
+import hashlib
 from pathlib import Path
 import socket
 import subprocess
@@ -52,6 +53,22 @@ w.release()
             page.locator('#stop-worker').click()
             expect(page.locator('#runtime-state')).to_contain_text('e ndalur', timeout=25000)
             assert not page.locator('#save-device').is_disabled()
+            # A centrally managed configuration starts byte-for-byte unchanged.
+            file=directory/'config.local.json';managed=json.loads(file.read_text())
+            managed['calibration']['source']={'kind':'image','width':320,'height':240}
+            managed['calibration']['fixed_view_confirmed']=True
+            managed['calibration']['review']={'status':'manual_review'}
+            digest=hashlib.sha256(json.dumps(managed,sort_keys=True,separators=(',',':')).encode()).hexdigest()
+            managed['deployment']={'calibration_version':5,'configuration_sha256':digest}
+            file.write_text(json.dumps(managed));before=file.read_bytes()
+            page.reload();expect(page.locator('#start-worker')).to_contain_text('konfigurimin aktiv')
+            expect(page.locator('#save-device')).to_be_disabled()
+            page.locator('#camera_id').fill('must-not-overwrite')
+            page.locator('#start-worker').click()
+            expect(page.locator('#runtime-state')).to_contain_text('po përpunohet',timeout=15000)
+            page.locator('#stop-worker').click()
+            expect(page.locator('#runtime-state')).to_contain_text('e ndalur',timeout=25000)
+            assert file.read_bytes()==before
             assert not errors,errors
             browser.close()
         with urllib.request.urlopen(base+'/api/status') as response:

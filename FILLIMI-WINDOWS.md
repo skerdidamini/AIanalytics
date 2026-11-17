@@ -61,3 +61,7 @@ Logjika e nisjes Python, llogaritë, demonstrimi dhe izolimi i databazave janë 
 ## Hap panelin e instalimit të kamerës
 
 Për kalibrim përdor **NIS-KALIBRIMIN-WINDOWS.cmd**, jo launcher-in e dashboard-it. Ky panel hap foto ose video të shkurtër, vizaton vijën/zonat, merr mostra manuale uniforme dhe shkarkon JSON-in për kamerën. Vetëm Python duhet instaluar; nuk instalohen varësi për këtë panel statik. Mostrat nuk aktivizojnë ende njohje automatike të stafit. Rrjedha e plotë është te `edge/calibration/README.md`. Mbyll terminalin kur mbaron; nëse porta është zënë, përdor `py -3 start-calibration.py --port 8767`.
+
+## Paneli Admin
+
+Mbyll fillimisht terminalin e demos së vjetër, pastaj hap **NIS-ADMIN-WINDOWS.cmd**. Serveri përdor të njëjtën databazë demo dhe ruan llogarinë e pronarit. Herën e parë krijo Admin me email tjetër nga ai i pronarit dhe fjalëkalim tëndin. Pastaj hyr në formularin “HYRJE ADMIN”. Nga paneli krijon bizneset/lokacionet/pajisjet/kamerat, llogaritë e teknikëve/pronarëve dhe caktimet. Shih `cloud/ADMIN.md` për rrjedhën e plotë. Pa heartbeat të pajisjes, statusi “Pa të dhëna” është i saktë edhe kur ke evente demo.

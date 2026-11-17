@@ -5,6 +5,7 @@ import getpass
 from pathlib import Path
 import secrets
 import socket
+import sqlite3
 import threading
 import time
 import urllib.request
@@ -18,7 +19,7 @@ from .database import Database
 
 def ensure_owner(database,demo=False,input_fn=input,password_fn=getpass.getpass):
     connection=database.connect()
-    try:row=connection.execute('SELECT organization_id FROM owners ORDER BY email LIMIT 1').fetchone()
+    try:row=connection.execute("SELECT organization_id FROM owners LEFT JOIN account_roles USING(email) WHERE coalesce(role,'reader')='reader' ORDER BY email LIMIT 1").fetchone()
     finally:connection.close()
     if row:
         print('The account is already configured. Use your existing email and password in the browser.')
@@ -69,6 +70,7 @@ def main():
     parser=argparse.ArgumentParser(description='Local owner dashboard')
     parser.add_argument('--root',required=True)
     parser.add_argument('--demo',action='store_true')
+    parser.add_argument('--admin',action='store_true')
     parser.add_argument('--port',type=int,default=8080)
     parser.add_argument('--no-browser',action='store_true')
     args=parser.parse_args()
@@ -79,19 +81,39 @@ def main():
     runtime=root/'runtime';runtime.mkdir(parents=True,exist_ok=True)
     path=runtime/('demo.sqlite3' if args.demo else 'local.sqlite3')
     database=Database(path);accounts.initialize(database)
-    organization=ensure_owner(database,args.demo)
+    if args.admin:
+        from .operations import SYSTEM_ORG
+        connection=database.connect()
+        try:exists=connection.execute("SELECT 1 FROM owners JOIN account_roles USING(email) WHERE role='admin' AND enabled=1").fetchone()
+        finally:connection.close()
+        if not exists:
+            print('Create your administrator account. Use a different email from an existing owner account.')
+            while True:
+                email=input('Administrator email: ').strip()
+                password=getpass.getpass('Administrator password (minimum 12 characters): ')
+                if password!=getpass.getpass('Repeat password: '):print('Passwords do not match.');continue
+                try:accounts.create_owner(database,SYSTEM_ORG,email,password,role='admin')
+                except (ValueError,sqlite3.IntegrityError):print('Email already used or fields invalid. Try a different email.');continue
+                break
+        connection=database.connect()
+        try:owner=connection.execute("SELECT organization_id FROM owners LEFT JOIN account_roles USING(email) WHERE coalesce(role,'reader')='reader' ORDER BY email LIMIT 1").fetchone()
+        finally:connection.close()
+        organization=owner['organization_id'] if owner else 'demo-business'
+    else:
+        organization=ensure_owner(database,args.demo)
     if args.demo:
         seed_demo(database,organization)
         print('DEMO MODE: simulated events only. Real data uses a separate database.',flush=True)
     else:print('REAL LOCAL MODE: starts empty until the edge sends events.',flush=True)
     url=f'http://127.0.0.1:{args.port}'
-    print(f'Open dashboard on this PC: {url}\nKeep this window open. Ctrl+C stops the server.',flush=True)
+    browser_url=url+('/?login=admin' if args.admin else '/')
+    print(f'Open dashboard on this PC: {browser_url}\nKeep this window open. Ctrl+C stops the server.',flush=True)
     if not args.no_browser:
         def open_when_ready():
             for _ in range(100):
                 try:
                     with urllib.request.urlopen(url+'/healthz',timeout=1) as response:
-                        if response.status==200:webbrowser.open(url);return
+                        if response.status==200:webbrowser.open(browser_url);return
                 except OSError:pass
                 time.sleep(.2)
         threading.Thread(target=open_when_ready,daemon=True).start()

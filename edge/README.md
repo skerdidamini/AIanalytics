@@ -130,3 +130,9 @@ Serveri përdor kufizim Host/Origin dhe token për veprime, pa CORS të hapur. N
 Shih [calibration/README.md](calibration/README.md) për rrjedhën e re. Paneli pranon video lokale me pause/seek, zona tavoline/shërbimi/takeaway, lidhje shërbimi→tavolinë, mostra manuale RGB/HSV sipas rolit, provë gjeometrike hyrje/daljeje dhe kontroll manual të konfigurimit. Numërimi i vijës mund të çaktivizohet për kamerat e tavolinave; edge kontrollon edhe raportin e përmasave të pamjes kundrejt kalibrimit.
 
 Mostrat dhe funksionet e zonave janë metadata për instalimin. Klasifikimi automatik i stafit dhe matjet e shërbimit ende nuk janë aktive; JSON i shënon të dyja false. Dallimi i stafit, tracking-u i përmirësuar dhe preview automatik i detektimeve kërkojnë zhvillimin/vlerësimin e modelit me video reale. Mos e paraqit kontrollin manual si validim të saktësisë së AI-së.
+
+## Version i menaxhuar nga platforma dhe heartbeat
+
+JSON-i aktiv nga Paneli Admin ka metadata `deployment` me version dhe hash. Worker-i e verifikon skedarin real dhe e përfshin provën në health file. Për raportim, nise `run --health-file worker-health.json` dhe veçmas `sync --watch --health-file worker-health.json`, me të njëjtin `--config`. Sync dërgon heartbeat rreth çdo 30 sekonda në endpoint-in fqinj `/v1/heartbeat`; pa health file të freskët të asaj kamere raportohet gjendje e panjohur, jo përpunim videoje. Lidhja mbetet HTTPS dhe token-i i pajisjes mbetet në ambient.
+
+Paneli lokal nuk autosave-on një konfigurim që ka `deployment` kur nis analizën: përdor skedarin aktiv ekzistues, për të mos ndryshuar hash-in pa version të ri në platformë. Për konfigurime lokale të pamenaxhuara ruajtja/nisja mbetet si më parë. Detajet e autorizimit, kalibrimit dhe instalimit manual janë te `../cloud/ADMIN.md`.
