@@ -208,7 +208,14 @@ def register(app,database,principal,same_origin,demo):
             if tuple(config.get(k) for k in ('organization_id','location_id','node_id','camera_id'))!=value:raise ValueError('Scope mismatch')
             config['database']='events.sqlite3'
             validate_config(config)
-            if body.status=='manual_review' and (config.get('calibration',{}).get('review',{}).get('status')!='manual_review' or not config['calibration'].get('fixed_view_confirmed') or not config['calibration'].get('source')):raise ValueError('Manual review incomplete')
+            if body.status=='manual_review':
+                calibration=config.get('calibration') or {}
+                if not calibration.get('source'):
+                    raise HTTPException(422,'Ngarko foton ose videon e kamerës përpara kontrollit manual.')
+                if not calibration.get('fixed_view_confirmed'):
+                    raise HTTPException(422,'Shëno kutinë: Pamja është fikse, pa zoom ose prerje gjatë analizës.')
+                if calibration.get('review',{}).get('status')!='manual_review':
+                    raise HTTPException(422,'Shtyp Kontrollo konfigurimin, pastaj Ruaj kontrollin manual. Nëse ndryshon konfigurimin, kontrolloje sërish.')
             if 'calibration' in config:config['calibration']['review']={'status':body.status}
         except (ValueError,KeyError,TypeError):raise HTTPException(422,'Invalid calibration, identity or manual review') from None
         text=operations.canonical(config);digest=operations.digest(config)

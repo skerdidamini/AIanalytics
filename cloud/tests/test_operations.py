@@ -87,6 +87,23 @@ class OperationsTests(unittest.TestCase):
         invalid=self.post('/v1/admin/accounts',{'role':'owner','email':'bad@example.com','password':'short','organization_id':'a'})
         self.assertNotIn('short',invalid.text)
 
+    def test_manual_review_reports_missing_steps_without_saving(self):
+        config=self.config()
+        calibration={'schema_version':1,'source':None,'fixed_view_confirmed':False,
+            'role_samples':[],'capabilities':{'uniform_classifier_active':False,
+            'table_service_active':False},'review':{'status':'draft'}}
+        config['calibration']=calibration
+        for expected in ('Ngarko foton', 'Pamja është fikse', 'Kontrollo konfigurimin'):
+            result=self.post('/v1/installations/calibrations'+self.query,
+                {'config':config,'expected_version':0,'status':'manual_review'})
+            self.assertEqual(result.status_code,422)
+            self.assertIn(expected,result.json()['detail'])
+            if calibration['source'] is None:
+                calibration['source']={'kind':'image','width':640,'height':360}
+            else:
+                calibration['fixed_view_confirmed']=True
+        self.assertEqual(self.client.get('/v1/installations/context'+self.query).json()['latest_version'],0)
+
     def test_calibration_versions_identity_activation_and_proof(self):
         config=self.config()
         first=self.post('/v1/installations/calibrations'+self.query,{'config':config,'expected_version':0,'status':'draft'})
