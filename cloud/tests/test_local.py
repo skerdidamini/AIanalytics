@@ -2,6 +2,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 from fastapi.testclient import TestClient
 from cloud_api import accounts
 from cloud_api.app import create_app
@@ -32,6 +33,21 @@ class LocalTests(unittest.TestCase):
         answers=iter(['real-business','owner@example.com']);passwords=iter(['owner-test-password','owner-test-password'])
         organization=ensure_owner(self.database,False,lambda _:next(answers),lambda _:next(passwords))
         self.assertEqual(organization,'real-business')
+
+    def test_admin_start_seeds_dedicated_business_only(self):
+        from cloud_api.operations import SYSTEM_ORG
+        from cloud_api.local import main
+        accounts.create_owner(self.database,SYSTEM_ORG,'admin@example.com','admin-test-password','admin')
+        accounts.create_owner(self.database,'real-restaurant','aaa@example.com','owner-test-password')
+        self.database.provision('real-restaurant','spille','edge',['camera'],'private-token')
+        root=Path(self.directory.name)
+        with patch('sys.argv',['local','--root',str(root),'--admin','--demo','--no-browser']), \
+             patch('cloud_api.local.Database',return_value=self.database), \
+             patch('uvicorn.run'):
+            main()
+        self.assertEqual(self.database.hourly('real-restaurant',0,9999999999),[])
+        self.assertEqual([c['location_id'] for c in self.database.inventory('real-restaurant')['cameras']],['spille'])
+        self.assertTrue(self.database.hourly('demo-business',0,9999999999))
 
     def test_demo_seed_is_idempotent_and_time_bounded(self):
         now=datetime(2026,11,16,12,30,tzinfo=timezone.utc)

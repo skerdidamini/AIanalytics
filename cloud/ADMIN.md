@@ -89,3 +89,5 @@ Testet kontrollojnë role/caktime, regjistrin, sekretet jashtë audit-it, versio
 Kopjet e kalibruesit në `cloud_api/installer` kontrollohen ndaj versionit standalone nga testet; kur ndryshon kalibruesi duhet të sinkronizohen skedarët e UI-së dhe validatori i pastër server-side. Nuk instalohet OpenCV në backend vetëm për të validuar konfigurimin.
 
 Mbeten për më vonë: monitorim hardware/disk, autostart i plotë i edge, alerts/email, rollout automatik i konfigurimit, ftesa dhe rikuperim fjalëkalimesh, emra/ndryshime/fshirje të regjistrit dhe testim fizik në NVR/Mini PC. Backup dhe deploy publik mbeten sipas planit të pilotit.
+
+Ngjarjet e simuluara krijohen vetëm te biznesi `demo-business`, pavarësisht rendit të llogarive të pronarëve. Versionet e vjetra mund të kenë krijuar `demo-location` te një biznes tjetër; përditësimi nuk fshin këto të dhëna. Për prova pa to, filtro vendndodhjen/kamerën reale (jo “Të gjitha”).

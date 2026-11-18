@@ -95,15 +95,11 @@ def main():
                 try:accounts.create_owner(database,SYSTEM_ORG,email,password,role='admin')
                 except (ValueError,sqlite3.IntegrityError):print('Email already used or fields invalid. Try a different email.');continue
                 break
-        connection=database.connect()
-        try:owner=connection.execute("SELECT organization_id FROM owners LEFT JOIN account_roles USING(email) WHERE coalesce(role,'reader')='reader' ORDER BY email LIMIT 1").fetchone()
-        finally:connection.close()
-        organization=owner['organization_id'] if owner else 'demo-business'
     else:
         organization=ensure_owner(database,args.demo)
     if args.demo:
-        seed_demo(database,organization)
-        print('DEMO MODE: simulated events only. Real data uses a separate database.',flush=True)
+        seed_demo(database,'demo-business')
+        print('DEMO MODE: simulated events belong only to demo-business. Existing data is preserved.',flush=True)
     else:print('REAL LOCAL MODE: starts empty until the edge sends events.',flush=True)
     url=f'http://127.0.0.1:{args.port}'
     browser_url=url+('/?login=admin' if args.admin else '/')
