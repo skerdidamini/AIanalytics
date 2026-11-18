@@ -4,6 +4,7 @@ from pathlib import Path
 import tempfile
 import time
 import unittest
+from unittest.mock import patch
 from fastapi.testclient import TestClient
 from cloud_api import accounts, operations
 from cloud_api.app import create_app
@@ -39,6 +40,20 @@ class OperationsTests(unittest.TestCase):
         value=json.loads((ROOT/'edge/config.example.json').read_text())
         value.update(organization_id='a',location_id='site',node_id='node',camera_id='cam')
         return value
+
+    def test_installer_uses_utf8_on_windows(self):
+        original_read_text = Path.read_text
+
+        def windows_read_text(path, encoding=None, errors=None):
+            return original_read_text(path, encoding=encoding or 'cp1252', errors=errors)
+
+        with patch.object(Path, 'read_text', windows_read_text):
+            page = self.client.get('/installer/' + self.query)
+            context = self.client.get('/v1/installations/context' + self.query)
+        self.assertEqual(page.status_code, 200)
+        self.assertIn('/admin-assets/installer.js', page.text)
+        self.assertIn('Kalibr', page.text)
+        self.assertEqual(context.status_code, 200)
 
     def test_create_registry_and_scope_technician(self):
         self.assertEqual(self.post('/v1/admin/businesses',{'id':'restaurant','name':'Restoranti'}).status_code,200)

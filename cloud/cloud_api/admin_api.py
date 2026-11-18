@@ -195,7 +195,7 @@ def register(app,database,principal,same_origin,demo):
         try:
             versions=[dict(row) for row in db.execute('SELECT version,status,created_by,created_at,digest FROM calibrations WHERE organization_id=? AND location_id=? AND node_id=? AND camera_id=? ORDER BY version DESC',value)]
             latest=db.execute('SELECT config FROM calibrations WHERE organization_id=? AND location_id=? AND node_id=? AND camera_id=? ORDER BY version DESC LIMIT 1',value).fetchone()
-            config=json.loads(latest['config']) if latest else json.loads((Path(__file__).parent/'installer/default_config.json').read_text())
+            config=json.loads(latest['config']) if latest else json.loads((Path(__file__).parent/'installer/default_config.json').read_text(encoding='utf-8'))
             config.update(dict(zip(('organization_id','location_id','node_id','camera_id'),value)))
             return {'config':config,'versions':versions,'latest_version':versions[0]['version'] if versions else 0}
         finally:db.close()
@@ -283,7 +283,7 @@ def register(app,database,principal,same_origin,demo):
 
     @app.get('/installer/',include_in_schema=False)
     def installer(identity=Depends(operator)):
-        text=(Path(__file__).parent/'installer/index.html').read_text()
+        text=(Path(__file__).parent/'installer/index.html').read_text(encoding='utf-8')
         text=text.replace('</head>','<link rel="stylesheet" href="/admin-assets/styles.css"><script src="/admin-assets/installer.js" defer></script></head>').replace('href="../../index.html"','href="/technician"')
         return Response(text,media_type='text/html',headers=page_headers)
 
