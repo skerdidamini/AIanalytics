@@ -30,7 +30,7 @@
   }
   function tick(now){
     frame=null;
-    if(paused||document.hidden){last=null;return;}
+    if(paused||document.hidden||document.getElementById('simulation-entries').hidden){last=null;return;}
     if(last!==null)elapsed+=Math.min((now-last)/1000,.1);
     last=now;render();frame=requestAnimationFrame(tick);
   }
@@ -40,6 +40,7 @@
   reduced.addEventListener('change',(event)=>{if(event.matches)setPaused(true);});
   document.addEventListener('visibilitychange',()=>{last=null;schedule();});
   window.addEventListener('home-language-change',label);
+  window.addEventListener('simulation-change',()=>{last=null;schedule();});
   render();label();schedule();
 })();
 
@@ -102,12 +103,39 @@
     counterTime.textContent=`${t('Waiting')}: ${Math.min(6,Math.max(0,Math.floor(cycle-3)))} min`;
     document.getElementById('takeaway-demo-status').textContent=t(cycle>=9?'Waiting complete':'Simulated wait');
   }
-  function tick(now){frame=null;if(paused||document.hidden){last=null;return;}if(last!==null)elapsed+=Math.min((now-last)/1000,.1);last=now;render();frame=requestAnimationFrame(tick);}
+  function tick(now){frame=null;if(paused||document.hidden||document.querySelector('.restaurant-demos').hidden){last=null;return;}if(last!==null)elapsed+=Math.min((now-last)/1000,.1);last=now;render();frame=requestAnimationFrame(tick);}
   function schedule(){if(frame===null&&!paused&&!document.hidden)frame=requestAnimationFrame(tick);}
   function pause(value){paused=value;last=null;if(frame!==null)cancelAnimationFrame(frame);frame=null;label();schedule();}
   toggle.addEventListener('click',()=>pause(!paused));
   reduced.addEventListener('change',(event)=>{if(event.matches)pause(true);});
   document.addEventListener('visibilitychange',()=>{last=null;schedule();});
   window.addEventListener('home-language-change',()=>{label();render();});
+  window.addEventListener('simulation-change',()=>{last=null;schedule();});
   label();render();schedule();
+})();
+
+(() => {
+  const tabs=Array.from(document.querySelectorAll('.simulation-tabs [role=tab]'));
+  if(!tabs.length)return;
+  function select(tab,focus=false){
+    tabs.forEach((item)=>{
+      const selected=item===tab;
+      item.setAttribute('aria-selected',String(selected));item.tabIndex=selected?0:-1;
+      document.getElementById(item.getAttribute('aria-controls')).hidden=!selected;
+    });
+    document.querySelector('.restaurant-demos').hidden=tab.id==='tab-entries';
+    if(focus)tab.focus();
+    window.dispatchEvent(new Event('simulation-change'));
+  }
+  tabs.forEach((tab,index)=>{
+    tab.addEventListener('click',()=>select(tab));
+    tab.addEventListener('keydown',(event)=>{
+      let next;
+      if(event.key==='ArrowRight')next=(index+1)%tabs.length;
+      if(event.key==='ArrowLeft')next=(index+tabs.length-1)%tabs.length;
+      if(event.key==='Home')next=0;
+      if(event.key==='End')next=tabs.length-1;
+      if(next!==undefined){event.preventDefault();select(tabs[next],true);}
+    });
+  });
 })();

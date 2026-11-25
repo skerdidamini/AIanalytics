@@ -188,7 +188,11 @@ const homepageTranslations = {
   "Simulated wait": "Pritje e simuluar",
   "Time at table": "Koha në tavolinë",
   "Customers at tables": "Klientë në tavolina",
-  "Waiting complete": "Pritja përfundoi"
+  "Waiting complete": "Pritja përfundoi",
+  "Tables": "Tavolinat",
+  "Service": "Shërbimi",
+  "Choose a simulation": "Zgjidh simulimin",
+  "Activity simulations": "Simulime të aktivitetit"
 };
 
 (() => {

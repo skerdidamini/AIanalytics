@@ -107,7 +107,9 @@
             </div>
             <p class="hero-trust">Projektuar për përdorim me kamerat që ke tashmë</p>
           </div>
-          <section class="hero-visual camera-demo" aria-label="Demonstrim i numërimit të hyrjeve">
+          <section class="hero-visual camera-demo" aria-label="Simulime të aktivitetit">
+<div class="simulation-tabs" role="tablist" aria-label="Zgjidh simulimin"><button type="button" role="tab" id="tab-entries" aria-controls="simulation-entries" aria-selected="true" tabindex="0">Hyrje</button><button type="button" role="tab" id="tab-tables" aria-controls="simulation-tables" aria-selected="false" tabindex="-1">Tavolinat</button><button type="button" role="tab" id="tab-service" aria-controls="simulation-service" aria-selected="false" tabindex="-1">Shërbimi</button><button type="button" role="tab" id="tab-takeaway" aria-controls="simulation-takeaway" aria-selected="false" tabindex="-1">Takeaway</button></div>
+<div id="simulation-entries" role="tabpanel" aria-labelledby="tab-entries" tabindex="0">
             <div class="demo-heading"><span class="demo-badge"><i></i><span>Simulim ilustrues</span></span><span class="demo-camera">CAM 01 / ENTRANCE</span></div>
             <h2>Çdo kalim bëhet një matje.</h2>
             <p class="demo-intro">Personi kalon vijën. Sistemi regjistron hyrjen.</p>
@@ -139,19 +141,17 @@
             </svg>
             <div class="demo-metrics"><div><span>Hyrje</span><strong id="demo-count">0</strong></div><div><span>Përpunimi</span><strong class="demo-local">Lokal</strong></div><button id="demo-toggle" type="button" aria-pressed="false">Ndalo animimin</button></div>
             <p class="demo-disclaimer">Animim demonstrues, jo pamje reale ose rezultat i matur. Cikli përsëritet.</p>
+</div>
+<div class="restaurant-demos" hidden>
+<article class="restaurant-demo-card" id="simulation-tables" role="tabpanel" aria-labelledby="tab-tables" tabindex="0" hidden><span class="demo-badge">Simulim ilustrues</span><h3>Tavolinat dhe qëndrimi</h3><p>Disa tavolina, grupe të ndryshme, kohë të ndryshme.</p><svg id="tables-demo" viewBox="0 0 340 280" role="img" aria-label="Simulim i përdorimit të tavolinave"></svg><p class="restaurant-demo-caption" id="tables-demo-status"></p></article>
+<article class="restaurant-demo-card" id="simulation-service" role="tabpanel" aria-labelledby="tab-service" tabindex="0" hidden><span class="demo-badge">Simulim ilustrues</span><h3>Pritja dhe konsumimi</h3><p>Nga ulja, te afrimi i kamarierit dhe largimi.</p><svg id="service-demo" viewBox="0 0 340 280" role="img" aria-label="Simulim i pritjes për shërbim"></svg><p class="restaurant-demo-caption" id="service-demo-status"></p></article>
+<article class="restaurant-demo-card" id="simulation-takeaway" role="tabpanel" aria-labelledby="tab-takeaway" tabindex="0" hidden><span class="demo-badge">Simulim ilustrues</span><h3>Takeaway në banak</h3><p>Ardhja, pritja në zonën e banakut dhe dalja.</p><svg id="takeaway-demo" viewBox="0 0 340 280" role="img" aria-label="Simulim i pritjes në banak"></svg><p class="restaurant-demo-caption" id="takeaway-demo-status"></p></article>
+<button id="restaurant-demo-toggle" type="button" aria-pressed="false">Ndalo animimin</button>
+<p class="restaurant-demo-note">Simulime ilustruese me kohë të përshpejtuar. Pikat përfaqësojnë klientë; matja automatike e shërbimit dhe seancave në tavolinë ende nuk është aktive.</p>
+</div>
           </section>
         </section>
 
-
-        <section class="restaurant-demos container" aria-labelledby="restaurant-demo-title">
-          <div class="restaurant-demo-heading"><div><p class="eyebrow">Lokali në lëvizje</p><h2 id="restaurant-demo-title">Nga ardhja te largimi.</h2><p>Tre skenarë për të kuptuar çfarë duam të matim.</p></div><button id="restaurant-demo-toggle" type="button" aria-pressed="false">Ndalo animimin</button></div>
-          <p class="restaurant-demo-note">Simulime ilustruese me kohë të përshpejtuar. Pikat përfaqësojnë klientë; matja automatike e shërbimit dhe seancave në tavolinë ende nuk është aktive.</p>
-          <div class="restaurant-demo-grid">
-            <article class="restaurant-demo-card"><span class="demo-badge">Simulim ilustrues</span><h3>Tavolinat dhe qëndrimi</h3><p>Disa tavolina, grupe të ndryshme, kohë të ndryshme.</p><svg id="tables-demo" viewBox="0 0 340 280" role="img" aria-label="Simulim i përdorimit të tavolinave"></svg><p class="restaurant-demo-caption" id="tables-demo-status"></p></article>
-            <article class="restaurant-demo-card"><span class="demo-badge">Simulim ilustrues</span><h3>Pritja dhe konsumimi</h3><p>Nga ulja, te afrimi i kamarierit dhe largimi.</p><svg id="service-demo" viewBox="0 0 340 280" role="img" aria-label="Simulim i pritjes për shërbim"></svg><p class="restaurant-demo-caption" id="service-demo-status"></p></article>
-            <article class="restaurant-demo-card"><span class="demo-badge">Simulim ilustrues</span><h3>Takeaway në banak</h3><p>Ardhja, pritja në zonën e banakut dhe dalja.</p><svg id="takeaway-demo" viewBox="0 0 340 280" role="img" aria-label="Simulim i pritjes në banak"></svg><p class="restaurant-demo-caption" id="takeaway-demo-status"></p></article>
-          </div>
-        </section>
 
         <section class="problem-section" id="product">
           <div class="container split">

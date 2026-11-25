@@ -773,3 +773,17 @@ section {
 .restaurant-demo-card svg { display: block; width: 100%; height: auto; margin-top: 1rem; }
 .restaurant-demo-card .restaurant-demo-caption { color: #87ddc9; font-size: .75rem; min-height: 2.5em; margin-bottom: 0; }
 @media (max-width: 850px) { .restaurant-demo-grid { grid-template-columns: 1fr; } .restaurant-demo-card svg { max-height: 320px; } .restaurant-demo-heading { align-items: flex-start; flex-direction: column; } }
+
+.simulation-tabs { display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: .3rem; margin-bottom: 1.3rem; padding: .3rem; background: #020b16; border: 1px solid #ffffff15; border-radius: 12px; }
+.simulation-tabs button { min-width: 0; border: 0; border-radius: 8px; padding: .7rem .2rem; font: inherit; font-size: .76rem; color: #a7b7c9; background: transparent; cursor: pointer; }
+.simulation-tabs button[aria-selected="true"] { background: #163c3c; color: #69edc8; }
+.simulation-tabs button:focus-visible { outline: 2px solid #38edbd; outline-offset: 2px; }
+.camera-demo .restaurant-demos { padding: 0; }
+.camera-demo .restaurant-demo-card { padding: 0; border: 0; background: none; }
+.camera-demo .restaurant-demo-card h3 { font-size: clamp(1.2rem,2vw,1.65rem); margin-top: 1.3rem; }
+.camera-demo .restaurant-demo-card svg { max-height: 300px; margin-top: .8rem; }
+.camera-demo .restaurant-demo-card > p { min-height: 0; }
+.camera-demo .restaurant-demo-card .restaurant-demo-caption { margin: .8rem 0; }
+.camera-demo #restaurant-demo-toggle { padding: .6rem; font-size: .75rem; }
+.camera-demo .restaurant-demo-note { font-size: .68rem; line-height: 1.6; margin-bottom: 0; }
+.simulation-tabs ~ [role="tabpanel"]:focus-visible, .restaurant-demo-card:focus-visible { outline: 2px solid #38edbd; outline-offset: 5px; }
