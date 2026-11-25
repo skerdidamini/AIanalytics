@@ -42,7 +42,6 @@
               <li><a href="#features">Funksionet</a></li>
               <li><a href="#faq">Pyetje të shpeshta</a></li>
               <li><a href="#contact">Kontakt</a></li>
-              <li><a href="/login">Hyr</a></li>
             </ul>
           </nav>
           <div class="nav-actions">
@@ -108,46 +107,39 @@
             </div>
             <p class="hero-trust">Projektuar për përdorim me kamerat që ke tashmë</p>
           </div>
-          <div class="hero-visual" aria-hidden="true">
-            <div class="visual-aura"></div>
-            <div class="visual-canvas">
-              <div class="node node-camera">
-                <p>Kamerat ekzistuese</p>
-                <span>Për kamera IP dhe NVR</span>
-              </div>
-              <span class="connector connector-one"></span>
-              <div class="node node-edge">
-                <p>Mini PC / Pajisja lokale</p>
-                <span>Analizë dhe ruajtje lokale</span>
-              </div>
-              <span class="connector connector-two"></span>
-              <div class="node node-cloud">
-                <p>Sinkronizim me serverin</p>
-                <span>Vetëm ngjarje dhe matje</span>
-              </div>
-              <span class="connector connector-three"></span>
-              <div class="node node-reports">
-                <p>Raporte</p>
-                <span>Përmbledhje për drejtuesit</span>
-              </div>
-            </div>
-            <div class="visual-panel">
-              <div class="panel-header">
-                <strong>Nga pajisja lokale te serveri</strong>
-                <span>Shembull i arkitekturës së instalimit</span>
-              </div>
-              <div class="panel-bars">
-                <div>
-                  <span>Përpunimi</span>
-                  <strong>Përpunim lokal</strong>
-                </div>
-                <div>
-                  <span>Trafiku drejt serverit</span>
-                  <strong>Sinkronizim vetëm i matjeve</strong>
-                </div>
-              </div>
-            </div>
-          </div>
+          <section class="hero-visual camera-demo" aria-label="Demonstrim i numërimit të hyrjeve">
+            <div class="demo-heading"><span class="demo-badge"><i></i><span>Simulim ilustrues</span></span><span class="demo-camera">CAM 01 / ENTRANCE</span></div>
+            <h2>Çdo kalim bëhet një matje.</h2>
+            <p class="demo-intro">Personi kalon vijën. Sistemi regjistron hyrjen.</p>
+            <svg class="demo-scene" viewBox="0 0 720 380" aria-hidden="true">
+              <defs>
+                <pattern id="demo-floor" width="48" height="48" patternUnits="userSpaceOnUse"><path d="M48 0H0V48" fill="none" stroke="#20364b" stroke-width="1"/></pattern>
+                <radialGradient id="demo-light"><stop stop-color="#163b45"/><stop offset="1" stop-color="#0b1726"/></radialGradient>
+              </defs>
+              <rect width="720" height="380" rx="18" fill="url(#demo-light)"/>
+              <rect x="12" y="12" width="696" height="356" rx="12" fill="url(#demo-floor)"/>
+              <path d="M30 120V32H690V120 M30 260V348H690V260" fill="none" stroke="#3b5265" stroke-width="8"/>
+              <rect x="510" y="45" width="120" height="55" rx="14" fill="#223848"/>
+              <rect x="510" y="280" width="120" height="55" rx="14" fill="#223848"/>
+              <path d="M360 35V345" class="demo-count-line" stroke="#38edbd" stroke-width="3" stroke-dasharray="9 8"/>
+              <path d="M322 195H401 M389 183L401 195L389 207" fill="none" stroke="#38edbd" stroke-width="3"/>
+              <g id="demo-person-1" class="demo-person" visibility="hidden">
+                <ellipse cy="32" rx="28" ry="16" fill="#000" opacity=".3"/>
+                <ellipse cy="6" rx="25" ry="34" fill="#5496b4"/><circle cy="-15" r="17" fill="#d8b599"/>
+                <rect x="-38" y="-54" width="76" height="112" rx="10" fill="none" stroke="#38edbd" stroke-width="2"/>
+                <rect x="-38" y="-78" width="76" height="22" rx="4" fill="#38edbd"/><text y="-63" text-anchor="middle" fill="#08111d" font-size="12" font-family="monospace">ID 01</text>
+              </g>
+              <g id="demo-person-2" class="demo-person" visibility="hidden">
+                <ellipse cy="32" rx="28" ry="16" fill="#000" opacity=".3"/>
+                <ellipse cy="6" rx="25" ry="34" fill="#bc8f66"/><circle cy="-15" r="17" fill="#d6bba1"/>
+                <rect x="-38" y="-54" width="76" height="112" rx="10" fill="none" stroke="#38edbd" stroke-width="2"/>
+                <rect x="-38" y="-78" width="76" height="22" rx="4" fill="#38edbd"/><text y="-63" text-anchor="middle" fill="#08111d" font-size="12" font-family="monospace">ID 02</text>
+              </g>
+              <rect x="275" y="316" width="170" height="28" rx="14" fill="#122b30"/><text x="360" y="335" text-anchor="middle" fill="#73e5c5" font-size="13">Vija e hyrjes</text>
+            </svg>
+            <div class="demo-metrics"><div><span>Hyrje</span><strong id="demo-count">0</strong></div><div><span>Përpunimi</span><strong class="demo-local">Lokal</strong></div><button id="demo-toggle" type="button" aria-pressed="false">Ndalo animimin</button></div>
+            <p class="demo-disclaimer">Animim demonstrues, jo pamje reale ose rezultat i matur. Cikli përsëritet.</p>
+          </section>
         </section>
 
         <section class="problem-section" id="product">
@@ -500,6 +492,7 @@
     </div>
     <script src="i18n.js" defer></script>
     <script src="scripts.js" defer></script>
+    <script src="demo.js" defer></script>
   </body>
 </html>
 

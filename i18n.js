@@ -151,7 +151,17 @@ const homepageTranslations = {
   "Sending…": "Duke dërguar…",
   "Sending your request…": "Po dërgohet kërkesa jote…",
   "Your request was submitted successfully. Thank you for contacting us!": "Kërkesa u dërgua me sukses. Faleminderit që na kontaktove!",
-  "We could not confirm your submission. Your details are still here; please try again later.": "Nuk u konfirmua dërgimi. Të dhënat mbeten në formular; provo përsëri më vonë."
+  "We could not confirm your submission. Your details are still here; please try again later.": "Nuk u konfirmua dërgimi. Të dhënat mbeten në formular; provo përsëri më vonë.",
+  "Illustrative simulation": "Simulim ilustrues",
+  "Every crossing becomes a metric.": "Çdo kalim bëhet një matje.",
+  "A person crosses the line. The system records an entry.": "Personi kalon vijën. Sistemi regjistron hyrjen.",
+  "Entry line": "Vija e hyrjes",
+  "Entries": "Hyrje",
+  "On device": "Lokal",
+  "Pause animation": "Ndalo animimin",
+  "Play animation": "Luaj animimin",
+  "Illustrative animation, not real footage or measured results. The cycle repeats.": "Animim demonstrues, jo pamje reale ose rezultat i matur. Cikli përsëritet.",
+  "Entry counting demonstration": "Demonstrim i numërimit të hyrjeve"
 };
 
 (() => {
@@ -184,6 +194,7 @@ const homepageTranslations = {
     const submit=document.querySelector('#contact-form button[type=submit]');
     if(submit)submit.textContent=translate(submit.disabled?'Sending…':'Send Request');
     try{localStorage.setItem('aicamera-language',language);}catch{}
+    window.dispatchEvent(new Event('home-language-change'));
   }
   window.HomeLanguage={translate,feedback(key){feedbackKey=key;return translate(key);}};
   document.querySelectorAll('[data-language]').forEach((button)=>button.addEventListener('click',()=>apply(button.dataset.language)));
