@@ -167,6 +167,19 @@ def create_app(database_path, secure_cookies=True, demo=False):
         return database.inventory(identity['organization_id'])
 
     @app.get('/',include_in_schema=False)
+    def home():
+        return Response((Path(__file__).parent/'public/index.html').read_bytes(),media_type='text/html',headers={
+            'Content-Security-Policy':"default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://formspree.io; img-src 'self' data:; frame-ancestors 'none'; base-uri 'none'; form-action 'self' https://formspree.io",
+            'Referrer-Policy':'no-referrer'})
+
+    @app.get('/styles.css',include_in_schema=False)
+    @app.get('/scripts.js',include_in_schema=False)
+    def public_asset(request: Request):
+        asset=request.url.path.lstrip('/')
+        return Response((Path(__file__).parent/'public'/asset).read_bytes(),media_type='text/css' if asset.endswith('.css') else 'text/javascript')
+
+    @app.get('/login',include_in_schema=False)
+    @app.get('/panel',include_in_schema=False)
     def dashboard():
         return Response((Path(__file__).parent/'dashboard/index.html').read_bytes(),media_type='text/html',headers={
             'Content-Security-Policy':"default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' blob: data:; frame-ancestors 'none'; base-uri 'none'; form-action 'self'",

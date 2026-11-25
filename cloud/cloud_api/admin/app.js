@@ -4,7 +4,7 @@ let data=null,loading=false;
 function message(text,error=false){$('status').textContent=text;$('status').classList.toggle('error',error);}
 async function api(path,value){
   const response=await fetch(path,value===undefined?{credentials:'same-origin'}:{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify(value)});
-  if(response.status===401){location.replace('/');throw Error('Hyr në llogari.');}
+  if(response.status===401){location.replace('/login');throw Error('Hyr në llogari.');}
   if(response.status===204)return {};
   const body=await response.json();if(!response.ok)throw Error(typeof body.detail==='string'?body.detail:'Veprimi dështoi. Kontrollo fushat.');return body;
 }
@@ -60,8 +60,8 @@ form('assignment-form','/v1/admin/assignments',(v)=>{const [organization_id,loca
 form('account-form','/v1/admin/accounts',(v)=>({email:v.email,password:v.password,role:v.role,organization_id:v.role==='owner'?v.organization_id:null}));
 $('account-form').elements.role.addEventListener('change',()=>{$('account-form').elements.organization_id.disabled=$('account-form').elements.role.value==='technician';});
 $('refresh').addEventListener('click',load);
-$('logout').addEventListener('click',async()=>{try{await api('/auth/logout',{});location.replace('/');}catch(e){message(e.message,true);}});
+$('logout').addEventListener('click',async()=>{try{await api('/auth/logout',{});location.replace('/login');}catch(e){message(e.message,true);}});
 document.querySelectorAll('[data-tab]').forEach((button)=>button.addEventListener('click',()=>tab(button.dataset.tab)));
-(async()=>{try{const me=await api('/v1/me');if(!['admin','technician'].includes(me.role)){location.replace('/');return;}await load();tab('installations');}catch(e){message(e.message,true);}})();
+(async()=>{try{const me=await api('/v1/me');if(!['admin','technician'].includes(me.role)){location.replace('/login');return;}await load();tab('installations');}catch(e){message(e.message,true);}})();
 
 setInterval(()=>{if(document.visibilityState==='visible')load();},30000);

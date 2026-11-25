@@ -4,7 +4,7 @@ let inventory={locations:[],cameras:[]}, query=null, loading=false, revision=0, 
 const format=new Intl.NumberFormat('sq-AL');
 const dateFormat=new Intl.DateTimeFormat('sq-AL',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'});
 function message(text,error=false){$('status').textContent=text;$('status').classList.toggle('error',error);}
-function loginView(){takeawayChoice='';revision++;loading=false;$('refresh').disabled=false;document.querySelectorAll('#filters input,#filters select').forEach((e)=>{e.disabled=false;});query=null;$('dashboard').hidden=true;$('login-view').hidden=false;$('password').value='';$('download').disabled=true;}
+function loginView(){history.replaceState(null,'','/login');takeawayChoice='';revision++;loading=false;$('refresh').disabled=false;document.querySelectorAll('#filters input,#filters select').forEach((e)=>{e.disabled=false;});query=null;$('dashboard').hidden=true;$('login-view').hidden=false;$('password').value='';$('download').disabled=true;}
 async function api(url,options={}){
   const response=await fetch(url,{...options,credentials:'same-origin',signal:AbortSignal.timeout(20000)});
   if(response.status===401){loginView();throw Error('Hyr përsëri në llogari.');}
@@ -119,6 +119,7 @@ async function enter(){
   const me=await(await api('/v1/me')).json();
   if(me.role==='admin'){location.assign('/admin');return;}
   if(me.role==='technician'){location.assign('/technician');return;}
+  history.replaceState(null,'','/panel');
   inventory=await(await api('/v1/inventory')).json();
   $('demo-banner').hidden=!me.demo;
   $('identity').textContent=`Biznesi: ${me.organization_id}${me.email?' · '+me.email:''}`;

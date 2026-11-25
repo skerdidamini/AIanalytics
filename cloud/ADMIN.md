@@ -24,7 +24,7 @@ Nga dosja cloud, pasi të instalohet paketa:
 .venv/bin/ai-camera-cloud --database runtime/cloud.sqlite3 serve
 ```
 
-Komanda kërkon fjalëkalimin fshehtas. Përdor emailin tënd. Nga shfletuesi hap rrugën `/?login=admin` për të ndërruar nga sesioni i pronarit pa ngatërruar llogaritë. Në prodhim kërkohet HTTPS dhe `--secure-cookies` pas reverse proxy sipas README-së kryesore cloud. Windows përdor `.venv\\Scripts` për komandat ekuivalente.
+Komanda kërkon fjalëkalimin fshehtas. Përdor emailin tënd. Nga faqja kryesore hap **Log In**. Të gjitha rolet përdorin të njëjtën hyrje; për të ndërruar llogari, dil nga sesioni aktual. Në prodhim kërkohet HTTPS dhe `--secure-cookies` pas reverse proxy sipas README-së kryesore cloud. Windows përdor `.venv\\Scripts` për komandat ekuivalente.
 
 Administratorë të tjerë krijohen vetëm nga CLI; paneli web krijon vetëm pronarë dhe teknikë, pa mundësi ngritjeje të rolit në Admin. Llogaritë ekzistuese migrohen si pronarë me të drejtat e mëparshme. Teknikët mund të caktohen në disa lokacione/biznese dhe të hiqen nga caktimet; serveri kontrollon caktimin në çdo kërkesë.
 
@@ -91,3 +91,7 @@ Kopjet e kalibruesit në `cloud_api/installer` kontrollohen ndaj versionit stand
 Mbeten për më vonë: monitorim hardware/disk, autostart i plotë i edge, alerts/email, rollout automatik i konfigurimit, ftesa dhe rikuperim fjalëkalimesh, emra/ndryshime/fshirje të regjistrit dhe testim fizik në NVR/Mini PC. Backup dhe deploy publik mbeten sipas planit të pilotit.
 
 Ngjarjet e simuluara krijohen vetëm te biznesi `demo-business`, pavarësisht rendit të llogarive të pronarëve. Versionet e vjetra mund të kenë krijuar `demo-location` te një biznes tjetër; përditësimi nuk fshin këto të dhëna. Për prova pa to, filtro vendndodhjen/kamerën reale (jo “Të gjitha”).
+
+## Faqja kryesore dhe hyrja e përbashkët
+
+Serveri shërben faqen prezantuese në `/`, hyrjen e përbashkët në `/login`, panelin e pronarit në `/panel`, Adminin në `/admin` dhe teknikun në `/technician`. Të gjitha janë pjesë e së njëjtës platformë dhe përdorin të njëjtin sesion. Roli merret nga serveri, jo nga një zgjedhje në formular. Skedarët `cloud_api/public` paketohen për instalimin; kur ndryshon faqja kryesore, sinkronizo `index.html`, `styles.css` dhe `scripts.js` nga rrënja e projektit.

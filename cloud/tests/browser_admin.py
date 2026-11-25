@@ -41,12 +41,18 @@ D.provision('private-business','private-site','private-node',['private-camera'],
             page=browser.new_page(accept_downloads=True);errors=[]
             page.on('pageerror',lambda e:errors.append(str(e)))
             def login(email,password):
-                page.goto(base);page.locator('#email').fill(email);page.locator('#password').fill(password);page.locator('#login-button').click()
+                page.goto(base);page.locator('.login-link').click();page.locator('#email').fill(email);page.locator('#password').fill(password);page.locator('#login-button').click()
             def fill(form,values):
                 for name,value in values.items():form.locator(f'[name={name}]').fill(value)
             def choose(select,match):
                 option=select.locator('option').filter(has_text=match).last
                 expect(option).to_have_count(1);select.select_option(option.get_attribute('value'))
+            page.goto(base)
+            for width in [320,390,768,1024,1440]:
+                page.set_viewport_size({'width':width,'height':1000})
+                expect(page.locator('.login-link')).to_be_visible()
+                assert page.evaluate('document.documentElement.scrollWidth===innerWidth'),width
+            page.set_viewport_size({'width':1440,'height':1000})
             login('admin@example.com','admin-test-password')
             expect(page).to_have_url(base+'/admin');expect(page.locator('#role-label')).to_have_text('PANELI ADMIN')
             page.get_by_role('button',name='Bizneset',exact=True).click()

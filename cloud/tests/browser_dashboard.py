@@ -44,7 +44,7 @@ D.ingest(p,events)
             page=b.new_page(accept_downloads=True);errors=[];external=[]
             page.on('pageerror',lambda e:errors.append(str(e)))
             page.on('request',lambda r:external.append(r.url) if r.url.startswith(('http:','https:')) and not r.url.startswith(base) else None)
-            page.goto(base)
+            page.goto(base+'/login')
             expect(page.locator('#login-view')).to_be_visible()
             page.locator('#email').fill('owner@example.com');page.locator('#password').fill('test-owner-password-123');page.locator('#login-button').click()
             expect(page.locator('#dashboard')).to_be_visible()

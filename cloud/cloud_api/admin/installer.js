@@ -8,7 +8,7 @@
   function message(text,error=false){$('server-status').textContent=text;$('server-status').classList.toggle('error',error);}
   const keys=['organization_id','location_id','node_id','camera_id'];const fixed={};for(const key of keys)fixed[key]=query.get(key)||'';
   const params=new URLSearchParams(fixed);
-  async function api(path,value){const response=await fetch(path,value===undefined?{credentials:'same-origin'}:{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify(value)});if(response.status===401){location.replace('/');throw Error('Hyr përsëri.');}if(!response.ok){const body=await response.json();throw Error(typeof body.detail==='string'?body.detail:'Kërkesa dështoi.');}return response;}
+  async function api(path,value){const response=await fetch(path,value===undefined?{credentials:'same-origin'}:{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify(value)});if(response.status===401){location.replace('/login');throw Error('Hyr përsëri.');}if(!response.ok){const body=await response.json();throw Error(typeof body.detail==='string'?body.detail:'Kërkesa dështoi.');}return response;}
   function disable(value){for(const id of ['save-draft','save-review','download-active'])$(id).disabled=value;}
   disable(true);$('export').hidden=true;
   $('settings').addEventListener('submit',(event)=>{event.preventDefault();event.stopImmediatePropagation();message('Përdor ruajtjen në platformë dhe shkarko versionin aktiv.',true);},true);

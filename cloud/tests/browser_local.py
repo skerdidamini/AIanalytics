@@ -33,7 +33,7 @@ for name,org in [('demo','demo-business'),('local','real-business')]:
             else:raise AssertionError('Local runtime failed to start')
             with sync_playwright() as p:
                 browser=p.chromium.launch(executable_path='/usr/bin/chromium',headless=True,args=['--no-sandbox'])
-                page=browser.new_page();page.goto(base)
+                page=browser.new_page();page.goto(base+'/login')
                 page.locator('#email').fill('owner@example.com');page.locator('#password').fill('local-test-password-123');page.locator('#login-button').click()
                 expect(page.locator('#dashboard')).to_be_visible()
                 if demo:

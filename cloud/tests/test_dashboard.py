@@ -67,6 +67,19 @@ class OwnerTests(unittest.TestCase):
         finally:connection.close()
         self.assertEqual(self.client.get('/v1/me').status_code,401)
 
+    def test_public_home_and_shared_login(self):
+        home=self.client.get('/')
+        self.assertIn('href="/login"',home.text)
+        self.assertIn('Edge-First Video Intelligence',home.text)
+        for asset in ('styles.css','scripts.js'):
+            self.assertEqual(self.client.get('/'+asset).status_code,200)
+        for page in ('login','panel'):
+            self.assertIn('id="login-form"',self.client.get('/'+page).text)
+        public=Path(__file__).resolve().parents[1]/'cloud_api/public'
+        root=Path(__file__).resolve().parents[2]
+        for asset in ('index.html','styles.css','scripts.js'):
+            self.assertEqual((public/asset).read_bytes(),(root/asset).read_bytes())
+
     def test_dashboard_assets_and_no_password_storage(self):
         response=self.client.get('/')
         self.assertEqual(response.status_code,200)

@@ -102,7 +102,7 @@ def main():
         print('DEMO MODE: simulated events belong only to demo-business. Existing data is preserved.',flush=True)
     else:print('REAL LOCAL MODE: starts empty until the edge sends events.',flush=True)
     url=f'http://127.0.0.1:{args.port}'
-    browser_url=url+('/?login=admin' if args.admin else '/')
+    browser_url=url+'/'
     print(f'Open dashboard on this PC: {browser_url}\nKeep this window open. Ctrl+C stops the server.',flush=True)
     if not args.no_browser:
         def open_when_ready():

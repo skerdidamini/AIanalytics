@@ -18,4 +18,4 @@ ai-camera-cloud = "cloud_api.cli:main"
 include = ["cloud_api*"]
 
 [tool.setuptools.package-data]
-cloud_api = ["dashboard/*.html", "dashboard/*.css", "dashboard/*.js", "admin/*.html", "admin/*.css", "admin/*.js", "installer/*.html", "installer/*.css", "installer/*.js", "installer/*.json"]
+cloud_api = ["public/*.html", "public/*.css", "public/*.js", "dashboard/*.html", "dashboard/*.css", "dashboard/*.js", "admin/*.html", "admin/*.css", "admin/*.js", "installer/*.html", "installer/*.css", "installer/*.js", "installer/*.json"]
