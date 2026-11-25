@@ -758,3 +758,18 @@ section {
 #demo-toggle:focus-visible { outline: 2px solid #38edbd; outline-offset: 3px; }
 .demo-disclaimer { font-size: .68rem; color: #97abbc; line-height: 1.6; margin: .6rem 0 0; }
 @media (max-width: 400px) { .camera-demo { padding: .9rem; } .demo-camera { font-size: .55rem; } .demo-metrics { gap: 1rem; } }
+
+.restaurant-demos { padding-top: 1rem; padding-bottom: 4rem; }
+.restaurant-demo-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.restaurant-demo-heading h2 { margin: .6rem 0; font-size: clamp(1.8rem,3vw,2.6rem); }
+.restaurant-demo-heading p { color: #a7b7c9; }
+#restaurant-demo-toggle { flex-shrink: 0; border: 1px solid #ffffff30; border-radius: 10px; padding: .8rem 1rem; color: #e0eaf5; background: #ffffff08; font: inherit; cursor: pointer; }
+#restaurant-demo-toggle:focus-visible { outline: 2px solid #38edbd; outline-offset: 3px; }
+.restaurant-demo-note { color: #9fb3c5; font-size: .85rem; line-height: 1.7; max-width: 850px; }
+.restaurant-demo-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 1.2rem; margin-top: 1.8rem; }
+.restaurant-demo-card { padding: 1.2rem; border: 1px solid #ffffff16; border-radius: 22px; background: linear-gradient(155deg,#0d2035,#07111e); min-width: 0; }
+.restaurant-demo-card h3 { margin: 1.3rem 0 .6rem; font-size: 1.2rem; }
+.restaurant-demo-card > p { color: #a7b7c9; font-size: .85rem; line-height: 1.6; min-height: 3em; }
+.restaurant-demo-card svg { display: block; width: 100%; height: auto; margin-top: 1rem; }
+.restaurant-demo-card .restaurant-demo-caption { color: #87ddc9; font-size: .75rem; min-height: 2.5em; margin-bottom: 0; }
+@media (max-width: 850px) { .restaurant-demo-grid { grid-template-columns: 1fr; } .restaurant-demo-card svg { max-height: 320px; } .restaurant-demo-heading { align-items: flex-start; flex-direction: column; } }

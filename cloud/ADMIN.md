@@ -99,3 +99,5 @@ Serveri shërben faqen prezantuese në `/`, hyrjen e përbashkët në `/login`, 
 Faqja kryesore ka zgjedhjen SQ / EN (shqip në vizitën e parë); shfletuesi ruan vetëm preferencën e gjuhës. Hyrja dhe panelet mbeten në shqip. Tekstet e kontaktit ndërrojnë gjuhë pa humbur fushat e plotësuara.
 
 Demonstrimi në krye të faqes është animim SVG lokal, jo analizë video dhe nuk krijon evente në DB. Numëron dy kalime për cikël, ka pauzë/vazhdim dhe nis i ndalur me preferencën për lëvizje të reduktuara.
+
+Tre skena të tjera ilustruese paraqesin grupet në tavolina, pritjen për kamarierin/qëndrimin dhe pritjen në banak. Koha është e përshpejtuar dhe e simuluar; nuk janë matje reale ose funksione aktive të klasifikimit të stafit/seancave në tavolinë. Nuk dërgojnë të dhëna në API.
