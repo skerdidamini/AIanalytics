@@ -94,4 +94,6 @@ Ngjarjet e simuluara krijohen vetëm te biznesi `demo-business`, pavarësisht re
 
 ## Faqja kryesore dhe hyrja e përbashkët
 
-Serveri shërben faqen prezantuese në `/`, hyrjen e përbashkët në `/login`, panelin e pronarit në `/panel`, Adminin në `/admin` dhe teknikun në `/technician`. Të gjitha janë pjesë e së njëjtës platformë dhe përdorin të njëjtin sesion. Roli merret nga serveri, jo nga një zgjedhje në formular. Skedarët `cloud_api/public` paketohen për instalimin; kur ndryshon faqja kryesore, sinkronizo `index.html`, `styles.css` dhe `scripts.js` nga rrënja e projektit.
+Serveri shërben faqen prezantuese në `/`, hyrjen e përbashkët në `/login`, panelin e pronarit në `/panel`, Adminin në `/admin` dhe teknikun në `/technician`. Të gjitha janë pjesë e së njëjtës platformë dhe përdorin të njëjtin sesion. Roli merret nga serveri, jo nga një zgjedhje në formular. Skedarët `cloud_api/public` paketohen për instalimin; kur ndryshon faqja kryesore, sinkronizo `index.html`, `styles.css`, `scripts.js` dhe `i18n.js` nga rrënja e projektit.
+
+Faqja kryesore ka zgjedhjen SQ / EN (shqip në vizitën e parë); shfletuesi ruan vetëm preferencën e gjuhës. Hyrja dhe panelet mbeten në shqip. Tekstet e kontaktit ndërrojnë gjuhë pa humbur fushat e plotësuara.

@@ -174,6 +174,7 @@ def create_app(database_path, secure_cookies=True, demo=False):
 
     @app.get('/styles.css',include_in_schema=False)
     @app.get('/scripts.js',include_in_schema=False)
+    @app.get('/i18n.js',include_in_schema=False)
     def public_asset(request: Request):
         asset=request.url.path.lstrip('/')
         return Response((Path(__file__).parent/'public'/asset).read_bytes(),media_type='text/css' if asset.endswith('.css') else 'text/javascript')

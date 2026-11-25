@@ -39,7 +39,7 @@ window.addEventListener('keydown', (event) => {
   }
 });
 window.addEventListener('resize', () => {
-  if (window.innerWidth > 960) {
+  if (window.innerWidth > 1200) {
     setNavState(false);
   }
 });
@@ -63,7 +63,7 @@ const feedback = document.getElementById('form-feedback');
 
 const showFeedback = (message, type) => {
   if (!feedback) return;
-  feedback.textContent = message;
+  feedback.textContent = window.HomeLanguage?.feedback(message) ?? message;
   feedback.classList.remove('success', 'error');
   if (type) feedback.classList.add(type);
 };
@@ -83,11 +83,10 @@ form?.addEventListener('submit', async (event) => {
     return;
   }
   const button = form.querySelector('button[type="submit"]');
-  const label = button.textContent;
   const data = new FormData(form);
   isSubmitting = true;
   button.disabled = true;
-  button.textContent = 'Sending…';
+  button.textContent = window.HomeLanguage?.translate('Sending…') ?? 'Sending…';
   form.setAttribute('aria-busy', 'true');
   showFeedback('Sending your request…');
   const controller = new AbortController();
@@ -103,7 +102,7 @@ form?.addEventListener('submit', async (event) => {
     clearTimeout(timeout);
     isSubmitting = false;
     button.disabled = false;
-    button.textContent = label;
+    button.textContent = window.HomeLanguage?.translate('Send Request') ?? 'Send Request';
     form.removeAttribute('aria-busy');
   }
 });
