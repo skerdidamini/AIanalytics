@@ -167,8 +167,10 @@ def create_app(database_path, secure_cookies=True, demo=False):
         return database.inventory(identity['organization_id'])
 
     @app.get('/',include_in_schema=False)
-    def home():
-        return Response((Path(__file__).parent/'public/index.html').read_bytes(),media_type='text/html',headers={
+    @app.get('/owner-demo',include_in_schema=False)
+    def home(request: Request):
+        page='owner-demo.html' if request.url.path=='/owner-demo' else 'index.html'
+        return Response((Path(__file__).parent/'public'/page).read_bytes(),media_type='text/html',headers={
             'Content-Security-Policy':"default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://formspree.io; img-src 'self' data:; frame-ancestors 'none'; base-uri 'none'; form-action 'self' https://formspree.io",
             'Referrer-Policy':'no-referrer'})
 
@@ -176,6 +178,7 @@ def create_app(database_path, secure_cookies=True, demo=False):
     @app.get('/scripts.js',include_in_schema=False)
     @app.get('/i18n.js',include_in_schema=False)
     @app.get('/demo.js',include_in_schema=False)
+    @app.get('/owner-demo.js',include_in_schema=False)
     def public_asset(request: Request):
         asset=request.url.path.lstrip('/')
         return Response((Path(__file__).parent/'public'/asset).read_bytes(),media_type='text/css' if asset.endswith('.css') else 'text/javascript')

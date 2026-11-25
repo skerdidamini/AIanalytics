@@ -103,3 +103,7 @@ Demonstrimi në krye të faqes është animim SVG lokal, jo analizë video dhe n
 Tre skena të tjera ilustruese paraqesin grupet në tavolina, pritjen për kamarierin/qëndrimin dhe pritjen në banak. Koha është e përshpejtuar dhe e simuluar; nuk janë matje reale ose funksione aktive të klasifikimit të stafit/seancave në tavolinë. Nuk dërgojnë të dhëna në API.
 
 Të katër simulimet janë bashkuar në krye të faqes me skedat Hyrje / Tavolinat / Shërbimi / Takeaway. Hyrjet shfaqen fillimisht; kalimi bëhet me klikim ose shigjetat e tastierës.
+
+## Demonstrimi publik i panelit
+
+Homepage paraqet një pamje të panelit dhe butonin “Eksploro panelin demo” te `/owner-demo`. Demoja është publike dhe tërësisht në shfletues, me të dhëna sintetike; nuk krijon llogari/sesion dhe nuk lexon ose shkruan API/DB. Filtrat ndryshojnë grafikun/treguesit/tabelën dhe eksporti CSV përdor të njëjtat rreshta shembull. SQ/EN mbështetet; pritja për kamarierin, porositë dhe seancat e grupeve shënohen si funksione të planifikuara. Sinkronizo edhe `owner-demo.js`/`owner-demo.html` me kopjet te `cloud_api/public` kur përditëson faqen.

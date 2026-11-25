@@ -64,6 +64,35 @@ with tempfile.TemporaryDirectory() as temp:
             page.locator('.login-link').click()
             expect(page.locator('html')).to_have_attribute('lang','sq')
             expect(page.locator('#login-button')).to_have_text('Hyr në panel')
+            page.goto(base)
+            expect(page.locator('[data-owner-demo=compact] .preview-kpis strong').first).to_have_text('476')
+            page.locator('.owner-preview-section').screenshot(path='/tmp/owner-home-preview.png')
+            page.locator('a[href="/owner-demo"]').click()
+            expect(page).to_have_url(base+'/owner-demo')
+            api_calls=[]
+            page.on('request',lambda request:api_calls.append(request.url) if '/v1/' in request.url or '/auth/' in request.url else None)
+            page.reload()
+            expect(page.locator('.preview-kpis strong').first).to_have_text('476')
+            filters=page.locator('.preview-filters select')
+            filters.nth(1).select_option('0')
+            expect(page.locator('.preview-kpis strong').first).to_have_text('220')
+            filters.nth(0).select_option('week')
+            expect(page.locator('.preview-kpis strong').first).to_have_text('1291')
+            with page.expect_download() as download:
+                page.locator('.preview-download').click()
+            csv_path=Path(temp)/'sample.csv';download.value.save_as(csv_path)
+            import csv
+            with csv_path.open() as stream: records=list(csv.DictReader(stream))
+            assert sum(int(row['entries']) for row in records)==1291
+            page.locator('[data-language=en]').click()
+            expect(page.locator('.preview-badge')).to_have_text('Simulated data')
+            expect(page.locator('.preview-planned')).to_contain_text('planned features')
+            for width in [320,390,768,1440]:
+                page.set_viewport_size({'width':width,'height':950})
+                assert page.evaluate('document.documentElement.scrollWidth===innerWidth'),width
+            page.screenshot(path='/tmp/owner-public-demo.png',full_page=True)
+            assert not api_calls,api_calls
+            page.locator('[data-language=sq]').click()
             demo=browser.new_page()
             demo.clock.install()
             demo.goto(base)
