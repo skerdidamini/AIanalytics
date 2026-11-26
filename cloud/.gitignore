@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.sqlite3*
+*.egg-info/
+build/
+dist/
+*.token
+*.pem
+*.key
+
+runtime/

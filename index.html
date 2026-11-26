@@ -1,10 +1,10 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="sq">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AI Camera Analytica | Edge-First Video Intelligence</title>
+    <title>AI Camera Analytica — Analizë video me përpunim lokal</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -12,44 +12,45 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
-    <link rel="icon" href="assets/logo.png" type="image/png" />
-    <meta name="description" content="Edge-first video analytics that turns existing cameras into actionable insights for retail and hospitality teams." />
+    <link rel="icon" href="data:," />
+    <meta name="description" content="Analizë video me përpunim lokal që i kthen kamerat ekzistuese në informacion të dobishëm për tregtinë dhe hotelerinë." data-meta-en="Edge-first video analytics that turns existing cameras into actionable insights for retail and hospitality teams." data-meta-sq="Analizë video me përpunim lokal që i kthen kamerat ekzistuese në informacion të dobishëm për tregtinë dhe hotelerinë." />
     <meta name="theme-color" content="#01040c" />
-    <meta property="og:title" content="AI Camera Analytica | Edge-first Video Intelligence" />
-    <meta property="og:description" content="Transform your current camera feeds into people flow, dwell-time, and zone usage intelligence without replacing infrastructure." />
-    <meta property="og:image" content="assets/logo.png" />
+    <meta property="og:title" content="AI Camera Analytica — Analizë video me përpunim lokal" data-meta-en="AI Camera Analytica | Edge-first Video Intelligence" data-meta-sq="AI Camera Analytica — Analizë video me përpunim lokal" />
+    <meta property="og:description" content="Analizo fluksin e njerëzve, kohën e qëndrimit dhe përdorimin e zonave me kamerat ekzistuese." data-meta-en="Transform your current camera feeds into people flow, dwell-time, and zone usage intelligence without replacing infrastructure." data-meta-sq="Analizo fluksin e njerëzve, kohën e qëndrimit dhe përdorimin e zonave me kamerat ekzistuese." />
     <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="AI Camera Analytica | Edge-first Video Intelligence" />
-    <meta name="twitter:description" content="Deploy operational analytics on your existing cameras with a privacy-conscious, edge-first engine." />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="AI Camera Analytica — Analizë video me përpunim lokal" data-meta-en="AI Camera Analytica | Edge-first Video Intelligence" data-meta-sq="AI Camera Analytica — Analizë video me përpunim lokal" />
+    <meta name="twitter:description" content="Analizo aktivitetin me kamerat ekzistuese dhe përpunim lokal që mbron privatësinë." data-meta-en="Deploy operational analytics on your existing cameras with a privacy-conscious, edge-first engine." data-meta-sq="Analizo aktivitetin me kamerat ekzistuese dhe përpunim lokal që mbron privatësinë." />
   </head>
   <body>
+    <a class="skip-link" href="#main-content">Kalo te përmbajtja</a>
     <div class="page-shell">
       <header class="site-header" id="home">
         <div class="container nav-wrapper">
           <a class="logo-wrap" href="#home">
-            <img src="assets/logo.png" alt="AI Camera Analytica logo" class="logo-image" />
             <div class="logo-copy">
               <strong>AI Camera</strong>
               <span>Analytica</span>
             </div>
           </a>
-          <nav class="primary-nav" aria-label="Primary" id="primary-navigation">
+          <nav class="primary-nav" aria-label="Navigimi kryesor" id="primary-navigation">
             <ul>
-              <li><a href="#home">Home</a></li>
-              <li><a href="#product">Product</a></li>
-              <li><a href="#how-it-works">How It Works</a></li>
-              <li><a href="#industries">Industries</a></li>
-              <li><a href="#features">Features</a></li>
-              <li><a href="#faq">FAQ</a></li>
-              <li><a href="#contact">Contact</a></li>
+              <li><a href="#home">Kryefaqja</a></li>
+              <li><a href="#product">Produkti</a></li>
+              <li><a href="#how-it-works">Si funksionon</a></li>
+              <li><a href="#industries">Sektorët</a></li>
+              <li><a href="#features">Funksionet</a></li>
+              <li><a href="#faq">Pyetje të shpeshta</a></li>
+              <li><a href="#contact">Kontakt</a></li>
             </ul>
           </nav>
           <div class="nav-actions">
-            <a class="btn primary nav-cta" href="#contact">Request Demo</a>
+            <div class="language-switch" role="group" aria-label="Gjuha / Language"><button type="button" data-language="sq" aria-pressed="true" lang="sq">SQ</button><button type="button" data-language="en" aria-pressed="false" lang="en">EN</button></div>
+            <a class="btn ghost login-link" href="/login">Hyr</a>
+            <a class="btn primary nav-cta" href="#contact">Kërko demonstrim</a>
             <button
               class="nav-toggle"
-              aria-label="Open navigation"
+              aria-label="Hap menunë"
               aria-controls="mobile-navigation"
               aria-expanded="false"
             >
@@ -59,10 +60,9 @@
             </button>
           </div>
         </div>
-        <div class="nav-menu" id="mobile-navigation" data-nav-menu>
+        <div class="nav-menu" id="mobile-navigation" data-nav-menu role="dialog" aria-modal="true" aria-label="Menuja për telefon" hidden inert>
           <div class="nav-menu-header">
             <a class="logo-wrap compact" href="#home">
-              <img src="assets/logo.png" alt="AI Camera Analytica logo" class="logo-image" />
               <div class="logo-copy">
                 <strong>AI Camera</strong>
                 <span>Analytica</span>
@@ -70,7 +70,7 @@
             </a>
             <button
               class="nav-toggle close"
-              aria-label="Close navigation"
+              aria-label="Mbyll menunë"
               aria-controls="mobile-navigation"
               aria-expanded="true"
             >
@@ -79,107 +79,136 @@
             </button>
           </div>
           <ul>
-            <li><a href="#home">Home</a></li>
-            <li><a href="#product">Product</a></li>
-            <li><a href="#how-it-works">How It Works</a></li>
-            <li><a href="#industries">Industries</a></li>
-            <li><a href="#features">Features</a></li>
-            <li><a href="#faq">FAQ</a></li>
-            <li><a href="#contact">Contact</a></li>
+            <li><a href="#home">Kryefaqja</a></li>
+            <li><a href="#product">Produkti</a></li>
+            <li><a href="#how-it-works">Si funksionon</a></li>
+            <li><a href="#industries">Sektorët</a></li>
+            <li><a href="#features">Funksionet</a></li>
+            <li><a href="#faq">Pyetje të shpeshta</a></li>
+            <li><a href="#contact">Kontakt</a></li>
+              <li><a href="/login">Hyr</a></li>
           </ul>
-          <a class="btn primary nav-cta" href="#contact">Request Demo</a>
+          <a class="btn primary nav-cta" href="#contact">Kërko demonstrim</a>
         </div>
         <div class="nav-backdrop" data-nav-backdrop></div>
       </header>
 
-      <main>
+      <main id="main-content">
         <section class="hero-section">
           <div class="hero-content">
-            <p class="eyebrow">Edge-first video intelligence for retail &amp; hospitality</p>
-            <h1>Turn Existing Cameras Into Business Intelligence</h1>
+            <p class="eyebrow">Analizë video me përpunim lokal për tregti dhe hoteleri</p>
+            <h1>Ktheji kamerat ekzistuese në informacion për biznesin</h1>
             <p class="lead">
-              AI Camera Analytica transforms existing camera infrastructure into actionable insights for retail and
-              hospitality businesses through people flow analytics, dwell time, zone usage, and automated reporting.
+              AI Camera Analytica përdor kamerat ekzistuese për të analizuar fluksin e njerëzve, kohën e qëndrimit dhe përdorimin e zonave, duke ndihmuar bizneset në tregti dhe hoteleri të marrin vendime më të informuara.
             </p>
             <div class="hero-ctas">
-              <a class="btn primary" href="#contact">Request Demo</a>
-              <a class="btn ghost" href="#how-it-works">See How It Works</a>
+              <a class="btn primary" href="#contact">Kërko demonstrim</a>
+              <a class="btn ghost" href="#how-it-works">Shiko si funksionon</a>
             </div>
-            <p class="hero-trust">Built for real-world deployment with existing camera infrastructure</p>
+            <p class="hero-trust">Projektuar për përdorim me kamerat që ke tashmë</p>
           </div>
-          <div class="hero-visual" aria-hidden="true">
-            <div class="visual-aura"></div>
-            <div class="visual-canvas">
-              <div class="node node-camera">
-                <p>Existing Cameras</p>
-                <span>IP &amp; NVR ready</span>
-              </div>
-              <span class="connector connector-one"></span>
-              <div class="node node-edge">
-                <p>Mini PC / Edge Node</p>
-                <span>Local analytics &amp; buffering</span>
-              </div>
-              <span class="connector connector-two"></span>
-              <div class="node node-cloud">
-                <p>Cloud Sync</p>
-                <span>Events &amp; metrics only</span>
-              </div>
-              <span class="connector connector-three"></span>
-              <div class="node node-reports">
-                <p>Reports</p>
-                <span>Executive-ready summaries</span>
-              </div>
-            </div>
-            <div class="visual-panel">
-              <div class="panel-header">
-                <strong>Edge-to-cloud flow</strong>
-                <span>Subtle, secure, high-availability architecture</span>
-              </div>
-              <div class="panel-bars">
-                <div>
-                  <span>Edge Capacity</span>
-                  <strong>98%</strong>
-                </div>
-                <div>
-                  <span>Bandwidth Saved</span>
-                  <strong>74%</strong>
-                </div>
-              </div>
-            </div>
+          <section class="hero-visual camera-demo" aria-label="Simulime të aktivitetit">
+<div class="simulation-tabs" role="tablist" aria-label="Zgjidh simulimin"><button type="button" role="tab" id="tab-entries" aria-controls="simulation-entries" aria-selected="true" tabindex="0">Hyrje</button><button type="button" role="tab" id="tab-tables" aria-controls="simulation-tables" aria-selected="false" tabindex="-1">Tavolinat</button><button type="button" role="tab" id="tab-service" aria-controls="simulation-service" aria-selected="false" tabindex="-1">Shërbimi</button><button type="button" role="tab" id="tab-takeaway" aria-controls="simulation-takeaway" aria-selected="false" tabindex="-1">Takeaway</button></div>
+<div id="simulation-entries" role="tabpanel" aria-labelledby="tab-entries" tabindex="0">
+            <div class="demo-heading"><span class="demo-badge"><i></i><span>Simulim ilustrues</span></span><span class="demo-camera">CAM 01 / ENTRANCE</span></div>
+            <h2>Çdo kalim bëhet një matje.</h2>
+            <p class="demo-intro">Personi kalon vijën. Sistemi regjistron hyrjen.</p>
+            <svg class="demo-scene" viewBox="0 0 720 380" aria-hidden="true">
+              <defs>
+                <pattern id="demo-floor" width="48" height="48" patternUnits="userSpaceOnUse"><path d="M48 0H0V48" fill="none" stroke="#20364b" stroke-width="1"/></pattern>
+                <radialGradient id="demo-light"><stop stop-color="#163b45"/><stop offset="1" stop-color="#0b1726"/></radialGradient>
+              </defs>
+              <rect width="720" height="380" rx="18" fill="url(#demo-light)"/>
+              <rect x="12" y="12" width="696" height="356" rx="12" fill="url(#demo-floor)"/>
+              <path d="M30 120V32H690V120 M30 260V348H690V260" fill="none" stroke="#3b5265" stroke-width="8"/>
+              <rect x="510" y="45" width="120" height="55" rx="14" fill="#223848"/>
+              <rect x="510" y="280" width="120" height="55" rx="14" fill="#223848"/>
+              <path d="M360 35V345" class="demo-count-line" stroke="#38edbd" stroke-width="3" stroke-dasharray="9 8"/>
+              <path d="M322 195H401 M389 183L401 195L389 207" fill="none" stroke="#38edbd" stroke-width="3"/>
+              <g id="demo-person-1" class="demo-person" visibility="hidden">
+                <ellipse cy="32" rx="28" ry="16" fill="#000" opacity=".3"/>
+                <ellipse cy="6" rx="25" ry="34" fill="#5496b4"/><circle cy="-15" r="17" fill="#d8b599"/>
+                <rect x="-38" y="-54" width="76" height="112" rx="10" fill="none" stroke="#38edbd" stroke-width="2"/>
+                <rect x="-38" y="-78" width="76" height="22" rx="4" fill="#38edbd"/><text y="-63" text-anchor="middle" fill="#08111d" font-size="12" font-family="monospace">ID 01</text>
+              </g>
+              <g id="demo-person-2" class="demo-person" visibility="hidden">
+                <ellipse cy="32" rx="28" ry="16" fill="#000" opacity=".3"/>
+                <ellipse cy="6" rx="25" ry="34" fill="#bc8f66"/><circle cy="-15" r="17" fill="#d6bba1"/>
+                <rect x="-38" y="-54" width="76" height="112" rx="10" fill="none" stroke="#38edbd" stroke-width="2"/>
+                <rect x="-38" y="-78" width="76" height="22" rx="4" fill="#38edbd"/><text y="-63" text-anchor="middle" fill="#08111d" font-size="12" font-family="monospace">ID 02</text>
+              </g>
+              <rect x="275" y="316" width="170" height="28" rx="14" fill="#122b30"/><text x="360" y="335" text-anchor="middle" fill="#73e5c5" font-size="13">Vija e hyrjes</text>
+            </svg>
+            <div class="demo-metrics"><div><span>Hyrje</span><strong id="demo-count">0</strong></div><div><span>Përpunimi</span><strong class="demo-local">Lokal</strong></div><button id="demo-toggle" type="button" aria-pressed="false">Ndalo animimin</button></div>
+            <p class="demo-disclaimer">Animim demonstrues, jo pamje reale ose rezultat i matur. Cikli përsëritet.</p>
+</div>
+<div class="restaurant-demos" hidden>
+<article class="restaurant-demo-card" id="simulation-tables" role="tabpanel" aria-labelledby="tab-tables" tabindex="0" hidden><span class="demo-badge">Simulim ilustrues</span><h3>Tavolinat dhe qëndrimi</h3><p>Disa tavolina, grupe të ndryshme, kohë të ndryshme.</p><svg id="tables-demo" viewBox="0 0 340 280" role="img" aria-label="Simulim i përdorimit të tavolinave"></svg><p class="restaurant-demo-caption" id="tables-demo-status"></p></article>
+<article class="restaurant-demo-card" id="simulation-service" role="tabpanel" aria-labelledby="tab-service" tabindex="0" hidden><span class="demo-badge">Simulim ilustrues</span><h3>Pritja dhe konsumimi</h3><p>Nga ulja, te afrimi i kamarierit dhe largimi.</p><svg id="service-demo" viewBox="0 0 340 280" role="img" aria-label="Simulim i pritjes për shërbim"></svg><p class="restaurant-demo-caption" id="service-demo-status"></p></article>
+<article class="restaurant-demo-card" id="simulation-takeaway" role="tabpanel" aria-labelledby="tab-takeaway" tabindex="0" hidden><span class="demo-badge">Simulim ilustrues</span><h3>Takeaway në banak</h3><p>Ardhja, pritja në zonën e banakut dhe dalja.</p><svg id="takeaway-demo" viewBox="0 0 340 280" role="img" aria-label="Simulim i pritjes në banak"></svg><p class="restaurant-demo-caption" id="takeaway-demo-status"></p></article>
+<button id="restaurant-demo-toggle" type="button" aria-pressed="false">Ndalo animimin</button>
+<p class="restaurant-demo-note">Simulime ilustruese me kohë të përshpejtuar. Pikat përfaqësojnë klientë; matja automatike e shërbimit dhe seancave në tavolinë ende nuk është aktive.</p>
+</div>
+          </section>
+        </section>
+
+
+        <section class="journey-section container" id="process-demo" aria-labelledby="journey-title">
+          <div class="journey-copy"><p class="eyebrow">Nga kamera te paneli</p><h2 id="journey-title">Si shndërrohet një kalim në informacion.</h2><p>Shiko rrugën e të dhënave nga lokali deri te paneli i pronarit.</p><span class="journey-label">Simulim ilustrues</span></div>
+          <div class="journey-card" id="journey-card">
+            <svg viewBox="0 0 900 450" role="img" aria-label="Një vizitor kalon kamerën e lokalit; të dhënat përpunohen në Mini PC dhe dërgohen në server.">
+              <defs><linearGradient id="sky" x2="0" y2="1"><stop stop-color="#8acbd4"/><stop offset="1" stop-color="#e8d4ad"/></linearGradient><linearGradient id="sea" x2="0" y2="1"><stop stop-color="#3f99a2"/><stop offset="1" stop-color="#225b72"/></linearGradient></defs>
+              <rect width="900" height="450" rx="18" fill="#0a1b2a"/><path fill="url(#sky)" d="M0 0h900v205H0z"/><circle cx="700" cy="73" r="36" fill="#ffe7b4"/><path fill="url(#sea)" d="M0 155h900v75H0z"/><path d="M0 183 Q100 174 200 183T400 183T600 183T900 183" fill="none" stroke="#b2dee0" opacity=".7" stroke-width="4"/>
+              <path d="M0 210H900V450H0z" fill="#d9bc98"/><path d="M0 300H900M0 370H900M180 210l-80 240M400 210l-15 240M620 210l45 240" stroke="#c3a584" stroke-width="3"/>
+              <path d="M15 60H275V230H15z" fill="#efdac0"/><path d="M0 55h295v24H0z" fill="#b36f55"/><path d="M35 100h115v125H35z" fill="#527b80"/><path d="M170 102h75v65h-75z" fill="#72adb0"/>
+              <g fill="#754f3e"><ellipse cx="445" cy="258" rx="70" ry="21"/><path d="M439 258h12v95h-12z"/><ellipse cx="690" cy="278" rx="72" ry="21"/><path d="M684 278h12v95h-12z"/></g>
+              <g stroke="#755345" stroke-width="10" fill="none"><path d="M355 277v70m-25-50h50m-40 0-12 52m45-52 12 52M760 300v70m-25-50h50m-40 0-12 52m45-52 12 52"/></g>
+              <g transform="translate(232 75)"><path d="M0 0h48l16 13-16 13H0z" fill="#edf5f1"/><circle cx="47" cy="13" r="7" fill="#1d5961"/><path d="M4 26v12" stroke="#385562" stroke-width="5"/></g>
+              <path d="M292 90L500 240 372 350z" fill="#64f0c0" opacity=".09" stroke="#54e1c0" stroke-dasharray="7 7"/>
+              <g class="journey-person"><ellipse cx="0" cy="35" rx="19" ry="7" fill="#604c3d" opacity=".25"/><circle cy="-40" r="14" fill="#e8b796"/><path d="M-16-24q16-10 32 0l6 47h-44z" fill="#245e76"/><path d="M-12 20l-5 34M12 20l5 34" stroke="#293b49" stroke-width="9"/><rect x="-28" y="-63" width="56" height="125" rx="8" fill="none" stroke="#35e5b2" stroke-width="3"/></g>
+              <path d="M300 112 Q335 74 410 78" class="journey-signal" fill="none" stroke="#0b705f" stroke-width="5" stroke-dasharray="8 8"/>
+              <g transform="translate(400 35)"><rect width="150" height="72" rx="12" fill="#102d3e"/><rect x="12" y="12" width="126" height="34" rx="5" fill="#1b4854"/><circle cx="23" cy="60" r="4" fill="#47efbd"/><text x="75" y="34" text-anchor="middle" fill="#e4f9f3" font-size="15">MINI PC</text></g>
+              <path d="M555 70H680" class="journey-signal" fill="none" stroke="#0b705f" stroke-width="5" stroke-dasharray="8 8"/>
+              <g transform="translate(680 25)"><rect width="162" height="90" rx="12" fill="#102d3e"/><rect x="16" y="12" width="130" height="17" rx="5" fill="#24525b"/><rect x="16" y="36" width="130" height="17" rx="5" fill="#24525b"/><circle cx="28" cy="20" r="3" fill="#47efbd"/><circle cx="28" cy="44" r="3" fill="#47efbd"/><text x="81" y="75" text-anchor="middle" fill="#e4f9f3" font-size="15">SERVER</text></g>
+            </svg>
+            <div class="journey-steps"><span>1 · Kamera vëzhgon</span><span>2 · Mini PC përpunon</span><span>3 · Serveri merr të dhënat</span></div>
+            <div class="journey-foot"><p>Ilustrim i procesit. Pamja video mbetet në lokal; dërgohen vetëm të dhënat e analizës.</p><button type="button" id="journey-toggle" aria-pressed="false">Ndalo animimin</button></div>
           </div>
+        </section>
+
+        <section class="owner-preview-section container" aria-labelledby="owner-preview-title">
+          <div class="owner-preview-copy"><p class="eyebrow">Paneli i pronarit</p><h2 id="owner-preview-title">Shiko çfarë po ndodh në lokalin tënd.</h2><p>Fluksi, oraret më të ngarkuara dhe qëndrimi në zona, të përmbledhura në një panel.</p><p class="owner-preview-note">Pamje ilustruese me të dhëna të simuluara. Nuk kërkon regjistrim.</p><a class="btn primary" href="/owner-demo">Eksploro panelin demo</a></div>
+          <section data-owner-demo="compact" aria-label="Pamje demonstrimi e panelit"></section>
         </section>
 
         <section class="problem-section" id="product">
           <div class="container split">
             <div>
-              <p class="eyebrow">Problem</p>
-              <h2>Most businesses already have cameras, but not real operational insight.</h2>
+              <p class="eyebrow">Problemi</p>
+              <h2>Shumica e bizneseve kanë kamera, por nuk kanë informacion të qartë mbi aktivitetin e tyre.</h2>
               <p>
-                Cameras are often limited to recording incidents. That raw footage rarely translates to decisions about
-                staffing, merchandising, or layout. AI Camera Analytica extracts the signals retailers and operators
-                actually need—customer flow, dwell time, peak hours, and space usage—without requiring camera rip-outs.
+                Kamerat shpesh përdoren vetëm për regjistrimin e incidenteve. Pamjet rrallë shndërrohen në vendime për stafin, ekspozimin e produkteve apo organizimin e hapësirës. AI Camera Analytica analizon fluksin e klientëve, qëndrimin, oraret e pikut dhe përdorimin e hapësirës, pa zëvendësuar kamerat.
               </p>
               <p>
-                We connect seamlessly to your existing IP cameras or NVR, process data locally, and deliver simple
-                metrics you can act on.
+                Lidhemi me kamerat IP ose NVR-në ekzistuese, përpunojmë të dhënat lokalisht dhe i paraqesim si matje të kuptueshme.
               </p>
             </div>
             <div class="problem-grid">
               <article>
-                <span class="metric">Customer Flow</span>
-                <p>See how visitors move through your site every hour.</p>
+                <span class="metric">Fluksi i klientëve</span>
+                <p>Shiko si lëvizin vizitorët në ambientin tënd gjatë çdo ore.</p>
               </article>
               <article>
-                <span class="metric">Peak Hours</span>
-                <p>Spot busiest windows for staffing and promotions.</p>
+                <span class="metric">Oraret e pikut</span>
+                <p>Identifiko oraret më të ngarkuara për planifikimin e stafit dhe ofertave.</p>
               </article>
               <article>
-                <span class="metric">Dwell Time</span>
-                <p>Understand how long guests linger in key areas.</p>
+                <span class="metric">Koha e qëndrimit</span>
+                <p>Kupto sa kohë qëndrojnë vizitorët në zonat kryesore.</p>
               </article>
               <article>
-                <span class="metric">Zone Usage</span>
-                <p>Measure space utilization for layout adjustments.</p>
+                <span class="metric">Përdorimi i zonave</span>
+                <p>Analizo përdorimin e hapësirës për të përmirësuar organizimin.</p>
               </article>
             </div>
           </div>
@@ -187,48 +216,48 @@
 
         <section class="feature-section" id="features">
           <div class="container">
-            <p class="eyebrow">Product Overview</p>
-            <h2>What AI Camera Analytica Helps You Measure</h2>
+            <p class="eyebrow">Përmbledhje e produktit</p>
+            <h2>Çfarë të ndihmon të matësh AI Camera Analytica</h2>
             <div class="feature-grid">
               <article>
                 <span class="icon-dot"></span>
-                <h3>People Counting</h3>
-                <p>Track footfall without extra hardware for accurate conversion insight.</p>
+                <h3>Numërimi i njerëzve</h3>
+                <p>Analizo fluksin e vizitorëve duke përdorur kamerat ekzistuese.</p>
               </article>
               <article>
                 <span class="icon-dot"></span>
-                <h3>Entry / Exit Analytics</h3>
-                <p>Understand door traffic and queue buildup to manage staffing.</p>
+                <h3>Analiza e hyrjeve dhe daljeve</h3>
+                <p>Kupto fluksin në hyrje dhe grumbullimin në radhë për të organizuar stafin.</p>
               </article>
               <article>
                 <span class="icon-dot"></span>
-                <h3>Traffic by Time Slot</h3>
-                <p>Compare morning, afternoon, and evening patterns to optimize hours.</p>
+                <h3>Fluksi sipas orarit</h3>
+                <p>Krahaso aktivitetin në mëngjes, pasdite dhe mbrëmje për të përshtatur oraret.</p>
               </article>
               <article>
                 <span class="icon-dot"></span>
-                <h3>Dwell Time</h3>
-                <p>Identify which areas hold attention and which are overlooked.</p>
+                <h3>Koha e qëndrimit</h3>
+                <p>Identifiko zonat ku vizitorët qëndrojnë dhe ato që kalohen pa vëmendje.</p>
               </article>
               <article>
                 <span class="icon-dot"></span>
-                <h3>Zone Usage</h3>
-                <p>Gauge how displays, checkout, and seating areas are performing.</p>
+                <h3>Përdorimi i zonave</h3>
+                <p>Analizo përdorimin e ekspozitorëve, arkave dhe zonave të uljes.</p>
               </article>
               <article>
                 <span class="icon-dot"></span>
-                <h3>Occupancy Overview</h3>
-                <p>Monitor crowd levels to balance comfort and compliance.</p>
+                <h3>Pamja e pranisë në ambient</h3>
+                <p>Vëzhgo praninë në ambient për të organizuar më mirë hapësirën.</p>
               </article>
               <article>
                 <span class="icon-dot"></span>
-                <h3>Automated Reports</h3>
-                <p>Receive concise summaries straight to email or your preferred workflow.</p>
+                <h3>Raporte automatike</h3>
+                <p>Përmbledhje të aktivitetit për raportim dhe ndjekje të rezultateve.</p>
               </article>
               <article>
                 <span class="icon-dot"></span>
-                <h3>Business Visibility</h3>
-                <p>Turn passive cameras into a practical command center for operations.</p>
+                <h3>Pamje e qartë e biznesit</h3>
+                <p>Përdor kamerat si burim informacioni për drejtimin e aktivitetit.</p>
               </article>
             </div>
           </div>
@@ -236,54 +265,53 @@
 
         <section class="flow-section" id="how-it-works">
           <div class="container">
-            <p class="eyebrow">Method</p>
-            <h2>How It Works</h2>
-            <p class="lead">An edge-first flow built to respect bandwidth and privacy.</p>
+            <p class="eyebrow">Metoda</p>
+            <h2>Si funksionon</h2>
+            <p class="lead">Përpunim lokal që redukton trafikun e internetit dhe mbron privatësinë.</p>
             <div class="flow-grid">
               <article>
-                <h3>Cameras / NVR</h3>
-                <p>Existing video sources stay on-site; no rip-and-replace.</p>
+                <h3>Kamerat / NVR</h3>
+                <p>Burimet ekzistuese të videos mbeten në lokal, pa zëvendësim të pajisjeve.</p>
               </article>
               <article>
-                <h3>Mini PC / Edge Node</h3>
-                <p>Processes analytics locally to limit cloud traffic.</p>
+                <h3>Mini PC / Pajisja lokale</h3>
+                <p>Përpunon analizat lokalisht për të kufizuar trafikun drejt serverit.</p>
               </article>
               <article>
-                <h3>Cloud Platform</h3>
-                <p>Syncs events, metrics, and recoverable cache for reporting.</p>
+                <h3>Platforma qendrore</h3>
+                <p>Sinkronizon ngjarjet dhe matjet, duke ridërguar të dhënat e ruajtura pas ndërprerjeve.</p>
               </article>
               <article>
-                <h3>Dashboard &amp; Reports</h3>
-                <p>Business-ready summaries delivered when you need them.</p>
+                <h3>Paneli dhe raportet</h3>
+                <p>Përmbledhje të kuptueshme për biznesin, kur të duhen.</p>
               </article>
             </div>
             <p class="flow-note">
-              Raw video stays on-premise unless you opt in. We only push analytics and reporting data to the cloud so
-              your bandwidth stays in control.
+              Videoja origjinale mbetet në lokal. Drejt serverit dërgohen vetëm të dhënat e analizës dhe raportimit, duke kufizuar përdorimin e internetit.
             </p>
           </div>
         </section>
 
         <section class="value-section">
           <div class="container">
-            <p class="eyebrow">Edge Advantage</p>
-            <h2>Built for Efficiency, Privacy, and Real-World Deployment</h2>
+            <p class="eyebrow">Avantazhi i përpunimit lokal</p>
+            <h2>Projektuar për efikasitet, privatësi dhe përdorim praktik</h2>
             <div class="value-grid">
               <article>
-                <h3>Existing Infrastructure Ready</h3>
-                <p>Works with IP cameras or NVRs you already own.</p>
+                <h3>Përdor infrastrukturën ekzistuese</h3>
+                <p>Punon me kamerat IP ose NVR-në që ke tashmë.</p>
               </article>
               <article>
-                <h3>Reduced Bandwidth Usage</h3>
-                <p>Only events and metrics travel to the cloud, not live streams.</p>
+                <h3>Më pak trafik interneti</h3>
+                <p>Në server dërgohen ngjarje dhe matje, jo transmetimi i videos.</p>
               </article>
               <article>
-                <h3>More Privacy-Conscious Architecture</h3>
-                <p>Local processing means sensitive footage never leaves the venue.</p>
+                <h3>Arkitekturë që mbron privatësinë</h3>
+                <p>Përpunimi lokal i mban pamjet brenda ambientit të biznesit.</p>
               </article>
               <article>
-                <h3>Local Cache and Sync Recovery</h3>
-                <p>Edge nodes buffer data and sync when connectivity is stable.</p>
+                <h3>Ruajtje lokale dhe rikthim i sinkronizimit</h3>
+                <p>Pajisjet ruajnë të dhënat dhe i sinkronizojnë kur lidhja rikthehet.</p>
               </article>
             </div>
           </div>
@@ -291,20 +319,20 @@
 
         <section class="industries-section" id="industries">
           <div class="container">
-            <p class="eyebrow">Industries</p>
-            <h2>Designed for Businesses with Real Customer Flow</h2>
+            <p class="eyebrow">Sektorët</p>
+            <h2>Për biznese me lëvizje të përditshme klientësh</h2>
             <div class="industry-grid">
               <article>
-                <h3>Retail Stores</h3>
-                <p>Plan campaigns, staff shifts, and checkout lanes around accurate hourly traffic.</p>
+                <h3>Dyqane</h3>
+                <p>Planifiko fushatat, turnet dhe arkat sipas fluksit për çdo orë.</p>
               </article>
               <article>
-                <h3>Restaurants, Cafés &amp; Bars</h3>
-                <p>Balance dine-in layout, queue areas, and peak happy hour moments.</p>
+                <h3>Restorante, kafene dhe bare</h3>
+                <p>Organizo zonat e uljes, hapësirat e pritjes dhe oraret më të ngarkuara.</p>
               </article>
               <article>
-                <h3>Markets / Mini Markets</h3>
-                <p>Track high-traffic aisles, optimize restocking, and improve checkout pacing.</p>
+                <h3>Markete / Minimarkete</h3>
+                <p>Identifiko korridoret më të frekuentuara dhe përmirëso furnizimin e ritmin te arkat.</p>
               </article>
             </div>
           </div>
@@ -312,24 +340,23 @@
 
         <section class="reporting-section">
           <div class="container">
-            <p class="eyebrow">Reporting</p>
-            <h2>Reports That Help Businesses Act, Not Just Observe</h2>
+            <p class="eyebrow">Raportimi</p>
+            <h2>Raporte që ndihmojnë në marrjen e vendimeve</h2>
             <p>
-              Daily and weekly summaries give you peak-hour visibility, dwell-time analysis, and zone performance so you
-              can adjust staffing, promotions, and layouts in minutes.
+              Përmbledhjet ditore dhe javore ndihmojnë të kuptosh oraret e pikut, qëndrimin dhe përdorimin e zonave, për të përshtatur stafin, ofertat dhe organizimin e ambientit.
             </p>
             <div class="reporting-grid">
               <article>
-                <h3>Prioritized KPIs</h3>
-                <p>Clear focus on flow, occupancy, and dwell time.</p>
+                <h3>Treguesit kryesorë</h3>
+                <p>Fokus te fluksi, prania në ambient dhe koha e qëndrimit.</p>
               </article>
               <article>
-                <h3>Exportable</h3>
-                <p>PDF or CSV ready for leadership, ops teams, or external partners.</p>
+                <h3>Të eksportueshme</h3>
+                <p>Eksporte për drejtuesit, ekipin e punës ose partnerët.</p>
               </article>
               <article>
-                <h3>Email Friendly</h3>
-                <p>Schedules summaries and alerts straight into inboxes.</p>
+                <h3>Raportim me email</h3>
+                <p>Përmbledhje të përshtatshme për t&#x27;u ndarë me ekipin.</p>
               </article>
             </div>
           </div>
@@ -337,32 +364,32 @@
 
         <section class="why-section" id="why">
           <div class="container">
-            <p class="eyebrow">Positioning</p>
-            <h2>Why AI Camera Analytica</h2>
+            <p class="eyebrow">Qasja jonë</p>
+            <h2>Pse AI Camera Analytica</h2>
             <div class="why-grid">
               <article>
-                <h3>Uses Existing Cameras</h3>
-                <p>No rip-and-replace required; we plug into what you already have.</p>
+                <h3>Përdor kamerat ekzistuese</h3>
+                <p>Lidhemi me pajisjet që ke, pa i zëvendësuar ato.</p>
               </article>
               <article>
-                <h3>Practical for SMEs</h3>
-                <p>Deploy quickly with manageable hardware and predictable workflows.</p>
+                <h3>Praktike për bizneset e vogla dhe të mesme</h3>
+                <p>Instalim me pajisje të menaxhueshme dhe hapa të qartë pune.</p>
               </article>
               <article>
-                <h3>Edge-First Analytics</h3>
-                <p>Local processing keeps bandwidth and latency under control.</p>
+                <h3>Analizë me përpunim lokal</h3>
+                <p>Përpunimi lokal kufizon trafikun dhe vonesat.</p>
               </article>
               <article>
-                <h3>Automated Reporting</h3>
-                <p>Weekly and daily digests that highlight action items.</p>
+                <h3>Raportim automatik</h3>
+                <p>Përmbledhje ditore dhe javore që ndihmojnë planifikimin.</p>
               </article>
               <article>
-                <h3>Scalable Architecture</h3>
-                <p>Add locations or cameras without rewiring your operations.</p>
+                <h3>Arkitekturë e zgjerueshme</h3>
+                <p>Shto vendndodhje ose kamera duke ruajtur të njëjtën mënyrë pune.</p>
               </article>
               <article>
-                <h3>Ready for Future Expansion</h3>
-                <p>A modular stack that can extend to deeper analytics when needed.</p>
+                <h3>Gati për zgjerim në të ardhmen</h3>
+                <p>Strukturë modulare që mund të zgjerohet me analiza të tjera sipas nevojës.</p>
               </article>
             </div>
           </div>
@@ -371,44 +398,44 @@
         <section class="faq-section" id="faq">
           <div class="container">
             <div class="section-heading">
-              <p class="eyebrow">Support</p>
-              <h2>Frequently Asked Questions</h2>
+              <p class="eyebrow">Mbështetje</p>
+              <h2>Pyetje të shpeshta</h2>
             </div>
             <div class="faq-grid">
               <article class="faq-item" data-faq>
                 <button type="button" aria-expanded="false" aria-controls="faq-answer-1">
-                  <span>Does AI Camera Analytica require new cameras?</span>
+                  <span>A kërkon AI Camera Analytica kamera të reja?</span>
                   <span class="faq-arrow" aria-hidden="true"></span>
                 </button>
-                <p id="faq-answer-1" hidden>No. It works with most IP cameras or NVRs already deployed on-site.</p>
+                <p id="faq-answer-1" hidden>Jo. Mund të përdorë kamerat IP ose NVR-në ekzistuese, në varësi të aksesit në video.</p>
               </article>
               <article class="faq-item" data-faq>
                 <button type="button" aria-expanded="false" aria-controls="faq-answer-2">
-                  <span>Is all video sent to the cloud?</span>
+                  <span>A dërgohet e gjithë videoja në server?</span>
                   <span class="faq-arrow" aria-hidden="true"></span>
                 </button>
-                <p id="faq-answer-2" hidden>No. Only events, metrics, and summary data sync to the cloud. Raw video stays local unless you opt in.</p>
+                <p id="faq-answer-2" hidden>Jo. Sinkronizohen vetëm ngjarjet, matjet dhe përmbledhjet. Videoja origjinale mbetet në lokal.</p>
               </article>
               <article class="faq-item" data-faq>
                 <button type="button" aria-expanded="false" aria-controls="faq-answer-3">
-                  <span>What can the system measure?</span>
+                  <span>Çfarë mund të masë sistemi?</span>
                   <span class="faq-arrow" aria-hidden="true"></span>
                 </button>
-                <p id="faq-answer-3" hidden>People counting, entry/exit, dwell time, zone usage, occupancy, and traffic across time slots.</p>
+                <p id="faq-answer-3" hidden>Fluksin e njerëzve, hyrjet dhe daljet, kohën e qëndrimit, përdorimin e zonave dhe praninë sipas orarit.</p>
               </article>
               <article class="faq-item" data-faq>
                 <button type="button" aria-expanded="false" aria-controls="faq-answer-4">
-                  <span>Who is this solution for?</span>
+                  <span>Për kë është kjo zgjidhje?</span>
                   <span class="faq-arrow" aria-hidden="true"></span>
                 </button>
-                <p id="faq-answer-4" hidden>Retail stores, quick-service restaurants, cafés, bars, and markets that care about customer flow.</p>
+                <p id="faq-answer-4" hidden>Për dyqane, restorante, kafene, bare dhe markete që duan të kuptojnë fluksin e klientëve.</p>
               </article>
               <article class="faq-item" data-faq>
                 <button type="button" aria-expanded="false" aria-controls="faq-answer-5">
-                  <span>Is it focused on analytics or surveillance?</span>
+                  <span>Është për analizë apo për mbikëqyrje?</span>
                   <span class="faq-arrow" aria-hidden="true"></span>
                 </button>
-                <p id="faq-answer-5" hidden>It is purpose-built for operational analytics, not biometric or identity tracking.</p>
+                <p id="faq-answer-5" hidden>Është projektuar për analizën e aktivitetit, jo për identifikim biometrik ose gjurmim të identitetit.</p>
               </article>
             </div>
           </div>
@@ -416,68 +443,55 @@
 
         <section class="final-cta">
           <div class="container">
-            <h2>See How Your Existing Cameras Can Support Smarter Business Decisions</h2>
+            <h2>Shiko si kamerat ekzistuese mund të ndihmojnë vendimet e biznesit</h2>
             <p>
-              Request a demo and explore how AI Camera Analytica can help you understand customer flow, space usage, and
-              operational patterns.
+              Kërko një demonstrim për të parë si AI Camera Analytica mund të ndihmojë në kuptimin e fluksit, hapësirës dhe aktivitetit të biznesit.
             </p>
-            <a class="btn primary" href="#contact">Request Demo</a>
+            <a class="btn primary" href="#contact">Kërko demonstrim</a>
           </div>
         </section>
 
         <section class="contact-section" id="contact">
           <div class="container">
             <div class="contact-details">
-              <p class="eyebrow">Request a Demo</p>
-              <h2>Talk with the team</h2>
-              <p>Tell us about your locations, cameras, and reporting needs—we respond within one business day.</p>
-              <ul class="contact-meta">
-                <li>
-                  <strong>Email:</strong>
-                  <span>contact@aicameraanalytica.com</span>
-                  <small>(placeholder—update before launch)</small>
-                </li>
-                <li>
-                  <strong>Phone:</strong>
-                  <span>+1 (555) 010-2300</span>
-                  <small>(placeholder—replace with your published number)</small>
-                </li>
-              </ul>
-              <p class="contact-note">Need a faster reply? Send your files and questions to the email above once you replace the placeholder details.</p>
+              <p class="eyebrow">Kërko një demonstrim</p>
+              <h2>Fol me ekipin</h2>
+              <p>Na trego për vendndodhjet, kamerat dhe raportet që të duhen.</p>
+              <p class="contact-note">Plotëso formularin me projektin tënd dhe mënyrën si mund të të kontaktojmë.</p>
             </div>
-            <form class="contact-form" id="contact-form" novalidate>
+            <form class="contact-form" id="contact-form" data-formspree-endpoint="https://formspree.io/f/mrpqprab" novalidate>
               <label>
-                Full Name
-                <input type="text" name="name" required />
+                Emri i plotë
+                <input type="text" name="name" autocomplete="name" required />
               </label>
               <label>
-                Company Name
-                <input type="text" name="company" required />
+                Emri i biznesit
+                <input type="text" name="company" autocomplete="organization" required />
               </label>
               <label>
                 Email
-                <input type="email" name="email" required />
+                <input type="email" name="email" autocomplete="email" required />
               </label>
               <label>
-                Phone
-                <input type="tel" name="phone" />
+                Telefoni
+                <input type="tel" name="phone" autocomplete="tel" />
               </label>
               <label>
-                Industry
+                Sektori
                 <select name="industry" required>
-                  <option value="">Select</option>
-                  <option>Retail</option>
-                  <option>Restaurant / Café / Bar</option>
-                  <option>Market / Mini Market</option>
-                  <option>Other</option>
+                  <option value="">Zgjidh</option>
+                  <option value="Retail">Tregti</option>
+                  <option value="Restaurant / Café / Bar">Restorant / Kafene / Bar</option>
+                  <option value="Market / Mini Market">Market / Minimarket</option>
+                  <option value="Other">Tjetër</option>
                 </select>
               </label>
               <label class="full">
-                Message
+                Mesazhi
                 <textarea name="message" rows="4" required></textarea>
               </label>
               <div class="form-actions">
-                <button class="btn primary" type="submit">Send Request</button>
+                <button class="btn primary" type="submit">Dërgo kërkesën</button>
                 <p class="form-feedback" id="form-feedback" role="status" aria-live="polite"></p>
               </div>
             </form>
@@ -489,36 +503,36 @@
         <div class="container footer-grid">
           <div>
             <a class="logo-wrap footer-logo" href="#home">
-              <img src="assets/logo.png" alt="AI Camera Analytica logo" class="logo-image" />
               <div class="logo-copy">
                 <strong>AI Camera</strong>
                 <span>Analytica</span>
               </div>
             </a>
             <p>
-              Edge-first video analytics that turns your existing cameras into a decision-making ally for retail and
-              hospitality operations.
+              Analizë video me përpunim lokal që i kthen kamerat ekzistuese në mbështetje për vendimet e biznesit në tregti dhe hoteleri.
             </p>
           </div>
           <div>
-            <h3>Quick Links</h3>
+            <h3>Lidhje të shpejta</h3>
             <ul>
-              <li><a href="#home">Home</a></li>
-              <li><a href="#product">Product</a></li>
-              <li><a href="#how-it-works">How It Works</a></li>
-              <li><a href="#industries">Industries</a></li>
+              <li><a href="#home">Kryefaqja</a></li>
+              <li><a href="#product">Produkti</a></li>
+              <li><a href="#how-it-works">Si funksionon</a></li>
+              <li><a href="#industries">Sektorët</a></li>
             </ul>
           </div>
           <div>
-            <h3>Contact</h3>
-            <p>Email: hello@aicameraanalytica.com</p>
-            <p>Phone: +1 (555) 010-2300</p>
-            <p>© 2026 AI Camera Analytica. All rights reserved.</p>
+            <h3>Kontakt</h3>
+            <p><a href="#contact">Kërko një demonstrim përmes formularit të kontaktit</a></p>
+            <p>© 2026 AI Camera Analytica. Të gjitha të drejtat e rezervuara.</p>
           </div>
         </div>
       </footer>
     </div>
+    <script src="i18n.js" defer></script>
     <script src="scripts.js" defer></script>
+    <script src="demo.js" defer></script>
+    <script src="owner-demo.js" defer></script>
   </body>
 </html>
 

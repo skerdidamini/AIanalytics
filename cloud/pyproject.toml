@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ai-camera-cloud"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = ["fastapi==0.115.12", "uvicorn==0.34.2"]
+
+[project.optional-dependencies]
+test = ["httpx==0.28.1"]
+
+[project.scripts]
+ai-camera-cloud = "cloud_api.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["cloud_api*"]
+
+[tool.setuptools.package-data]
+cloud_api = ["public/*.html", "public/*.css", "public/*.js", "dashboard/*.html", "dashboard/*.css", "dashboard/*.js", "admin/*.html", "admin/*.css", "admin/*.js", "installer/*.html", "installer/*.css", "installer/*.js", "installer/*.json"]

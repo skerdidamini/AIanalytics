@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="sq">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kalibrimi i kamerës | AI Camera Analytica</title>
+<link rel="icon" href="data:,"><link rel="stylesheet" href="styles.css">
+<script src="app.js" defer></script>
+<script src="calibration.js" defer></script>
+</head>
+<body>
+<header><a href="../../index.html">AI Camera <span>Analytica</span></a><span class="badge">EDGE · KALIBRIM LOKAL</span></header>
+<main>
+<div class="intro"><p class="eyebrow">KONFIGURIMI I KAMERËS</p><h1>Një pamje. Një konfigurim.</h1><p>Vendos vijën e numërimit dhe zonat e interesit. Pamja përpunohet vetëm në shfletues; nuk ngarkohet në server.</p></div>
+<div class="layout">
+<section class="workspace" aria-label="Pamja dhe mjetet e vizatimit">
+<div class="toolbar"><label class="button">Ngarko foto<input id="image-file" type="file" accept="image/png,image/jpeg,image/webp"></label><label class="button secondary">Ngarko video<input id="video-file" type="file" accept="video/mp4,video/webm,video/ogg"></label><label class="button secondary">Importo konfigurim<input id="config-file" type="file" accept=".json,application/json"></label></div>
+<p class="hint">Përdor një foto nga pamja fikse e kamerës, pa zoom ose prerje. Mund të ushtrohesh edhe mbi rrjetën bosh.</p>
+<div class="tools" role="group" aria-label="Mjetet"><button id="line-tool" aria-pressed="true">Vija e numërimit</button><button id="zone-tool" aria-pressed="false">Zonë drejtkëndore</button><button id="role-tool" aria-pressed="false">Mostër uniforme</button><button id="trace-tool" aria-pressed="false">Provë kalimi</button><button id="cancel" class="quiet">Anulo pikën</button></div>
+<p id="instruction">Kliko pikën e parë dhe pastaj të dytën të vijës.</p>
+<div id="stage" class="stage"><img id="camera-image" alt="Pamja lokale e kamerës për kalibrim" hidden><video id="camera-video" muted playsinline preload="metadata" hidden></video><svg id="drawing" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-label="Vizatimi: kliko dy pika për vijën ose zonën"><defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10" fill="#38edbd"/></marker><marker id="exit-arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10" fill="#ffb86b"/></marker></defs><g id="geometry"></g></svg><span id="empty-label">PAMJE DEMONSTRUESE · NGARKO FOTON E KAMERËS</span></div>
+<div id="video-controls" class="video-controls" hidden><button id="video-play" type="button" class="secondary">Luaj / pauzë</button><label>Momenti i videos<input id="video-seek" type="range" min="0" max="1" value="0" step="0.05"></label><output id="video-time">0.0 s</output></div>
+<p id="image-name" class="hint">Pa foto. Koordinatat ruhen relative ndaj gjithë pamjes (0–1).</p>
+<p class="hint">Shigjeta jeshile tregon <strong>hyrjen</strong>, portokallia <strong>daljen</strong>. Mbaj të njëjtin kornizim në programin edge.</p>
+<section class="card"><h2>Provë e kontrolluar</h2><p class="hint">Me “Provë kalimi”, shëno dy pika të trajektores së një personi. Kontrollohet drejtimi dhe segmenti; nuk kryhet detektim automatik dhe nuk dërgohen evente.</p><p id="crossing-result" role="status">Ende pa trajektore prove.</p><button id="review-config" type="button" class="secondary">Kontrollo konfigurimin</button><p id="review-result" role="status">Konfigurimi ende nuk është kontrolluar.</p></section>
+</section>
+<aside>
+<form id="settings">
+<section class="card"><h2>Identiteti i kamerës</h2><label>Organizata<input id="organization_id" required value="pilot-organization"></label><label>Lokacioni<input id="location_id" required value="pilot-location"></label><div class="row"><label>Edge node<input id="node_id" required value="edge-001"></label><label>Kamera<input id="camera_id" required value="entrance-001"></label></div></section>
+<section class="card"><h2>Vija e hyrjes / daljes</h2><label class="check"><input id="line-enabled" type="checkbox" checked>Aktivizo numërimin e hyrjes/daljes në këtë kamerë</label><p class="hint">Çaktivizoje nëse kamera sheh vetëm tavolinat dhe jo një pikë hyrjeje.</p><p class="hint">Mund ta vendosësh edhe me numra, pa përdorur miun.</p><div class="coordinates"><label>Fillimi X<input id="start-x" type="number" min="0" max="1" step="any" value="0.1" required></label><label>Fillimi Y<input id="start-y" type="number" min="0" max="1" step="any" value="0.5" required></label><label>Fundi X<input id="end-x" type="number" min="0" max="1" step="any" value="0.9" required></label><label>Fundi Y<input id="end-y" type="number" min="0" max="1" step="any" value="0.5" required></label></div><button id="apply-line" type="button" class="secondary">Vendos koordinatat</button><label>Drejtimi i hyrjes<select id="enter-side"><option value="1">Ana +1 (poshtë për vijë majtas → djathtas)</option><option value="-1">Ana −1 (sipër për vijë majtas → djathtas)</option></select></label><label>Toleranca pranë vijës (0–1)<input id="margin" type="number" min="0.001" max="0.999" step="any" value="0.02" required></label></section>
+<section class="card"><h2>Zonat <span id="zone-count">0</span></h2><p class="hint">Vizato ose shto me numra. Çdo zonë duhet të ketë emër unik.</p><div id="zones"></div><button id="add-zone" type="button" class="secondary">Shto zonë me koordinata</button></section>
+<section class="card"><h2>Uniformat dhe rolet</h2><p class="hint">Zgjidh rolin dhe vizato vetëm pjesën e bluzës. Ruhen ngjyra dhe koordinata, jo foto apo identitet. Këto janë mostra manuale; klasifikimi automatik i stafit nuk është aktiv.</p><label>Roli i mostrës<select id="sample-role"><option value="waiter">Kamarier</option><option value="bartender">Banakier</option><option value="customer">Klient (kundërshembull)</option><option value="unknown">I panjohur</option></select></label><div class="coordinates"><label>Mostra X1<input id="sample-x1" type="number" min="0" max="1" step="any" value="0.3"></label><label>Mostra Y1<input id="sample-y1" type="number" min="0" max="1" step="any" value="0.2"></label><label>Mostra X2<input id="sample-x2" type="number" min="0" max="1" step="any" value="0.5"></label><label>Mostra Y2<input id="sample-y2" type="number" min="0" max="1" step="any" value="0.5"></label></div><button id="add-sample" type="button" class="secondary">Merr mostrën me koordinata</button><div id="role-samples"></div><button id="compare-samples" type="button" class="secondary">Krahaso ngjyrat në këtë pamje</button><p id="sample-result" role="status"></p></section>
+<section class="card"><h2>Pamja dhe kontrolli</h2><label class="check"><input id="fixed-view" type="checkbox">Pamja është fikse, pa zoom ose prerje gjatë analizës.</label><p class="hint">Nëse ndryshon këndi, rikalibro. Eksporti përmban status “draft” ose kontroll manual; nuk certifikon saktësinë e AI-së.</p></section>
+<div class="export"><button type="submit" id="export">Shkarko config.local.json</button><p class="hint">Kopjo skedarin pranë konfigurimit edge dhe rinis procesin. Paneli nuk ndryshon kamerën dhe nuk nis analizën.</p></div>
+</form>
+</aside>
+</div>
+<p id="status" role="status" aria-live="polite">Gati për kalibrim. Fillo me një pamje ose importo konfigurimin ekzistues.</p>
+<details><summary>Si përdoret konfigurimi?</summary><ol><li>Ngarko një pamje fikse nga kamera.</li><li>Vizato vijën te pika reale e kalimit dhe kontrollo shigjetën e hyrjes.</li><li>Shto zonat që dëshiron të matësh.</li><li>Shkarko JSON-in dhe ruaje në dosjen edge.</li><li>Nis programin: <code>ai-camera-edge --config config.local.json run</code>. Adresa RTSP jepet veçmas në ambientin e procesit.</li></ol><p>Importi ruan parametrat e tjerë të konfigurimit. Fotoja nuk përfshihet në JSON. Një konfigurim i ri përdor parametrat bazë të prototipit; saktësia kërkon verifikim në terren.</p></details>
+</main>
+</body></html>

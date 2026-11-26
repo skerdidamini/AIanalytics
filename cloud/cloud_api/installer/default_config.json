@@ -1,0 +1,17 @@
+{
+  "organization_id": "pilot-organization",
+  "location_id": "pilot-location",
+  "node_id": "edge-001",
+  "camera_id": "entrance-001",
+  "database": "events.sqlite3",
+  "sample_fps": 5,
+  "max_width": 960,
+  "track_distance": 0.15,
+  "track_timeout": 2.0,
+  "line": {"start": [0.1, 0.5], "end": [0.9, 0.5], "enter_side": 1, "margin": 0.02},
+  "zones": [{"id": "visible-area", "rect": [0.1, 0.1, 0.9, 0.9]}],
+  "occupancy_interval": 30,
+  "queue_max_events": 100000,
+  "cloud_url_env": "EDGE_CLOUD_URL",
+  "cloud_token_env": "EDGE_CLOUD_TOKEN"
+}

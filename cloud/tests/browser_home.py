@@ -1,0 +1,160 @@
+"""Public homepage language, responsive navigation and contact form regression."""
+from pathlib import Path
+import socket
+import subprocess
+import tempfile
+import time
+import urllib.request
+from playwright.sync_api import sync_playwright, expect
+
+ROOT=Path(__file__).resolve().parents[2]
+with tempfile.TemporaryDirectory() as temp:
+    with socket.socket() as sock:
+        sock.bind(('127.0.0.1',0));port=sock.getsockname()[1]
+    base=f'http://127.0.0.1:{port}'
+    process=subprocess.Popen([str(ROOT/'cloud/.venv/bin/python'),'-m','cloud_api.cli','--database',str(Path(temp)/'cloud.sqlite3'),'serve','--port',str(port)],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+    try:
+        for _ in range(100):
+            try:urllib.request.urlopen(base+'/healthz',timeout=1).close();break
+            except OSError:time.sleep(.1)
+        with sync_playwright() as p:
+            browser=p.chromium.launch(executable_path='/usr/bin/chromium',headless=True,args=['--no-sandbox'])
+            page=browser.new_page();errors=[]
+            page.on('pageerror',lambda e:errors.append(str(e)))
+            page.goto(base)
+            expect(page.locator('html')).to_have_attribute('lang','sq')
+            expect(page.locator('h1')).to_contain_text('Ktheji kamerat')
+            expect(page.locator('#journey-title')).to_contain_text('kalim')
+            page.locator('#journey-toggle').click()
+            expect(page.locator('#journey-toggle')).to_have_attribute('aria-pressed','true')
+            expect(page.locator('#journey-card')).to_have_class('journey-card is-paused')
+            expect(page.locator('meta[name=description]')).to_have_attribute('content','Analizë video me përpunim lokal që i kthen kamerat ekzistuese në informacion të dobishëm për tregtinë dhe hotelerinë.')
+            page.locator('[name=name]').fill('Test User')
+            page.locator('[data-language=en]').click()
+            expect(page.locator('h1')).to_have_text('Turn Existing Cameras Into Business Intelligence')
+            expect(page.locator('#journey-title')).to_have_text('How a crossing becomes insight.')
+            expect(page.locator('#journey-toggle')).to_have_text('Play animation')
+            expect(page.locator('[name=name]')).to_have_value('Test User')
+            page.reload();expect(page.locator('html')).to_have_attribute('lang','en')
+            page.locator('[data-language=sq]').click()
+            expect(page.locator('#faq-answer-1')).to_be_hidden()
+            page.locator('[aria-controls=faq-answer-1]').click()
+            expect(page.locator('#faq-answer-1')).to_contain_text('Jo.')
+            for width in [320,390,768,1024,1440]:
+                page.set_viewport_size({'width':width,'height':900})
+                expect(page.locator('.language-switch')).to_be_visible()
+                expect(page.locator('.login-link')).to_be_visible()
+                assert page.evaluate('document.documentElement.scrollWidth===innerWidth'),width
+            page.set_viewport_size({'width':390,'height':900})
+            page.locator('.nav-toggle:not(.close)').click()
+            expect(page.locator('#mobile-navigation')).to_be_visible()
+            page.keyboard.press('Escape')
+            expect(page.locator('#mobile-navigation')).to_be_hidden()
+            page.locator('[name=name]').fill('Test User')
+            page.locator('[name=company]').fill('Test Business')
+            page.locator('[name=email]').fill('test@example.com')
+            page.locator('[name=industry]').select_option('Retail')
+            page.locator('[name=message]').fill('Test request')
+            page.route('https://formspree.io/f/*',lambda route:route.fulfill(status=500,body='{}'))
+            page.locator('#contact-form button[type=submit]').click()
+            expect(page.locator('#form-feedback')).to_contain_text('Nuk u konfirmua')
+            expect(page.locator('[name=name]')).to_have_value('Test User')
+            page.locator('[data-language=en]').click()
+            expect(page.locator('#form-feedback')).to_contain_text('We could not confirm')
+            page.route('https://formspree.io/f/*',lambda route:route.fulfill(status=200,body='{}'))
+            page.locator('#contact-form button[type=submit]').click()
+            expect(page.locator('#form-feedback')).to_contain_text('submitted successfully')
+            page.locator('[data-language=sq]').click()
+            expect(page.locator('#form-feedback')).to_contain_text('sukses')
+            page.locator('[data-language=en]').click()
+            page.locator('.login-link').click()
+            expect(page.locator('html')).to_have_attribute('lang','sq')
+            expect(page.locator('#login-button')).to_have_text('Hyr në panel')
+            page.goto(base)
+            expect(page.locator('[data-owner-demo=compact] .preview-kpis strong').first).to_have_text('476')
+            page.locator('.owner-preview-section').screenshot(path='/tmp/owner-home-preview.png')
+            page.locator('a[href="/owner-demo"]').click()
+            expect(page).to_have_url(base+'/owner-demo')
+            api_calls=[]
+            page.on('request',lambda request:api_calls.append(request.url) if '/v1/' in request.url or '/auth/' in request.url else None)
+            page.reload()
+            expect(page.locator('.preview-kpis strong').first).to_have_text('476')
+            filters=page.locator('.preview-filters select')
+            filters.nth(1).select_option('0')
+            expect(page.locator('.preview-kpis strong').first).to_have_text('220')
+            filters.nth(0).select_option('week')
+            expect(page.locator('.preview-kpis strong').first).to_have_text('1291')
+            with page.expect_download() as download:
+                page.locator('.preview-download').click()
+            csv_path=Path(temp)/'sample.csv';download.value.save_as(csv_path)
+            import csv
+            with csv_path.open() as stream: records=list(csv.DictReader(stream))
+            assert sum(int(row['entries']) for row in records)==1291
+            page.locator('[data-language=en]').click()
+            expect(page.locator('.preview-badge')).to_have_text('Simulated data')
+            expect(page.locator('.preview-planned')).to_contain_text('planned features')
+            for width in [320,390,768,1440]:
+                page.set_viewport_size({'width':width,'height':950})
+                assert page.evaluate('document.documentElement.scrollWidth===innerWidth'),width
+            page.screenshot(path='/tmp/owner-public-demo.png',full_page=True)
+            assert not api_calls,api_calls
+            page.locator('[data-language=sq]').click()
+            demo=browser.new_page()
+            demo.clock.install()
+            demo.goto(base)
+            expect(demo.locator('#demo-count')).to_have_text('0')
+            demo.clock.run_for(3200)
+            expect(demo.locator('#demo-count')).to_have_text('1')
+            expect(demo.locator('#demo-person-1')).to_have_css('visibility','visible')
+            demo.clock.run_for(3000)
+            expect(demo.locator('#demo-count')).to_have_text('2')
+            expect(demo.locator('#simulation-entries')).to_be_visible()
+            expect(demo.locator('#simulation-tables')).to_be_hidden()
+            demo.locator('#demo-toggle').click()
+            expect(demo.locator('#demo-toggle')).to_have_attribute('aria-pressed','true')
+            position=demo.locator('#demo-person-2').get_attribute('transform')
+            demo.locator('#tab-service').click()
+            expect(demo.locator('#simulation-service')).to_be_visible()
+            expect(demo.locator('#simulation-entries')).to_be_hidden()
+            demo.clock.run_for(6200)
+            expect(demo.locator('#service-demo')).to_contain_text('Pritje: 4 min')
+            demo.locator('#restaurant-demo-toggle').click()
+            status=demo.locator('#service-demo-status').inner_text()
+            demo.clock.run_for(1000)
+            expect(demo.locator('#service-demo-status')).to_have_text(status)
+            expect(demo.locator('#restaurant-demo-toggle')).to_have_attribute('aria-pressed','true')
+            demo.locator('#tab-tables').click()
+            expect(demo.locator('#tables-demo-status')).to_contain_text('Klientë në tavolina: 4')
+            demo.locator('#tab-tables').press('ArrowRight')
+            expect(demo.locator('#tab-service')).to_be_focused()
+            expect(demo.locator('#simulation-service')).to_be_visible()
+            demo.locator('#tab-service').press('End')
+            expect(demo.locator('#simulation-takeaway')).to_be_visible()
+            demo.locator('[data-language=en]').click()
+            expect(demo.locator('#tab-service')).to_have_text('Service')
+            expect(demo.locator('#restaurant-demo-toggle')).to_have_text('Play animation')
+            expect(demo.locator('#service-demo')).to_contain_text('Waiting: 4 min')
+            demo.locator('#tab-entries').click()
+            expect(demo.locator('#demo-toggle')).to_have_text('Play animation')
+            assert demo.locator('#demo-person-2').get_attribute('transform')==position
+            expect(demo.locator('.camera-demo .demo-badge').first).to_contain_text('Illustrative simulation')
+            demo.close()
+            reduced=browser.new_page(reduced_motion='reduce',viewport={'width':1440,'height':1000})
+            reduced.goto(base)
+            expect(reduced.locator('#demo-toggle')).to_have_attribute('aria-pressed','true')
+            expect(reduced.locator('#demo-count')).to_have_text('2')
+            reduced.locator('#tab-tables').click()
+            expect(reduced.locator('#restaurant-demo-toggle')).to_have_attribute('aria-pressed','true')
+            reduced.locator('.camera-demo').screenshot(path='/tmp/restaurant-scenes-desktop.png')
+            reduced.screenshot(path='/tmp/home-demo-desktop.png',full_page=False)
+            reduced.set_viewport_size({'width':390,'height':844})
+            assert reduced.evaluate('document.documentElement.scrollWidth===innerWidth')
+            reduced.locator('.camera-demo').screenshot(path='/tmp/restaurant-scenes-mobile.png')
+            reduced.locator('.camera-demo').scroll_into_view_if_needed()
+            reduced.screenshot(path='/tmp/home-demo-mobile.png')
+            reduced.close()
+            assert not errors,errors
+            browser.close()
+        print('PASS: SQ default, EN persistence, forms preserve input, translated feedback, mobile navigation, responsive switch and Albanian login')
+    finally:
+        process.terminate();process.wait(timeout=10)

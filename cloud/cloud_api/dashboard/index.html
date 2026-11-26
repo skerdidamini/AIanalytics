@@ -1,0 +1,33 @@
+<!doctype html><html lang="sq"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Bar &amp; Restorant | AI Camera Analytica</title><link rel="icon" href="data:,"><link rel="stylesheet" href="/dashboard/styles.css"><script src="/dashboard/app.js" defer></script></head><body>
+<header><strong>AI Camera <span>Analytica</span></strong><a href="/">Faqja kryesore</a></header>
+<main>
+<section id="login-view" class="login"><p class="eyebrow">MIRË SE ERDHE</p><h1>Të dhënat e biznesit,<br>në një vend.</h1><p class="muted">Hyr me llogarinë tënde. Platforma hap panelin për Adminin, pronarin ose teknikun sipas rolit.</p><form id="login-form"><label>Email<input id="email" type="email" autocomplete="username" required></label><label>Fjalëkalimi<input id="password" type="password" autocomplete="current-password" required maxlength="256"></label><button id="login-button" type="submit">Hyr në panel</button></form><p id="login-status" role="status" aria-live="polite"></p></section>
+<section id="dashboard" hidden>
+<p id="demo-banner" class="demo-banner" hidden>MODALITET DEMO — këto janë të dhëna të simuluara, jo rezultate nga kamera reale.</p>
+<div class="heading"><div><p class="eyebrow">PËRMBLEDHJE E SHËRBIMIT</p><h1>Si po shërbehet lokali yt?</h1><p id="identity" class="muted"></p></div><button id="logout" class="secondary">Dil nga llogaria</button></div>
+<form id="filters" class="filters"><label>Nga data<input id="start" type="date" required></label><label>Deri më<input id="end" type="date" required></label><label>Lokacioni<select id="location"><option value="">Të gjitha lokacionet</option></select></label><label>Kamera<select id="camera"><option value="">Të gjitha kamerat</option></select></label><button id="refresh" type="submit">Shfaq të dhënat</button><button id="download" type="button" class="secondary" disabled>Shkarko CSV</button></form>
+<p id="timezone" class="note"></p><p id="status" role="status" aria-live="polite">Duke ngarkuar…</p>
+<section class="restaurant-overview" aria-labelledby="service-title">
+<div class="section-heading"><div><p class="eyebrow">EKSPERIENCA E KLIENTIT</p><h2 id="service-title">Shërbimi në tavolinë</h2></div><span class="state-label">Në pritje të matjeve</span></div>
+<div class="service-grid">
+<article><h3>Pritja për kamarierin</h3><strong>—</strong><p>Ulja e grupit → afrimi i parë i kamarierit.</p><small>Ende e pamatur · kërkon dallimin e stafit dhe zënien e tavolinës.</small></article>
+<article><h3>Pritja e porosisë</h3><strong>—</strong><p>Marrja e porosisë → dorëzimi në tavolinë.</p><small>Ende e pamatur · duhen evente porosie, p.sh. nga POS-i.</small></article>
+<article><h3>Qëndrimi i grupit</h3><strong>—</strong><p>Zënia e tavolinës → largimi i grupit.</p><small>Ende i pamatur · koha e një personi në zonë nuk është sesion tavoline.</small></article>
+<article><h3>Përdorimi i tavolinave</h3><strong>—</strong><p>Tavolina më e përdorur dhe më pak e përdorur.</p><small>Ende i pamatur · duhen intervalet e zënies dhe orari i hapjes.</small></article>
+</div></section>
+<section class="panel" aria-labelledby="zones-title"><div class="section-heading"><div><p class="eyebrow">ZONE1 · ZONE2 · ZONE3</p><h2 id="zones-title">Tavolinat dhe zonat</h2></div><button id="download-zones" class="secondary" disabled>Shkarko CSV zonash</button></div>
+<p class="note">Matja aktuale tregon qëndrimin e personave të dukshëm në secilën zonë, pa dalluar ende klientët nga stafi. Nuk është koha e grupit në tavolinë. Riemërto zonat te kalibrimi sipas tavolinave të tua.</p>
+<p id="zones-status" role="status">Duke pritur të dhënat e zonave…</p>
+<div class="table-wrap" tabindex="0" role="region" aria-label="Tabela e tavolinave dhe zonave"><table><caption class="sr-only">Qëndrimi i vëzhguar sipas zonës dhe kamerës</caption><thead><tr><th scope="col">Tavolina / zona</th><th scope="col">Lokacioni / kamera</th><th scope="col">Qëndrim mesatar i vëzhguar</th><th scope="col">Sesione të plota</th><th scope="col">Sesione të ndërprera</th></tr></thead><tbody id="zone-rows"></tbody></table></div>
+</section>
+<section class="panel" aria-labelledby="takeaway-title"><p class="eyebrow">HAPËSIRA E VEÇANTË TE BANAKU</p><h2 id="takeaway-title">Takeaway</h2>
+<label class="takeaway-selector">Zgjidh zonën e dedikuar<select id="takeaway-zone"><option value="">Zgjidh zonën e takeaway</option></select></label>
+<div class="takeaway-value"><strong id="takeaway-dwell">—</strong><span>Qëndrim mesatar i vëzhguar në zonë</span></div>
+<p id="takeaway-note" class="note">Zgjidh zonën nga të dhënat e kamerës. Kjo zgjedhje vlen për pamjen aktuale; nuk ndryshon kalibrimin.</p><p class="note">Kjo matje ende nuk provon pritjen e porosisë ose dorëzimin e saj dhe mund të përfshijë stafin.</p>
+</section>
+<div class="section-heading"><div><p class="eyebrow">FLUKSI DHE TË DHËNAT BAZË</p><h2>Aktiviteti i regjistruar</h2></div></div>
+<div class="kpis"><article><p>Hyrje të regjistruara</p><strong id="entries">—</strong><small>Kalime vije, jo persona unikë</small></article><article><p>Dalje të regjistruara</p><strong id="exits">—</strong><small>Sipas kamerave të zgjedhura</small></article><article><p>Qëndrimi mesatar në zona</p><strong id="dwell">—</strong><small>Vetëm sesionet e përfunduara</small></article><article><p>Peak i personave të dukshëm</p><strong id="peak">—</strong><small id="peak-note">Zgjidh një kamerë për këtë matje</small></article></div>
+<section class="panel"><div class="section-heading"><div><p class="eyebrow">FLUKSI NË KOHË</p><h2>Hyrje dhe dalje sipas orës</h2></div><p class="legend"><span>● Hyrje</span><span>● Dalje</span></p></div><p id="chart-empty" class="empty">Nuk ka të dhëna për këtë periudhë.</p><svg id="chart" viewBox="0 0 960 280" role="img" aria-label="Grafiku i hyrjeve dhe daljeve sipas orës" hidden></svg><p class="note">Shfaqen orët me evente. Mungesa e të dhënave nuk do të thotë që kamera ishte online me zero vizitorë.</p></section>
+<section class="panel"><h2>Detajet sipas kamerës dhe orës</h2><p id="row-count" class="note"></p><div class="table-wrap" tabindex="0" role="region" aria-label="Tabela e detajeve orare"><table><caption class="sr-only">Rezultatet analitike të periudhës së zgjedhur</caption><thead><tr><th scope="col">Ora</th><th scope="col">Lokacioni / kamera</th><th scope="col">Hyrje</th><th scope="col">Dalje</th><th scope="col">Sesione zone</th></tr></thead><tbody id="rows"></tbody></table></div></section>
+<p class="note">Këto metrika bazohen në detektimin dhe kalibrimin edge. Qëndrimi në zonë nuk është domosdoshmërisht kohëzgjatja e gjithë vizitës; kamerat mund të shohin të njëjtin person.</p>
+</section></main></body></html>
