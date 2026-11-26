@@ -1,0 +1,22 @@
+[Unit]
+Description=AI Camera Analytica
+After=network.target
+
+[Service]
+Type=simple
+User=aianalytica
+Group=aianalytica
+WorkingDirectory=/opt/aianalytica
+StateDirectory=aianalytica
+StateDirectoryMode=0700
+UMask=0077
+ExecStart=/opt/aianalytica/.venv/bin/ai-camera-cloud --database /var/lib/aianalytica/cloud.sqlite3 serve --host 127.0.0.1 --port 8080 --secure-cookies
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target
