@@ -823,3 +823,22 @@ section {
 .owner-demo-main [data-owner-demo] { margin: 2rem 0; }
 @media (max-width: 1000px) { .owner-preview-section { grid-template-columns: 1fr; } }
 @media (max-width: 600px) { .preview-kpis { grid-template-columns: repeat(2,minmax(0,1fr)); } [data-owner-demo] { padding: 1rem; } .preview-filters { flex-direction: column; } .preview-top { flex-wrap: wrap; } .demo-page-header { flex-wrap: wrap; } }
+
+.journey-section { padding-top: 2rem; padding-bottom: 4rem; display:grid; grid-template-columns: .65fr 1.35fr; align-items:center; gap:2.5rem; }
+.journey-copy h2 { font-size:clamp(1.8rem,3vw,2.6rem); line-height:1.15; }
+.journey-copy p { color:#a7b7c9; line-height:1.7; }
+.journey-label { color:#8be8d0; font-size:.75rem; border:1px solid #38edbd40; border-radius:99px; padding:.45rem .7rem; }
+.journey-card { padding:1rem; background:#0a192b; border:1px solid #ffffff1c; border-radius:22px; }
+.journey-card svg { width:100%; height:auto; display:block; border-radius:16px; }
+.journey-person { animation: journey-walk 10s linear infinite; }
+.journey-signal { animation: journey-flow 1.3s linear infinite; }
+.journey-steps { display:flex; justify-content:space-between; flex-wrap:wrap; gap:.5rem; color:#8be8d0; font-size:.75rem; padding:1rem .3rem; }
+.journey-foot { display:flex; justify-content:space-between; gap:1rem; align-items:center; }
+.journey-foot p { color:#a7b7c9; font-size:.72rem; line-height:1.5; margin:0; }
+#journey-toggle { flex-shrink:0; background:#ffffff0a; color:#e2f1f4; border:1px solid #ffffff30; border-radius:8px; padding:.65rem; cursor:pointer; font:inherit; font-size:.75rem; }
+#journey-toggle:focus-visible { outline:2px solid #38edbd; outline-offset:3px; }
+.journey-card.is-paused .journey-person,.journey-card.is-paused .journey-signal { animation-play-state:paused; }
+@keyframes journey-walk { 0% {transform:translate(305px,300px);opacity:0} 10% {opacity:1} 80% {opacity:1} 100% {transform:translate(800px,300px);opacity:0} }
+@keyframes journey-flow { to { stroke-dashoffset:-32; } }
+@media (prefers-reduced-motion:reduce) { .journey-person { animation-duration:10s !important; animation-delay:-4s !important; } .journey-signal { animation-duration:1.3s !important; } }
+@media (max-width:850px) { .journey-section { grid-template-columns:1fr; gap:1.4rem; } .journey-foot { align-items:flex-start; flex-direction:column; } }

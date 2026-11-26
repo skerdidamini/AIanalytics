@@ -139,3 +139,13 @@
     });
   });
 })();
+
+(() => {
+  const card=document.getElementById('journey-card'), button=document.getElementById('journey-toggle');
+  if(!card||!button)return;
+  const media=matchMedia('(prefers-reduced-motion: reduce)');let paused=media.matches;
+  function update(){card.classList.toggle('is-paused',paused);button.setAttribute('aria-pressed',String(paused));button.textContent=window.HomeLanguage?.translate(paused?'Play animation':'Pause animation')||'';}
+  button.addEventListener('click',()=>{paused=!paused;update();});
+  media.addEventListener('change',e=>{if(e.matches){paused=true;update();}});
+  window.addEventListener('home-language-change',update);update();
+})();

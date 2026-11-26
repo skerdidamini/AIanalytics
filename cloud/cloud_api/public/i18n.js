@@ -225,7 +225,15 @@ const homepageTranslations = {
   "Average dwell": "Qëndrimi mesatar",
   "Zone activity — simulated": "Aktiviteti i zonave — simulim",
   "Waiter waiting time, order delivery and group table sessions: planned features, not active measurements.": "Pritja për kamarierin, dorëzimi i porosisë dhe seancat e grupeve në tavolina: funksione të planifikuara, jo matje aktive.",
-  "Download sample CSV": "Shkarko CSV shembull"
+  "Download sample CSV": "Shkarko CSV shembull",
+  "From camera to dashboard": "Nga kamera te paneli",
+  "How a crossing becomes insight.": "Si shndërrohet një kalim në informacion.",
+  "Follow the data from the venue to the owner dashboard.": "Shiko rrugën e të dhënave nga lokali deri te paneli i pronarit.",
+  "A visitor passes the venue camera; the Mini PC processes data and sends it to the server.": "Një vizitor kalon kamerën e lokalit; të dhënat përpunohen në Mini PC dhe dërgohen në server.",
+  "1 · Camera observes": "1 · Kamera vëzhgon",
+  "2 · Mini PC processes": "2 · Mini PC përpunon",
+  "3 · Server receives data": "3 · Serveri merr të dhënat",
+  "Process illustration. Video stays at the venue; only analytics data is sent.": "Ilustrim i procesit. Pamja video mbetet në lokal; dërgohen vetëm të dhënat e analizës."
 };
 
 (() => {
